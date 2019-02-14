@@ -1,0 +1,67 @@
+{
+   "name": "typeorm-fixture-factory",
+   "version": "0.0.1",
+   "description": "",
+   "main": "dist/index.js",
+   "directories": {
+      "test": "test"
+   },
+   "scripts": {
+      "build": "rm -rf dist/ && tsc",
+      "test": "jest",
+      "test:watch": "jest --watch",
+      "test:cov": "jest --coverage",
+      "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+      "start": "ts-node src/index.ts"
+   },
+   "author": "",
+   "license": "ISC",
+   "dependencies": {
+      "faker": "^4.1.0",
+      "typeorm": "0.2.11",
+      "reflect-metadata": "^0.1.10",
+      "sqlite3": "^3.1.10"
+   },
+   "peerDependencies": {
+      "typeorm": "^0.2.12"
+   },
+   "devDependencies": {
+      "@types/faker": "^4.1.5",
+      "@types/jest": "^23.3.13",
+      "husky": "^1.3.1",
+      "jest": "^23.6.0",
+      "lint-staged": "^8.1.0",
+      "prettier": "^1.16.0",
+      "sqlite3": "^4.0.6",
+      "ts-jest": "^23.10.5",
+      "tslint": "^5.12.1",
+      "typeorm": "^0.2.12",
+      "typescript": "2.5.2",
+      "ts-node": "3.3.0",
+      "@types/node": "^8.0.29"
+   },
+   "lint-staged": {
+      "src/**/*.ts": [
+         "prettier --write --print-width 120 --trailing-comma all --single-quote --parser typescript --arrow-parens always",
+         "git add"
+      ],
+      "*.{js,json,md}": [
+         "prettier --write",
+         "git add"
+      ]
+   },
+   "jest": {
+      "moduleFileExtensions": [
+         "js",
+         "json",
+         "ts"
+      ],
+      "rootDir": "test",
+      "testRegex": ".spec.ts$",
+      "transform": {
+         "^.+\\.(t|j)s$": "ts-jest"
+      },
+      "coverageDirectory": "../coverage",
+      "testEnvironment": "node"
+   }
+}
