@@ -1,7 +1,6 @@
-import { ConnectionOptions, EntityManager } from 'typeorm';
-import { Post } from '../samples/entities/Post';
-import { User } from '../samples/entities/User';
+import { ConnectionOptions } from 'typeorm';
 import { FixtureFactory } from '../src';
+import { User, Post } from './entities';
 
 export const ormConfig: ConnectionOptions = {
     type: 'sqlite',
@@ -10,18 +9,8 @@ export const ormConfig: ConnectionOptions = {
     synchronize: true,
 };
 
-export const getFactory = () => {
-    return new FixtureFactory({
-        connection: ormConfig,
-    });
-};
-
-export const getManager = async (
-    factory: FixtureFactory,
-): Promise<EntityManager> => {
-    const conn = await factory.getConnection();
-
-    return await conn.manager;
+export const getDefaultFactory = () => {
+    return new FixtureFactory();
 };
 
 export const defineUserFactory = (factory: FixtureFactory) => {
@@ -29,6 +18,7 @@ export const defineUserFactory = (factory: FixtureFactory) => {
         username: faker.internet.userName(),
         email: faker.internet.email(),
         active: true,
+        name: `${faker.name.firstName()} ${faker.name.lastName()}`,
     }));
 };
 

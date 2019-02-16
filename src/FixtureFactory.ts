@@ -1,14 +1,13 @@
-import { Connection, createConnection, getConnection } from 'typeorm';
+import { DefaultAdapter } from './adapters/DefaultAdapter';
+import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
 import { BlueprintBuilder } from './blueprint/BlueprintBuilder';
 import { Builder } from './Builder';
 import { DeepFactoryPartial } from './common/DeepFactoryPartial';
 import { FixtureObjectType } from './common/FixtureObjectType';
-
 import { FixtureFactoryOptions } from './FixtureFactoryOptions';
 import { FixtureProfileLoader } from './profile/FixtureProfileLoader';
 
 import {
-    // FactoryBuilderMethod,
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
 } from './common/FactoryProfileMethod';
@@ -30,7 +29,7 @@ export class FixtureFactory implements BlueprintBuilder {
         FactoryProfileCallbackMethod<any>
     >();
 
-    private connection: Connection;
+    private readonly adapter: FixtureFactoryAdapter;
 
     /**
      * Create a new FixtureFactory
@@ -38,6 +37,7 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param options
      */
     constructor(private readonly options: FixtureFactoryOptions = {}) {
+        this.adapter = options.adapter || new DefaultAdapter();
         if (options.fixtures) {
             const loader = new FixtureProfileLoader(options.fixtures);
             const profiles = loader.getProfiles();
@@ -49,23 +49,6 @@ export class FixtureFactory implements BlueprintBuilder {
     }
 
     /**
-     * Get connection to the database.
-     */
-    public async getConnection(): Promise<Connection> {
-        if (!this.connection) {
-            const conn = await this.getExistingConnection();
-
-            if (conn) {
-                this.connection = conn;
-            } else {
-                this.connection = await this.createNewConnection();
-            }
-        }
-
-        return this.connection;
-    }
-
-    /**
      * Get a builder instance for an entity
      *
      * @param entity
@@ -73,7 +56,7 @@ export class FixtureFactory implements BlueprintBuilder {
     public for<EntityType>(
         entity: FixtureObjectType<EntityType>,
     ): Builder<EntityType> {
-        const builder = new Builder(entity, this);
+        const builder = new Builder(entity, this, this.adapter);
 
         return builder;
     }
@@ -264,42 +247,5 @@ export class FixtureFactory implements BlueprintBuilder {
         state?: string,
     ): FactoryProfileCallbackMethod<Entity> {
         return this.creatingCallbackMethods.get(getKey(entity, state));
-    }
-
-    /**
-     * Create a new connection
-     */
-    private async createNewConnection(): Promise<Connection> {
-        let connection: Connection;
-        if (!this.options.connection) {
-            connection = await createConnection();
-        } else {
-            connection = await createConnection(this.options.connection as any);
-        }
-
-        return connection;
-    }
-
-    /**
-     * Attempt to retrieve a connection from the connection manager.
-     */
-    private async getExistingConnection(): Promise<Connection | undefined> {
-        const connName =
-            typeof this.options.connection === 'string'
-                ? this.options.connection
-                : this.options.connection.name;
-
-        let connection: Connection;
-        try {
-            if (!connName) {
-                connection = getConnection();
-            } else {
-                connection = getConnection(connName);
-            }
-        } catch (ex) {
-            // do nothing
-        }
-
-        return connection;
     }
 }

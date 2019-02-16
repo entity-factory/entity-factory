@@ -1,7 +1,9 @@
 import { FixtureFactory } from '../FixtureFactory';
 
-// Taken from Typeorm's DeepPartial type of the same name
-export type DeepEntityPartial<T> = { [P in keyof T]: DeepFactoryPartial<T[P]> };
+// Taken from Typeorm's DeepPartial type of the same firstName
+export type DeepEntityPartial<T> = {
+    [P in keyof T]?: DeepFactoryPartial<T[P]>
+};
 
 // Deep partial passed to factory and state definition methods allowing property
 // values to be resolved via T or () => T

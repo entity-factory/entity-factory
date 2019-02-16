@@ -3,7 +3,7 @@ import { FixtureObjectType } from '../common/FixtureObjectType';
 export const DEFAULT_KEY = '__default';
 
 /**
- * Get the name of an object
+ * Get the firstName of an object
  *
  * @param entity
  */

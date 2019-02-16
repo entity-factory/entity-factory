@@ -1,11 +1,11 @@
 import * as faker from 'faker';
-import { DeepPartial } from 'typeorm';
+import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
+import { CallBackContext } from './common/CallBackContext';
 import {
-    DeepFactoryPartial,
+    DeepEntityPartial,
     DeepFactoryPartialMethod,
 } from './common/DeepFactoryPartial';
 import {
-    CallBackContext,
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
 } from './common/FactoryProfileMethod';
@@ -22,11 +22,12 @@ interface StateBuilderObject<Entity> {
 export class Builder<Entity> {
     private stateFactories: StateBuilderObject<Entity>[] = [];
 
-    private partial: DeepPartial<Entity> = {};
+    private partial: DeepEntityPartial<Entity> = {};
 
     constructor(
         private readonly type: FixtureObjectType<Entity>,
         private readonly factory: FixtureFactory,
+        private readonly adapter: FixtureFactoryAdapter,
     ) {
         this.stateFactories.push(this.getStateBuilder());
     }
@@ -50,7 +51,7 @@ export class Builder<Entity> {
         };
     }
 
-    with(partial: DeepPartial<Entity>): Builder<Entity> {
+    with(partial: DeepEntityPartial<Entity>): Builder<Entity> {
         this.partial = {
             ...this.partial,
             ...partial,
@@ -60,9 +61,15 @@ export class Builder<Entity> {
     }
 
     async make(): Promise<Entity>;
-    async make(count: 1, partial?: DeepPartial<Entity>): Promise<Entity>;
-    async make(count: number, partial?: DeepPartial<Entity>): Promise<Entity[]>;
-    async make(count: number = 1, partial?: DeepPartial<Entity>): Promise<any> {
+    async make(count: 1, partial?: DeepEntityPartial<Entity>): Promise<Entity>;
+    async make(
+        count: number,
+        partial?: DeepEntityPartial<Entity>,
+    ): Promise<Entity[]>;
+    async make(
+        count: number = 1,
+        partial?: DeepEntityPartial<Entity>,
+    ): Promise<any> {
         if (partial) {
             this.partial = {
                 ...this.partial,
@@ -70,19 +77,20 @@ export class Builder<Entity> {
             };
         }
 
-        let objects: DeepPartial<Entity>[] = [];
+        let objects: DeepEntityPartial<Entity>[] = [];
 
         for (let makeCount = 0; makeCount < count; makeCount++) {
             const builtObject = await this.resolveStates();
-            objects.push(builtObject as DeepPartial<Entity>);
+            objects.push(builtObject as DeepEntityPartial<Entity>);
         }
 
-        const conn = await this.factory.getConnection();
-        const preparedEntities = conn.manager.create(this.type, objects);
+        // const conn = await this.factory.getConnection();
+        // const preparedEntities = conn.manager.create(this.type, objects);
+        const preparedEntities = await this.adapter.make(this.type, objects);
 
         // fire after making for each
         for (let i = 0; i < preparedEntities.length; i++) {
-            const context = await this.getCallbackContext();
+            const context = this.getCallbackContext();
             // loop through state afterMaking callbacks
             for (
                 let stateIdx = 0;
@@ -101,24 +109,29 @@ export class Builder<Entity> {
     }
 
     async create(): Promise<Entity>;
-    async create(count: 1, partial?: DeepPartial<Entity>): Promise<Entity>;
+    async create(
+        count: 1,
+        partial?: DeepEntityPartial<Entity>,
+    ): Promise<Entity>;
     async create(
         count: number,
-        partial?: DeepPartial<Entity>,
+        partial?: DeepEntityPartial<Entity>,
     ): Promise<Entity[]>;
     async create(
         count: number = 1,
-        partial?: DeepPartial<Entity>,
+        partial?: DeepEntityPartial<Entity>,
     ): Promise<any> {
         let entities = await this.make(count, partial);
         if (!Array.isArray(entities)) {
             entities = [entities];
         }
 
-        const connection = await this.factory.getConnection();
-        entities = await connection.manager.save(entities);
+        // const connection = await this.factory.getConnection();
+        // entities = await connection.manager.save(entities);
 
-        const context = await this.getCallbackContext();
+        entities = await this.adapter.create(this.type, entities);
+
+        const context = this.getCallbackContext();
 
         for (let i = 0; i < entities.length; i++) {
             for (
@@ -140,7 +153,7 @@ export class Builder<Entity> {
     /**
      * Resolve states
      */
-    private async resolveStates(): Promise<DeepPartial<Entity>> {
+    private async resolveStates(): Promise<DeepEntityPartial<Entity>> {
         let builtObject = {};
 
         for (let i = 0; i < this.stateFactories.length; i++) {
@@ -183,13 +196,10 @@ export class Builder<Entity> {
     /**
      * Get context for callback methods.
      */
-    private async getCallbackContext(): Promise<CallBackContext> {
-        const conn = await this.factory.getConnection();
-
+    private getCallbackContext(): CallBackContext {
         return {
             factory: this.factory,
             faker,
-            manager: conn.manager,
         };
     }
 }

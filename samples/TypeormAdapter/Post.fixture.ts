@@ -1,5 +1,5 @@
-import { FixtureProfile, BlueprintBuilder } from '../../src';
-import { Post } from '../entities/Post';
+import { BlueprintBuilder, FixtureProfile } from '../../src';
+import { Post } from './Post.entity';
 
 export class PostFixture extends FixtureProfile<Post> {
     register(builder: BlueprintBuilder): void {

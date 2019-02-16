@@ -1,8 +1,7 @@
-import { ConnectionOptions } from 'typeorm';
 import { FixtureProfile } from './';
+import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
 
 export interface FixtureFactoryOptions {
-    connection?: string | ConnectionOptions;
-    // tslint:disable-next-line
+    adapter?: FixtureFactoryAdapter;
     fixtures?: Array<Function | string | FixtureProfile<any>>;
 }

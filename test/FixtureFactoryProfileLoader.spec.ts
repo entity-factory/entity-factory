@@ -1,11 +1,11 @@
-import { Comment } from '../../samples/entities/Comment';
-import { CommentFixture } from '../../samples/fixtures/CommentFixture';
-import { PostFixture } from '../../samples/fixtures/PostFixture';
-import { UserFixture } from '../../samples/fixtures/UserFixture';
-import { FixtureProfile } from '../../src';
-import { FixtureProfileLoader } from '../../src/profile/FixtureProfileLoader';
+import { Comment } from '../samples/TypeormAdapter/Comment.entity';
+import { CommentFixture } from '../samples/TypeormAdapter/Comment.fixture';
+import { PostFixture } from '../samples/TypeormAdapter/Post.fixture';
+import { UserFixture } from '../samples/TypeormAdapter/User.fixture';
+import { FixtureProfile } from '../src';
+import { FixtureProfileLoader } from '../src/profile/FixtureProfileLoader';
 
-describe('FixtureProfileLoader (e2e)', () => {
+describe('FixtureProfileLoader', () => {
     it('should load function entities', async () => {
         const loader = new FixtureProfileLoader([
             UserFixture,
@@ -23,7 +23,9 @@ describe('FixtureProfileLoader (e2e)', () => {
     });
 
     it('should load entities via glob pattern', async () => {
-        const loader = new FixtureProfileLoader(['samples/fixtures/*.ts']);
+        const loader = new FixtureProfileLoader([
+            'samples/TypeormAdapter/*.fixture.ts',
+        ]);
 
         const profiles = loader.getProfiles();
         if (profiles) {
@@ -36,7 +38,7 @@ describe('FixtureProfileLoader (e2e)', () => {
 
     it('should let a mix of entities, functions and instances', async () => {
         const loader = new FixtureProfileLoader([
-            'samples/fixtures/UserFixture.ts',
+            'samples/TypeormAdapter/User.fixture.ts',
             CommentFixture,
             new PostFixture(),
         ]);
@@ -50,7 +52,7 @@ describe('FixtureProfileLoader (e2e)', () => {
 
     it('should only load profiles', async () => {
         const loader = new FixtureProfileLoader([
-            'samples/models/*.ts',
+            'samples/TypeormAdapter/*.entity.ts',
             Comment,
             new PostFixture(),
         ]);
