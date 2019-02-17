@@ -14,7 +14,7 @@ export const getDefaultFactory = () => {
 };
 
 export const defineUserFactory = (factory: FixtureFactory) => {
-    factory.define(User, faker => ({
+    factory.define(User, async faker => ({
         username: faker.internet.userName(),
         email: faker.internet.email(),
         active: true,
@@ -23,7 +23,7 @@ export const defineUserFactory = (factory: FixtureFactory) => {
 };
 
 export const definePostFactory = (factory: FixtureFactory) => {
-    factory.define(Post, faker => ({
+    factory.define(Post, async faker => ({
         title: faker.company.catchPhrase(),
         body: faker.lorem.paragraphs(2, '\n\n'),
     }));

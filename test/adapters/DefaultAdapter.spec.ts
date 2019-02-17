@@ -64,23 +64,36 @@ describe('DefaultAdapter', async () => {
     it('should allow string types to be used', async () => {
         const adapter = new DefaultAdapter();
 
-        let persons = await adapter.make<Person>('person', [personPartial]);
+        let persons = await adapter.make('person', [personPartial]);
 
         expect(persons[0].firstName).toEqual('chuck');
         expect(persons[0].age).toEqual(personPartial.age);
 
-        persons = await adapter.create<Person>('person', persons);
+        persons = await adapter.create('person', persons);
 
         expect(persons[0].id).toEqual(1);
     });
+
+    // it('should allow string types to be used', async () => {
+    //     const adapter = new DefaultAdapter();
+    //
+    //     let persons = await adapter.make('person', [personPartial]);
+    //
+    //     expect(persons[0].firstName).toEqual('chuck');
+    //     expect(persons[0].age).toEqual(personPartial.age);
+    //
+    //     persons = await adapter.create('person', persons);
+    //
+    //     expect(persons[0].id).toEqual(1);
+    // });
 
     it('should allow for id generation to be disabled', async () => {
         const adapter = new DefaultAdapter({
             generateId: false,
         });
 
-        let persons = await adapter.make<Person>('person', [personPartial]);
-        persons = await adapter.create<Person>('person', persons);
+        let persons = await adapter.make('person', [personPartial]);
+        persons = await adapter.create('person', persons);
 
         expect(persons[0].id).toBeUndefined();
     });

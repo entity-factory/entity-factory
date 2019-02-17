@@ -10,7 +10,7 @@ export interface FixtureFactoryAdapter {
      * @param objects
      */
     make<Entity>(
-        type: FixtureObjectType<Entity>,
+        type: FixtureObjectType<Entity> | string,
         objects: DeepEntityPartial<Entity>[],
     ): Promise<Entity[]>;
 
@@ -22,7 +22,7 @@ export interface FixtureFactoryAdapter {
      * @param objects
      */
     create<Entity>(
-        type: FixtureObjectType<Entity>,
+        type: FixtureObjectType<Entity> | string,
         objects: Entity[],
     ): Promise<Entity[]>;
 }

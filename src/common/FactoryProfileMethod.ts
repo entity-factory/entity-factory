@@ -5,7 +5,7 @@ import { DeepFactoryPartial } from './DeepFactoryPartial';
 // method for creating partials of an object using faker
 export type FactoryProfileMethod<EntityType> = (
     fakerInstance: FakerStatic,
-) => DeepFactoryPartial<EntityType>;
+) => Promise<DeepFactoryPartial<EntityType>>;
 
 // Method for altering a partial after has been created, used for state manipulations
 export type FactoryProfileCallbackMethod<EntityType> = (

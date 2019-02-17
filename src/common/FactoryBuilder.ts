@@ -1,41 +1,41 @@
-import { DeepFactoryPartial } from '../common/DeepFactoryPartial';
+import { DeepFactoryPartial } from './DeepFactoryPartial';
 import {
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
-} from '../common/FactoryProfileMethod';
-import { FixtureObjectType } from '../common/FixtureObjectType';
+} from './FactoryProfileMethod';
+import { FixtureObjectType } from './FixtureObjectType';
 
-export interface BlueprintBuilder {
+export interface FactoryBuilder {
     define<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         factory: FactoryProfileMethod<Entity>,
-    ): BlueprintBuilder;
+    ): FactoryBuilder;
 
     state<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         state: string,
         factory: FactoryProfileMethod<Entity> | DeepFactoryPartial<Entity>,
-    ): BlueprintBuilder;
+    ): FactoryBuilder;
 
     afterMaking<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         callback: FactoryProfileCallbackMethod<Entity>,
-    ): BlueprintBuilder;
+    ): FactoryBuilder;
 
     afterMakingState<Entity>(
         entity: FixtureObjectType<Entity>,
         state: string,
         callback: FactoryProfileCallbackMethod<Entity>,
-    ): BlueprintBuilder;
+    ): FactoryBuilder;
 
     afterCreating<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         callback: FactoryProfileCallbackMethod<Entity>,
-    ): BlueprintBuilder;
+    ): FactoryBuilder;
 
     afterCreatingState<Entity>(
         entity: FixtureObjectType<Entity>,
         state: string,
         callback: FactoryProfileCallbackMethod<Entity>,
-    ): BlueprintBuilder;
+    ): FactoryBuilder;
 }

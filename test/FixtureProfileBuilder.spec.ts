@@ -88,7 +88,7 @@ describe('Builder', () => {
             defineUserFactory(factory);
             definePostFactory(factory);
 
-            factory.state(User, 'with-posts', faker => ({
+            factory.state(User, 'with-posts', async faker => ({
                 posts: async factory => await factory.for(Post).make(2),
             }));
 
@@ -105,7 +105,7 @@ describe('Builder', () => {
 
             defineUserFactory(factory);
 
-            factory.state(User, 'inactive', faker => ({
+            factory.state(User, 'inactive', async faker => ({
                 active: false,
             }));
 

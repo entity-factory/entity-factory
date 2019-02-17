@@ -8,7 +8,7 @@ export const DEFAULT_KEY = '__default';
  * @param entity
  */
 export const getName = (entity: any): string => {
-    return entity.name;
+    return typeof entity === 'string' ? entity : entity.name;
 };
 
 /**
@@ -17,8 +17,8 @@ export const getName = (entity: any): string => {
  * @param entity
  * @param state
  */
-export const getKey = <Entity>(
-    entity: FixtureObjectType<Entity>,
+export const getKey = (
+    entity: FixtureObjectType<any> | string,
     state?: string,
 ) => {
     return `${getName(entity)}.${state || DEFAULT_KEY}`;

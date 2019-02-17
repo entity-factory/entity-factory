@@ -48,15 +48,6 @@ export class DefaultAdapter implements FixtureFactoryAdapter {
         };
     }
 
-    async make<Entity = any>(
-        type: string,
-        objects: DeepEntityPartial<Entity>[],
-    ): Promise<Entity[]>;
-    async make<Entity>(
-        type: FixtureObjectType<Entity>,
-        objects: DeepEntityPartial<Entity>[],
-    ): Promise<Entity[]>;
-
     async make<Entity>(
         type: FixtureObjectType<Entity> | string,
         objects: DeepEntityPartial<Entity>[],
@@ -78,14 +69,6 @@ export class DefaultAdapter implements FixtureFactoryAdapter {
     }
 
     async create<Entity = any>(
-        type: string,
-        objects: Entity[],
-    ): Promise<Entity[]>;
-    async create<Entity>(
-        type: FixtureObjectType<Entity>,
-        objects: Entity[],
-    ): Promise<Entity[]>;
-    async create<Entity>(
         type: FixtureObjectType<Entity> | string,
         objects: Entity[],
     ): Promise<Entity[]> {

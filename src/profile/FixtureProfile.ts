@@ -1,5 +1,5 @@
-import { BlueprintBuilder } from '../blueprint/BlueprintBuilder';
+import { FactoryBuilder } from '..';
 
 export abstract class FixtureProfile<EntityType = any> {
-    public abstract register(builder: BlueprintBuilder): void;
+    public abstract register(builder: FactoryBuilder): void;
 }

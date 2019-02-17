@@ -25,7 +25,7 @@ export class Builder<Entity> {
     private partial: DeepEntityPartial<Entity> = {};
 
     constructor(
-        private readonly type: FixtureObjectType<Entity>,
+        private readonly type: FixtureObjectType<Entity> | string,
         private readonly factory: FixtureFactory,
         private readonly adapter: FixtureFactoryAdapter,
     ) {
@@ -171,7 +171,7 @@ export class Builder<Entity> {
     private async resolveStateFactory(
         stateFactory: FactoryProfileMethod<Entity>,
     ) {
-        const derived = stateFactory(faker);
+        const derived = await stateFactory(faker);
 
         for (const key in derived) {
             if (key in derived) {

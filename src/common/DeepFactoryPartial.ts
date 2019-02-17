@@ -1,4 +1,4 @@
-import { FixtureFactory } from '../FixtureFactory';
+import { FactoryExecutor } from './FactoryExecutor';
 
 // Taken from Typeorm's DeepPartial type of the same firstName
 export type DeepEntityPartial<T> = {
@@ -15,5 +15,5 @@ export declare type DeepFactoryPartial<T> = {
 
 // Method to resolve property within DeepFactoryPartial by calling a factory method
 export type DeepFactoryPartialMethod<Type> = (
-    factory: FixtureFactory,
+    factory: FactoryExecutor,
 ) => Type | Promise<Type>;

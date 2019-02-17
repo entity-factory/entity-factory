@@ -1,19 +1,19 @@
 import { DefaultAdapter } from './adapters/DefaultAdapter';
 import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
-import { BlueprintBuilder } from './blueprint/BlueprintBuilder';
+import { FactoryBuilder } from './common/FactoryBuilder';
 import { Builder } from './Builder';
 import { DeepFactoryPartial } from './common/DeepFactoryPartial';
+import { FactoryExecutor } from './common/FactoryExecutor';
 import { FixtureObjectType } from './common/FixtureObjectType';
 import { FixtureFactoryOptions } from './FixtureFactoryOptions';
 import { FixtureProfileLoader } from './profile/FixtureProfileLoader';
-
 import {
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
 } from './common/FactoryProfileMethod';
 import { DEFAULT_KEY, getKey, getName, isFunction } from './utils';
 
-export class FixtureFactory implements BlueprintBuilder {
+export class FixtureFactory implements FactoryBuilder, FactoryExecutor {
     private readonly factoryMethods = new Map<
         string,
         FactoryProfileMethod<any>
@@ -54,9 +54,9 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param entity
      */
     public for<EntityType>(
-        entity: FixtureObjectType<EntityType>,
+        entity: FixtureObjectType<EntityType> | string,
     ): Builder<EntityType> {
-        const builder = new Builder(entity, this, this.adapter);
+        const builder = new Builder<EntityType>(entity, this, this.adapter);
 
         return builder;
     }
@@ -67,15 +67,13 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param entity
      * @param factory
      */
-    public define<Entity>(
-        entity: FixtureObjectType<Entity>,
+    public define<Entity = {}>(
+        entity: FixtureObjectType<Entity> | string,
         factory: FactoryProfileMethod<Entity>,
-    ): BlueprintBuilder {
+    ): FactoryBuilder {
         const key = getKey(entity);
 
-        this.factoryMethods.set(key, factory);
-
-        return this;
+        return this.state(entity, null, factory);
     }
 
     /**
@@ -86,15 +84,15 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param factory
      */
     public state<Entity>(
-        entity: FixtureObjectType<Entity>,
-        state: string,
+        entity: FixtureObjectType<Entity> | string,
+        state: string | null,
         factory: FactoryProfileMethod<Entity> | DeepFactoryPartial<Entity>,
-    ): BlueprintBuilder {
+    ): FactoryBuilder {
         const key = getKey(entity, state);
 
         let factoryMethod: FactoryProfileMethod<Entity>;
         if (!isFunction(factory)) {
-            factoryMethod = () => factory as DeepFactoryPartial<Entity>;
+            factoryMethod = async () => factory as DeepFactoryPartial<Entity>;
         } else {
             factoryMethod = factory as FactoryProfileMethod<Entity>;
         }
@@ -111,9 +109,9 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param callback
      */
     public afterMaking<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         callback: FactoryProfileCallbackMethod<Entity>,
-    ): BlueprintBuilder {
+    ): FactoryBuilder {
         return this.afterMakingState(entity, DEFAULT_KEY, callback);
     }
 
@@ -125,10 +123,10 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param callback
      */
     public afterMakingState<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         state: string,
         callback: FactoryProfileCallbackMethod<Entity>,
-    ): BlueprintBuilder {
+    ): FactoryBuilder {
         this.makingCallbackMethods.set(getKey(entity, state), callback);
 
         return this;
@@ -141,9 +139,9 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param callback
      */
     public afterCreating<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         callback: FactoryProfileCallbackMethod<Entity>,
-    ): BlueprintBuilder {
+    ): FactoryBuilder {
         return this.afterCreatingState(entity, DEFAULT_KEY, callback);
     }
 
@@ -155,10 +153,10 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param callback
      */
     public afterCreatingState<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         state: string,
         callback: FactoryProfileCallbackMethod<Entity>,
-    ): BlueprintBuilder {
+    ): FactoryBuilder {
         this.creatingCallbackMethods.set(getKey(entity, state), callback);
 
         return this;
@@ -171,7 +169,7 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param state
      */
     public hasFactoryMethod<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         state?: string,
     ): boolean {
         return this.factoryMethods.has(getKey(entity, state));
@@ -184,7 +182,7 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param state
      */
     public getFactoryMethod<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         state?: string,
     ): FactoryProfileMethod<Entity> {
         if (!this.hasFactoryMethod(entity, state)) {
@@ -204,8 +202,8 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param state
      */
     public hasMakingCallbackMethod<Entity>(
-        entity: FixtureObjectType<Entity>,
-        state: string,
+        entity: FixtureObjectType<Entity> | string,
+        state?: string,
     ): boolean {
         return this.makingCallbackMethods.has(getKey(entity, state));
     }
@@ -217,7 +215,7 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param state
      */
     public getMakingCallbackMethod<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         state?: string,
     ): FactoryProfileCallbackMethod<Entity> {
         return this.makingCallbackMethods.get(getKey(entity, state));
@@ -230,7 +228,7 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param state
      */
     public hasCreatingCallbackMethod<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         state?: string,
     ): boolean {
         return this.creatingCallbackMethods.has(getKey(entity, state));
@@ -243,7 +241,7 @@ export class FixtureFactory implements BlueprintBuilder {
      * @param state
      */
     public getCreatingCallbackMethod<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: FixtureObjectType<Entity> | string,
         state?: string,
     ): FactoryProfileCallbackMethod<Entity> {
         return this.creatingCallbackMethods.get(getKey(entity, state));
