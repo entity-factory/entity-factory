@@ -67,7 +67,7 @@ export class FixtureFactory implements FactoryBuilder, FactoryExecutor {
      * @param entity
      * @param factory
      */
-    public define<Entity = {}>(
+    public define<Entity>(
         entity: FixtureObjectType<Entity> | string,
         factory: FactoryProfileMethod<Entity>,
     ): FactoryBuilder {

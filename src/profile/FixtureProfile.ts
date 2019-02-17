@@ -1,5 +1,5 @@
 import { FactoryBuilder } from '..';
 
-export abstract class FixtureProfile<EntityType = any> {
+export abstract class FixtureProfile {
     public abstract register(builder: FactoryBuilder): void;
 }

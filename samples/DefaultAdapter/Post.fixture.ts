@@ -1,7 +1,7 @@
 import { FactoryBuilder, FixtureProfile } from '../../src';
 import { IPost } from './interfaces';
 
-export class PostFixture extends FixtureProfile<IPost> {
+export class PostFixture extends FixtureProfile {
     register(builder: FactoryBuilder): void {
         builder.define<IPost>('post', async faker => ({
             title: faker.company.catchPhrase(),

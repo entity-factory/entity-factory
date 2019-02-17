@@ -1,7 +1,7 @@
 import { FactoryBuilder, FixtureProfile } from '../../src';
 import { IUser } from './interfaces';
 
-export class UserFixture extends FixtureProfile<IUser> {
+export class UserFixture extends FixtureProfile {
     register(builder: FactoryBuilder): void {
         builder.define<IUser>('user', async faker => ({
             username: faker.internet.userName(),

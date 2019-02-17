@@ -2,7 +2,7 @@ import { FactoryBuilder, FixtureProfile } from '../../src';
 import { Post } from './Post.entity';
 import { User } from './User.entity';
 
-export class UserFixture extends FixtureProfile<User> {
+export class UserFixture extends FixtureProfile {
     register(builder: FactoryBuilder): void {
         builder.define(User, async faker => ({
             username: faker.internet.userName(),
