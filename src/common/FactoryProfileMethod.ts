@@ -1,14 +1,19 @@
 import FakerStatic = Faker.FakerStatic;
-import { CallBackContext } from './CallBackContext';
+import { FactoryCallBackContext } from './FactoryCallBackContext';
 import { DeepFactoryPartial } from './DeepFactoryPartial';
 
-// method for creating partials of an object using faker
+/**
+ * Method used when defining a base factory and state factory
+ */
 export type FactoryProfileMethod<EntityType> = (
     fakerInstance: FakerStatic,
 ) => Promise<DeepFactoryPartial<EntityType>>;
 
-// Method for altering a partial after has been created, used for state manipulations
+/**
+ * Method passed as callback to to afterCreating and afterMaking used
+ * for manipulating an entity
+ */
 export type FactoryProfileCallbackMethod<EntityType> = (
     entity: EntityType,
-    context: CallBackContext,
+    context: FactoryCallBackContext,
 ) => Promise<void>;

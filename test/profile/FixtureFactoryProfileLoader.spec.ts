@@ -1,9 +1,9 @@
-import { Comment } from '../samples/TypeormAdapter/Comment.entity';
-import { CommentFixture } from '../samples/TypeormAdapter/Comment.fixture';
-import { PostFixture } from '../samples/TypeormAdapter/Post.fixture';
-import { UserFixture } from '../samples/TypeormAdapter/User.fixture';
-import { FixtureProfile } from '../src';
-import { FixtureProfileLoader } from '../src/profile/FixtureProfileLoader';
+import { Comment } from '../../samples/TypeormAdapter/Comment.entity';
+import { CommentFixture } from '../../samples/TypeormAdapter/Comment.fixture';
+import { PostFixture } from '../../samples/TypeormAdapter/Post.fixture';
+import { UserFixture } from '../../samples/TypeormAdapter/User.fixture';
+import { FixtureProfile } from '../../src';
+import { FixtureProfileLoader } from '../../src/profile/FixtureProfileLoader';
 
 describe('FixtureProfileLoader', () => {
     it('should load function entities', async () => {
@@ -29,7 +29,7 @@ describe('FixtureProfileLoader', () => {
 
         const profiles = loader.getProfiles();
         if (profiles) {
-            expect(profiles.length).toEqual(3);
+            expect(profiles.length).toEqual(4);
             for (let i = 0; i < profiles.length; i++) {
                 expect(profiles[i]).toBeInstanceOf(FixtureProfile);
             }

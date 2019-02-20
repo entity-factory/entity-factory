@@ -95,7 +95,7 @@ export class FixtureProfileLoader {
      * @param cls
      */
     private createFactoryProfileInstance(
-        cls: Function | FixtureProfile<any>,
+        cls: Function | FixtureProfile,
     ): FixtureProfile | undefined {
         if (cls instanceof FixtureProfile) {
             return cls;

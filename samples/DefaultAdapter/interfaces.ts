@@ -21,3 +21,9 @@ export interface IComment {
     body: string;
     post: IPost;
 }
+
+export interface IWidget {
+    id: number;
+    name: string;
+    active: boolean;
+}

@@ -5,28 +5,44 @@ import {
     DeepPartial,
     getConnection,
 } from 'typeorm';
-import { DeepEntityPartial } from '../common/DeepFactoryPartial';
-import { FixtureObjectType } from '../common/FixtureObjectType';
+import { DeepEntityPartial } from '..';
 import { FixtureFactoryAdapter } from './FixtureFactoryAdapter';
+import { TypeormAdapterContext } from './TypeormAdapterContext';
 
-export class TypeormAdapter implements FixtureFactoryAdapter {
+export class TypeormAdapter
+    implements FixtureFactoryAdapter<TypeormAdapterContext> {
     private connection: Connection;
 
     constructor(private readonly options?: string | ConnectionOptions) {}
 
+    /**
+     * Prepare entities by converting object literals to
+     * instantiated entities
+     *
+     * @param objects
+     * @param context
+     */
     async make<Entity>(
-        type: FixtureObjectType<Entity>,
         objects: DeepEntityPartial<Entity>[],
+        context: TypeormAdapterContext,
     ): Promise<Entity[]> {
+        const type = context.type;
         const conn = await this.getConnection();
 
         return conn.manager.create(type, <DeepPartial<Entity>[]>objects);
     }
 
+    /**
+     * Persist instantiated entities to the database
+     *
+     * @param objects
+     * @param context
+     */
     async create<Entity>(
-        type: FixtureObjectType<Entity>,
         objects: Entity[],
+        context: TypeormAdapterContext,
     ): Promise<Entity[]> {
+        const type = context.type;
         const conn = await this.getConnection();
 
         return await conn.manager.save(objects);

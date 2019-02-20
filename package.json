@@ -60,6 +60,10 @@
             "src",
             "test"
         ],
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "./samples/"
+        ],
         "testRegex": ".spec.ts$",
         "transform": {
             "^.+\\.(t|j)s$": "ts-jest"

@@ -1,15 +1,13 @@
 import * as faker from 'faker';
 import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
-import { CallBackContext } from './common/CallBackContext';
-import {
-    DeepEntityPartial,
-    DeepFactoryPartialMethod,
-} from './common/DeepFactoryPartial';
+import { FixtureBlueprint } from './blueprint/FixtureBlueprint';
+import { DeepEntityPartial } from './common/DeepEntityPartial';
+import { FactoryCallBackContext } from './common/FactoryCallBackContext';
+import { DeepFactoryPartialMethod } from './common/DeepFactoryPartial';
 import {
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
 } from './common/FactoryProfileMethod';
-import { FixtureObjectType } from './common/FixtureObjectType';
 import { FixtureFactory } from './FixtureFactory';
 import { isFunction } from './utils';
 
@@ -19,19 +17,24 @@ interface StateBuilderObject<Entity> {
     afterCreating?: FactoryProfileCallbackMethod<Entity>;
 }
 
-export class Builder<Entity> {
+export class Builder<Entity = Record<string, any>> {
     private stateFactories: StateBuilderObject<Entity>[] = [];
 
     private partial: DeepEntityPartial<Entity> = {};
 
     constructor(
-        private readonly type: FixtureObjectType<Entity> | string,
+        private readonly blueprint: FixtureBlueprint<Entity>,
         private readonly factory: FixtureFactory,
         private readonly adapter: FixtureFactoryAdapter,
     ) {
         this.stateFactories.push(this.getStateBuilder());
     }
 
+    /**
+     * Set states to be built
+     *
+     * @param state
+     */
     public state(...state: string[]): Builder<Entity> {
         state.forEach(state => {
             this.stateFactories.push(this.getStateBuilder(state));
@@ -40,17 +43,25 @@ export class Builder<Entity> {
         return this;
     }
 
+    /**
+     * Get the state builder object from the blueprint
+     *
+     * @param state
+     */
     private getStateBuilder(state?: string): StateBuilderObject<Entity> {
         return {
-            stateFactory: this.factory.getFactoryMethod(this.type, state),
-            afterMaking: this.factory.getMakingCallbackMethod(this.type, state),
-            afterCreating: this.factory.getCreatingCallbackMethod(
-                this.type,
-                state,
-            ),
+            stateFactory: this.blueprint.getFactoryMethod(state),
+            afterMaking: this.blueprint.getMakingCallbackMethod(state),
+            afterCreating: this.blueprint.getCreatingCallbackMethod(state),
         };
     }
 
+    /**
+     * Override created entity properties. Will be applied after
+     * state transforms and callbacks.
+     *
+     * @param partial
+     */
     with(partial: DeepEntityPartial<Entity>): Builder<Entity> {
         this.partial = {
             ...this.partial,
@@ -60,12 +71,35 @@ export class Builder<Entity> {
         return this;
     }
 
+    /**
+     * Instantiate a single entity
+     */
     async make(): Promise<Entity>;
+
+    /**
+     * Instantiate a single entity with an optional override for values
+     *
+     * @param count
+     * @param partial
+     */
     async make(count: 1, partial?: DeepEntityPartial<Entity>): Promise<Entity>;
+
+    /**
+     * Instantiate multiple entities and return them in an array
+     * @param count
+     * @param partial
+     */
     async make(
         count: number,
         partial?: DeepEntityPartial<Entity>,
     ): Promise<Entity[]>;
+
+    /**
+     * Instantiate one or more entities and return them
+     *
+     * @param count
+     * @param partial
+     */
     async make(
         count: number = 1,
         partial?: DeepEntityPartial<Entity>,
@@ -84,9 +118,10 @@ export class Builder<Entity> {
             objects.push(builtObject as DeepEntityPartial<Entity>);
         }
 
-        // const conn = await this.factory.getConnection();
-        // const preparedEntities = conn.manager.create(this.type, objects);
-        const preparedEntities = await this.adapter.make(this.type, objects);
+        const preparedEntities = await this.adapter.make(
+            objects,
+            this.blueprint.getContext(),
+        );
 
         // fire after making for each
         for (let i = 0; i < preparedEntities.length; i++) {
@@ -108,15 +143,38 @@ export class Builder<Entity> {
         return count === 1 ? preparedEntities[0] : preparedEntities;
     }
 
+    /**
+     * Create and persist a single entity
+     */
     async create(): Promise<Entity>;
+
+    /**
+     * Create and persist a single entity with optional override
+     *
+     * @param count
+     * @param partial
+     */
     async create(
         count: 1,
         partial?: DeepEntityPartial<Entity>,
     ): Promise<Entity>;
+
+    /**
+     * Create and persist an array of entities
+     * @param count
+     * @param partial
+     */
     async create(
         count: number,
         partial?: DeepEntityPartial<Entity>,
     ): Promise<Entity[]>;
+
+    /**
+     * Create and persist entities
+     *
+     * @param count
+     * @param partial
+     */
     async create(
         count: number = 1,
         partial?: DeepEntityPartial<Entity>,
@@ -126,10 +184,10 @@ export class Builder<Entity> {
             entities = [entities];
         }
 
-        // const connection = await this.factory.getConnection();
-        // entities = await connection.manager.save(entities);
-
-        entities = await this.adapter.create(this.type, entities);
+        entities = await this.adapter.create(
+            entities,
+            this.blueprint.getContext(),
+        );
 
         const context = this.getCallbackContext();
 
@@ -151,7 +209,7 @@ export class Builder<Entity> {
     }
 
     /**
-     * Resolve states
+     * Resolve all state factories
      */
     private async resolveStates(): Promise<DeepEntityPartial<Entity>> {
         let builtObject = {};
@@ -168,6 +226,11 @@ export class Builder<Entity> {
         return builtObject;
     }
 
+    /**
+     * Resolve a single state factory method to create the entity
+     *
+     * @param stateFactory
+     */
     private async resolveStateFactory(
         stateFactory: FactoryProfileMethod<Entity>,
     ) {
@@ -196,7 +259,7 @@ export class Builder<Entity> {
     /**
      * Get context for callback methods.
      */
-    private getCallbackContext(): CallBackContext {
+    private getCallbackContext(): FactoryCallBackContext {
         return {
             factory: this.factory,
             faker,

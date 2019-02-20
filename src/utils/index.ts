@@ -12,19 +12,6 @@ export const getName = (entity: any): string => {
 };
 
 /**
- * Get the key representing an entity
- *
- * @param entity
- * @param state
- */
-export const getKey = (
-    entity: FixtureObjectType<any> | string,
-    state?: string,
-) => {
-    return `${getName(entity)}.${state || DEFAULT_KEY}`;
-};
-
-/**
  * https://stackoverflow.com/a/7356528
  *
  * @param functionToCheck

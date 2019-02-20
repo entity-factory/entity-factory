@@ -1,28 +1,27 @@
-import { DeepEntityPartial } from '../common/DeepFactoryPartial';
-import { FixtureObjectType } from '../common/FixtureObjectType';
+import { DeepEntityPartial } from '..';
+import { AdapterContext } from './AdapterContext';
 
-export interface FixtureFactoryAdapter {
+export interface FixtureFactoryAdapter<
+    Context extends AdapterContext = AdapterContext
+> {
     /**
      * Called during the make operation. Perform any task necessary to convert
      * from a plain object into a valid entity object.
      *
-     * @param type
      * @param objects
+     * @param context
      */
     make<Entity>(
-        type: FixtureObjectType<Entity> | string,
-        objects: DeepEntityPartial<Entity>[],
+        objects: DeepEntityPartial<Entity>[], //Record<string, any>,
+        context: Context,
     ): Promise<Entity[]>;
 
     /**
      * Called during the create operation. Perform any necessary tasks to persist
      * the provided entities.
      *
-     * @param type
      * @param objects
+     * @param context
      */
-    create<Entity>(
-        type: FixtureObjectType<Entity> | string,
-        objects: Entity[],
-    ): Promise<Entity[]>;
+    create<Entity>(objects: Entity[], context: Context): Promise<Entity[]>;
 }

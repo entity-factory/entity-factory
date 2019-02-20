@@ -1,43 +1,37 @@
-import { FactoryBuilder, FixtureProfile } from '../../src';
-import { IUser } from './interfaces';
+import { FixtureProfile } from '../../src';
+import { Blueprint } from '../../src';
+import { IPost, IUser } from './interfaces';
 
-export class UserFixture extends FixtureProfile {
-    register(builder: FactoryBuilder): void {
-        builder.define<IUser>('user', async faker => ({
+export class UserFixture extends FixtureProfile<IUser> {
+    register(blueprint: Blueprint<IUser>): void {
+        blueprint.define('user', async faker => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
             active: true,
         }));
 
-        builder.state<IUser>('user', 'inactive', async faker => ({
+        blueprint.state('inactive', async faker => ({
             active: false,
         }));
 
-        // builder.afterMaking<IUser>('user', async (user, { factory, faker }) => {
-        //     const posts = await factory
-        //         .for('post')
-        //         .with({
-        //             title: 'foobar',
-        //         })
-        //         .make(3, {
-        //             body: 'nope',
-        //         });
-        //
-        //     user.posts = posts;
-        // });
+        blueprint.afterMaking(async (user, { factory, faker }) => {
+            user.posts = await factory
+                .for<IPost>('post')
+                .with({
+                    title: 'foobar',
+                })
+                .make(3, {
+                    body: 'nope',
+                });
+        });
 
-        // builder.afterCreating<IUser>(
-        //     'user',
-        //     async (user, { factory, faker }) => {
-        //         const posts = await factory
-        //             .for('post')
-        //             .with({
-        //                 title: faker.company.bsBuzz(),
-        //             })
-        //             .make(3);
-        //
-        //         user.posts = posts;
-        //     },
-        // );
+        blueprint.afterCreating(async (user, { factory, faker }) => {
+            user.posts = await factory
+                .for<IPost>('post')
+                .with({
+                    title: faker.company.bsBuzz(),
+                })
+                .make(3);
+        });
     }
 }

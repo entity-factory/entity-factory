@@ -1,22 +1,34 @@
-import { DeepEntityPartial } from '../common/DeepFactoryPartial';
 import { FixtureObjectType } from '../common/FixtureObjectType';
 import { isFunction } from '../utils';
+import { AdapterContext } from './AdapterContext';
 import { FixtureFactoryAdapter } from './FixtureFactoryAdapter';
 
 interface DefaultAdapterOptions {
     generateId?: boolean;
     defaultIdAttribute?: string;
     idAttributeMap?:
-        | Map<FixtureObjectType<any>, string>
-        | Array<[FixtureObjectType<any>, string]>;
+        | Map<FixtureObjectType<any> | string, string>
+        | Array<[FixtureObjectType<any> | string, string]>;
 }
-export class DefaultAdapter implements FixtureFactoryAdapter {
+
+export class DefaultAdapter implements FixtureFactoryAdapter<AdapterContext> {
     private readonly options: DefaultAdapterOptions;
 
+    /**
+     * Keeps track of any custom id attribute names
+     */
     private idAttributeMap: Map<FixtureObjectType<any> | string, string>;
 
+    /**
+     * Keep a running counter for entity id's
+     */
     private idCounter = new Map<FixtureObjectType<any> | string, number>();
 
+    /**
+     * Default Adapter
+     *
+     * @param options
+     */
     constructor(options: DefaultAdapterOptions = {}) {
         const defaults = this.getDefaults();
         this.options = {
@@ -40,6 +52,9 @@ export class DefaultAdapter implements FixtureFactoryAdapter {
         }
     }
 
+    /**
+     * Get default options
+     */
     private getDefaults(): DefaultAdapterOptions {
         return {
             generateId: true,
@@ -48,11 +63,18 @@ export class DefaultAdapter implements FixtureFactoryAdapter {
         };
     }
 
-    async make<Entity>(
-        type: FixtureObjectType<Entity> | string,
-        objects: DeepEntityPartial<Entity>[],
+    /**
+     * Create instances of entities
+     *
+     * @param objects
+     * @param context
+     */
+    public async make<Entity = any>(
+        objects: Record<string, any>[],
+        context: AdapterContext,
     ): Promise<Entity[]> {
-        return objects.map(object => {
+        const type = context.type;
+        return objects.map((object: Record<string, any>) => {
             let created: any;
             if (isFunction(type)) {
                 created = new (<any>type)();
@@ -68,10 +90,18 @@ export class DefaultAdapter implements FixtureFactoryAdapter {
         });
     }
 
-    async create<Entity = any>(
-        type: FixtureObjectType<Entity> | string,
+    /**
+     * Persist entities
+     *
+     * @param objects
+     * @param context
+     */
+    public async create<Entity = any>(
         objects: Entity[],
+        context: AdapterContext,
     ): Promise<Entity[]> {
+        const type = context.type;
+
         if (this.options.generateId) {
             const idKey =
                 this.idAttributeMap.get(type) ||
@@ -81,10 +111,15 @@ export class DefaultAdapter implements FixtureFactoryAdapter {
             });
         }
 
-        return <Entity[]>objects;
+        return objects;
     }
 
-    getNextId(entity: FixtureObjectType<any> | string): number {
+    /**
+     * Get the next generated id for an entity
+     *
+     * @param entity
+     */
+    private getNextId(entity: FixtureObjectType<any> | string): number {
         if (!this.idCounter.has(entity)) {
             this.idCounter.set(entity, 0);
         }

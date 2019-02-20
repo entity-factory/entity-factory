@@ -1,21 +1,22 @@
-import { FactoryBuilder, FixtureProfile } from '../../src';
+import { FixtureProfile } from '../../src';
+import { Blueprint } from '../../src/blueprint/Blueprint';
 import { Post } from './Post.entity';
 import { User } from './User.entity';
 
-export class UserFixture extends FixtureProfile {
-    register(builder: FactoryBuilder): void {
-        builder.define(User, async faker => ({
+export class UserFixture extends FixtureProfile<User> {
+    register(blueprint: Blueprint<User>): void {
+        blueprint.define(User, async faker => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
             active: true,
         }));
 
-        builder.state(User, 'inactive', async faker => ({
+        blueprint.state('inactive', async faker => ({
             active: false,
         }));
 
-        builder.afterMaking(User, async (user, { factory, faker }) => {
-            const posts = await factory
+        blueprint.afterMaking(async (user, { factory, faker }) => {
+            user.posts = await factory
                 .for(Post)
                 .with({
                     title: 'foobar',
@@ -23,19 +24,15 @@ export class UserFixture extends FixtureProfile {
                 .make(3, {
                     body: 'nope',
                 });
-
-            user.posts = posts;
         });
 
-        builder.afterCreating(User, async (user, { factory, faker }) => {
-            const posts = await factory
+        blueprint.afterCreating(async (user, { factory, faker }) => {
+            user.posts = await factory
                 .for(Post)
                 .with({
                     title: faker.company.bsBuzz(),
                 })
                 .make(3);
-
-            user.posts = posts;
         });
     }
 }
