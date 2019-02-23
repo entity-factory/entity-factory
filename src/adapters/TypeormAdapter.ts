@@ -29,7 +29,7 @@ export class TypeormAdapter
         const type = context.type;
         const conn = await this.getConnection();
 
-        return conn.manager.create(type, (objects as any) as DeepPartial<
+        return await conn.manager.create(type, (objects as any) as DeepPartial<
             Entity
         >);
     }
@@ -49,6 +49,10 @@ export class TypeormAdapter
         return await conn.manager.save(objects);
     }
 
+    public async dispose() {
+        await this.connection.close();
+    }
+
     /**
      * Get connection to the database.
      */
@@ -63,6 +67,10 @@ export class TypeormAdapter
             }
         }
 
+        if (!this.connection.isConnected) {
+            await this.connection.connect();
+        }
+
         return this.connection;
     }
 
@@ -70,36 +78,30 @@ export class TypeormAdapter
      * Create a new connection
      */
     private async createNewConnection(): Promise<Connection> {
-        let connection: Connection;
-        if (!this.options) {
-            connection = await createConnection();
-        } else {
-            connection = await createConnection(this.options as any);
+        if (this.options) {
+            return await createConnection(this.options as any);
         }
 
-        return connection;
+        return await createConnection();
     }
 
     /**
      * Attempt to retrieve a connection from the connection manager.
      */
     private async getExistingConnection(): Promise<Connection | undefined> {
-        let connName = 'default';
+        let connName;
         if (typeof this.options === 'string') {
             connName = this.options;
         } else if (this.options && this.options.name) {
             connName = this.options.name;
         }
 
-        let connection: Connection;
         try {
-            if (!connName) {
-                connection = getConnection();
-            } else {
-                connection = getConnection(connName);
+            if (connName) {
+                return await getConnection(connName);
             }
 
-            return connection;
+            return await getConnection();
         } catch (ex) {
             // do nothing
         }

@@ -108,17 +108,6 @@ export class DefaultAdapter implements FixtureFactoryAdapter<AdapterContext> {
     }
 
     /**
-     * Get default options
-     */
-    private getDefaults(): DefaultAdapterOptions {
-        return {
-            generateId: true,
-            defaultIdAttribute: 'id',
-            idAttributeMap: [],
-        };
-    }
-
-    /**
      * Get the next generated id for an entity
      *
      * @param entity

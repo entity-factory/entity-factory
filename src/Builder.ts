@@ -217,16 +217,14 @@ export class Builder<Entity = Record<string, any>> {
         const derived = await stateFactory(faker);
 
         for (const key in derived) {
-            if (key in derived) {
-                const value = derived[key];
+            const value = derived[key];
 
-                if (isFunction(value)) {
-                    const callback = derived[key] as DeepFactoryPartialMethod<
-                        Entity
-                    >;
+            if (isFunction(value)) {
+                const callback = derived[key] as DeepFactoryPartialMethod<
+                    Entity
+                >;
 
-                    derived[key] = await callback(this.factory);
-                }
+                derived[key] = await callback(this.factory);
             }
         }
 

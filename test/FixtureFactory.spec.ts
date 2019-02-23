@@ -1,8 +1,9 @@
 import { IUser } from '../samples/DefaultAdapter/interfaces';
 import { User } from '../samples/TypeormAdapter/User.entity';
 import { UserFixture } from '../samples/TypeormAdapter/User.fixture';
+import { Widget } from '../samples/TypeormAdapter/Widget.entity';
 import { FixtureFactory } from '../src';
-import { FixtureBlueprint } from '../src/blueprint/FixtureBlueprint';
+import { FixtureBlueprint } from '../src';
 import { Builder } from '../src/Builder';
 
 describe('FixtureFactory', () => {
@@ -44,5 +45,14 @@ describe('FixtureFactory', () => {
         expect(() => factory.for('user')).toThrowError(
             'No blueprint exists for entity user',
         );
+    });
+
+    it('should return a registered factory', async () => {
+        const factory = new FixtureFactory();
+        factory.register(blueprint => {
+            blueprint.setType(Widget);
+        });
+
+        expect(factory.getBlueprint(Widget)).toBeDefined();
     });
 });

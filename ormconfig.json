@@ -1,0 +1,6 @@
+{
+    "type": "sqlite",
+    "database": ":memory:",
+    "entities": ["samples/TypeormAdapter/*.entity{.ts,.js}"],
+    "synchronize": true
+}

@@ -2,15 +2,8 @@ import { ConnectionOptions } from 'typeorm';
 import { Post } from '../samples/TypeormAdapter/Post.entity';
 import { User } from '../samples/TypeormAdapter/User.entity';
 import { FixtureFactory } from '../src';
-import { Blueprint } from '../src/blueprint/Blueprint';
-import { FixtureBlueprint } from '../src/blueprint/FixtureBlueprint';
-
-export const ormConfig: ConnectionOptions = {
-    type: 'sqlite',
-    database: ':memory:',
-    entities: ['samples/entities/*.ts'],
-    synchronize: true,
-};
+import { Blueprint } from '../src';
+import { FixtureBlueprint } from '../src';
 
 export const getDefaultFactory = () => {
     return new FixtureFactory();
