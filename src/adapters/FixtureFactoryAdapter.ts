@@ -1,8 +1,8 @@
 import { DeepEntityPartial } from '..';
-import { AdapterContext } from './AdapterContext';
+import { BaseAdapterContext } from './BaseAdapterContext';
 
 export interface FixtureFactoryAdapter<
-    Context extends AdapterContext = AdapterContext
+    Context extends BaseAdapterContext = BaseAdapterContext
 > {
     /**
      * Called during the make operation. Perform any task necessary to convert

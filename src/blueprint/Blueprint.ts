@@ -1,4 +1,4 @@
-import { AdapterContext } from '..';
+import { BaseAdapterContext } from '..';
 import { DeepFactoryPartial } from '..';
 import {
     FactoryProfileCallbackMethod,
@@ -8,7 +8,7 @@ import { FixtureObjectType } from '../common/FixtureObjectType';
 
 export interface Blueprint<
     Entity = Record<string, any>,
-    Context extends AdapterContext = AdapterContext
+    Context extends BaseAdapterContext = BaseAdapterContext
 > {
     /**
      * Set the type entity being defined
@@ -24,7 +24,7 @@ export interface Blueprint<
      *
      * @param context
      */
-    setContext(context: Context): Blueprint<Entity, Context>;
+    context(context: Context): Blueprint<Entity, Context>;
 
     /**
      * Define a new entity factory

@@ -1,4 +1,4 @@
-import { AdapterContext, DeepFactoryPartial } from '..';
+import { BaseAdapterContext, DeepFactoryPartial } from '..';
 import {
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
@@ -9,7 +9,7 @@ import { Blueprint } from './Blueprint';
 
 export class FixtureBlueprint<
     Entity = any,
-    Context extends AdapterContext = AdapterContext
+    Context extends BaseAdapterContext = BaseAdapterContext
 > implements Blueprint<Entity, Context> {
     /**
      * key used as default state when saving to defining
@@ -27,10 +27,10 @@ export class FixtureBlueprint<
         FactoryProfileCallbackMethod<Entity>
     >();
 
-    private context: Record<string, any>;
+    private fixtureContext: Record<string, any>;
 
     constructor() {
-        this.context = {
+        this.fixtureContext = {
             type: '',
         };
     }
@@ -43,7 +43,7 @@ export class FixtureBlueprint<
     public setType(
         type: string | FixtureObjectType<Entity>,
     ): Blueprint<Entity, Context> {
-        this.context.type = type;
+        this.fixtureContext.type = type;
 
         return this;
     }
@@ -52,7 +52,7 @@ export class FixtureBlueprint<
      * Get the type of entity for the blueprint
      */
     public getType(): string | FixtureObjectType<Entity> {
-        return this.context.type;
+        return this.fixtureContext.type;
     }
 
     /**
@@ -60,9 +60,9 @@ export class FixtureBlueprint<
      *
      * @param context
      */
-    public setContext(context: Context): Blueprint<Entity, Context> {
-        this.context = {
-            ...this.context,
+    public context(context: Context): Blueprint<Entity, Context> {
+        this.fixtureContext = {
+            ...this.fixtureContext,
             ...(context as Record<string, any>),
         };
 
@@ -73,7 +73,7 @@ export class FixtureBlueprint<
      * Get blueprint context
      */
     public getContext(): Context {
-        return this.context as Context;
+        return this.fixtureContext as Context;
     }
 
     /**

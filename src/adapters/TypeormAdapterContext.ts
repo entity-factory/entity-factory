@@ -1,6 +1,6 @@
-import { AdapterContext } from './AdapterContext';
+import { BaseAdapterContext } from './BaseAdapterContext';
 
 /**
  * Adapter context for typeorm
  */
-export interface TypeormAdapterContext extends AdapterContext {}
+export interface TypeormAdapterContext extends BaseAdapterContext {}

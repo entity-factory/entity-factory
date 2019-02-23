@@ -49,6 +49,10 @@ export class TypeormAdapter
         return await conn.manager.save(objects);
     }
 
+    public getManager() {
+        return this.connection.manager;
+    }
+
     public async dispose() {
         await this.connection.close();
     }

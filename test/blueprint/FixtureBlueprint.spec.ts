@@ -3,24 +3,7 @@ import FakerStatic = Faker.FakerStatic;
 
 import { IWidget } from '../../samples/DefaultAdapter/interfaces';
 import { Widget } from '../../samples/TypeormAdapter/Widget.entity';
-import { AdapterContext, DeepEntityPartial, FixtureFactory } from '../../src';
 import { FixtureBlueprint } from '../../src';
-
-const getMockContext = () => ({
-    factory: new FixtureFactory(),
-    faker,
-});
-
-const getMockWidgetObject = (
-    partial: DeepEntityPartial<IWidget> = {},
-): IWidget => {
-    return {
-        id: 0,
-        name: '',
-        active: false,
-        ...partial,
-    };
-};
 
 describe('Fixture Blueprint', async () => {
     it('should allow factories to be defined with string keys', async () => {
@@ -204,8 +187,8 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow the setting of context', async () => {
-        const blueprint = new FixtureBlueprint<Widget, AdapterContext>();
-        blueprint.setContext({
+        const blueprint = new FixtureBlueprint<Widget>();
+        blueprint.context({
             type: 'Widget',
         });
 

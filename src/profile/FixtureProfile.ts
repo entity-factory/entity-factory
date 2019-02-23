@@ -1,9 +1,8 @@
-import { Blueprint } from '..';
-import { AdapterContext } from '..';
+import { BaseAdapterContext, Blueprint } from '..';
 
 export abstract class FixtureProfile<
     Entity = any,
-    Context extends AdapterContext = AdapterContext
+    Context extends BaseAdapterContext = BaseAdapterContext
 > {
     /**
      * Register a blueprint configuration

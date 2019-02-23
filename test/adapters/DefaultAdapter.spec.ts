@@ -1,5 +1,9 @@
 import { Widget } from '../../samples/TypeormAdapter/Widget.entity';
-import { DeepEntityPartial, DefaultAdapter } from '../../src';
+import {
+    DeepEntityPartial,
+    DefaultAdapter,
+    DefaultAdapterContext,
+} from '../../src';
 
 const widgetPartial: DeepEntityPartial<Widget> = {
     name: 'widgetA',
@@ -46,50 +50,17 @@ describe('DefaultAdapter', async () => {
         expect(result[1].id).toEqual(2);
     });
 
-    it('should allow custom mappings to be created as an array', async () => {
-        const customPartial: DeepEntityPartial<CustomObject> = {
-            name: 'custom',
-        };
-
-        const adapter = new DefaultAdapter({
-            idAttributeMap: [[CustomObject, 'customId']],
-        });
-
-        const context = { type: CustomObject };
-
-        let widgets = await adapter.make([customPartial], context);
-        widgets = await adapter.create(widgets, context);
-
-        expect(widgets[0].customId).toEqual(1);
-    });
-
-    it('should allow custom mappings for id attributes as functions', async () => {
-        const customPartial: DeepEntityPartial<CustomObject> = {
-            name: 'custom',
-        };
-
-        const adapter = new DefaultAdapter({
-            idAttributeMap: new Map([[CustomObject, 'customId']]),
-        });
-
-        const context = { type: CustomObject };
-
-        let widgets = await adapter.make([customPartial], context);
-        widgets = await adapter.create(widgets, context);
-
-        expect(widgets[0].customId).toEqual(1);
-    });
-
-    it('should allow custom mappings for id attributes as strings', async () => {
+    it('should allow custom mappings for id attributes in context', async () => {
         const customPartial: DeepEntityPartial<CustomObjectInterface> = {
             name: 'custom',
         };
 
-        const adapter = new DefaultAdapter({
-            idAttributeMap: new Map([['customObject', '_id']]),
-        });
+        const adapter = new DefaultAdapter();
 
-        const context = { type: 'customObject' };
+        const context: DefaultAdapterContext = {
+            type: 'customObject',
+            idAttribute: '_id',
+        };
 
         let results = await adapter.make([customPartial], context);
         results = await adapter.create(results, context);

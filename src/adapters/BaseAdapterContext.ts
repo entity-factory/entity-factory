@@ -3,7 +3,7 @@ import { FixtureObjectType } from '../common/FixtureObjectType';
 /**
  * Defualt adapter context
  */
-export interface AdapterContext {
+export interface BaseAdapterContext {
     /**
      * The type of entity being defined
      */

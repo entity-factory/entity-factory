@@ -1,10 +1,14 @@
-import { FixtureProfile } from '../../src';
-import { Blueprint } from '../../src/blueprint/Blueprint';
+import { FixtureProfile, TypeormAdapterContext } from '../../src';
+import { Blueprint } from '../../src';
 import { Post } from './Post.entity';
 import { User } from './User.entity';
 
-export class UserFixture extends FixtureProfile<User> {
-    register(blueprint: Blueprint<User>): void {
+export class UserFixture extends FixtureProfile<User, TypeormAdapterContext> {
+    public register(blueprint: Blueprint<User, TypeormAdapterContext>): void {
+        blueprint.context({
+            type: User,
+        });
+
         blueprint.define(User, async faker => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
@@ -15,24 +19,19 @@ export class UserFixture extends FixtureProfile<User> {
             active: false,
         }));
 
-        blueprint.afterMaking(async (user, { factory, faker }) => {
-            user.posts = await factory
-                .for(Post)
-                .with({
-                    title: 'foobar',
-                })
-                .make(3, {
-                    body: 'nope',
-                });
-        });
+        blueprint.state('with-posts', async faker => ({
+            posts: async factory => await factory.for(Post).make(3),
+        }));
 
-        blueprint.afterCreating(async (user, { factory, faker }) => {
-            user.posts = await factory
-                .for(Post)
-                .with({
-                    title: faker.company.bsBuzz(),
-                })
-                .make(3);
-        });
+        // blueprint.afterMaking(async (user, { factory, faker }) => {
+        //     user.posts = await factory
+        //         .for<IPost>('post')
+        //         .with({
+        //             title: 'foobar',
+        //         })
+        //         .make(3, {
+        //             body: 'nope',
+        //         });
+        // });
     }
 }

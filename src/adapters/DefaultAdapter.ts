@@ -1,27 +1,19 @@
 import { FixtureObjectType } from '../common/FixtureObjectType';
 import { isFunction } from '../utils';
-import { AdapterContext } from './AdapterContext';
+import { DefaultAdapterContext } from './DefaultAdapterContext';
 import { FixtureFactoryAdapter } from './FixtureFactoryAdapter';
 
 interface DefaultAdapterOptions {
     generateId?: boolean;
     defaultIdAttribute?: string;
-    idAttributeMap?:
-        | Map<FixtureObjectType<any> | string, string>
-        | Array<[FixtureObjectType<any> | string, string]>;
 }
 
-export class DefaultAdapter implements FixtureFactoryAdapter<AdapterContext> {
+export class DefaultAdapter
+    implements FixtureFactoryAdapter<DefaultAdapterContext> {
     private readonly options = {
         generateId: true,
         defaultIdAttribute: 'id',
-        idAttributeMap: [],
     };
-
-    /**
-     * Keeps track of any custom id attribute names
-     */
-    private idAttributeMap: Map<FixtureObjectType<any> | string, string>;
 
     /**
      * Keep a running counter for entity id's
@@ -41,17 +33,6 @@ export class DefaultAdapter implements FixtureFactoryAdapter<AdapterContext> {
         if (options.defaultIdAttribute !== undefined) {
             this.options.defaultIdAttribute = options.defaultIdAttribute;
         }
-
-        if (Array.isArray(options.idAttributeMap)) {
-            this.idAttributeMap = new Map(options.idAttributeMap);
-        } else if (options.idAttributeMap instanceof Map) {
-            this.idAttributeMap = options.idAttributeMap as Map<
-                FixtureObjectType<any>,
-                string
-            >;
-        } else {
-            this.idAttributeMap = new Map<FixtureObjectType<any>, string>();
-        }
     }
 
     /**
@@ -62,7 +43,7 @@ export class DefaultAdapter implements FixtureFactoryAdapter<AdapterContext> {
      */
     public async make<Entity = any>(
         objects: Array<Record<string, any>>,
-        context: AdapterContext,
+        context: DefaultAdapterContext,
     ): Promise<Entity[]> {
         const type = context.type;
         return objects.map((object: Record<string, any>) => {
@@ -91,16 +72,17 @@ export class DefaultAdapter implements FixtureFactoryAdapter<AdapterContext> {
      */
     public async create<Entity = any>(
         objects: Entity[],
-        context: AdapterContext,
+        context: DefaultAdapterContext,
     ): Promise<Entity[]> {
-        const type = context.type;
+        const { type, idAttribute } = context;
 
         if (this.options.generateId) {
-            const idKey =
-                this.idAttributeMap.get(type) ||
-                this.options.defaultIdAttribute;
-            objects.forEach((entity: any) => {
-                entity[idKey] = this.getNextId(type);
+            const idKey = idAttribute || this.options.defaultIdAttribute;
+            objects = objects.map((entity: any) => {
+                return {
+                    [idKey]: this.getNextId(type),
+                    ...entity,
+                };
             });
         }
 

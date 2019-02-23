@@ -6,24 +6,24 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from './User.entity';
 import { Comment } from './Comment.entity';
+import { User } from './User.entity';
 
 @Entity()
 export class Post {
     @PrimaryGeneratedColumn()
-    id: number;
+    public id: number;
 
     @ManyToOne(type => User, user => user.posts)
     @JoinColumn()
-    author: User;
+    public author: User;
 
     @Column()
-    title: string;
+    public title: string;
 
     @Column()
-    body: string;
+    public body: string;
 
     @OneToMany(type => Comment, comment => comment.post)
-    comments: Comment[];
+    public comments: Comment[];
 }

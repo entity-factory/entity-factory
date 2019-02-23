@@ -23,7 +23,7 @@ export interface IComment {
 }
 
 export interface IWidget {
-    id: number;
+    widgetId: number;
     name: string;
     active: boolean;
 }

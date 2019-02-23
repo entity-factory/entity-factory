@@ -1,5 +1,6 @@
-export * from './adapters/AdapterContext';
+export * from './adapters/BaseAdapterContext';
 export * from './adapters/DefaultAdapter';
+export * from './adapters/DefaultAdapterContext';
 export * from './adapters/TypeormAdapter';
 export * from './adapters/TypeormAdapterContext';
 

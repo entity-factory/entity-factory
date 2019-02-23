@@ -9,7 +9,8 @@
         "interface-name": [false],
         "object-literal-sort-keys": [false],
         "unified-signatures": [false],
-        "forin": [false]
+        "forin": [false],
+        "no-empty-interface": [false]
     },
     "rulesDirectory": []
 }
