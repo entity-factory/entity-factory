@@ -15,7 +15,7 @@
         "start": "ts-node src/index.ts"
     },
     "author": "",
-    "license": "ISC",
+    "license": "MIT",
     "dependencies": {
         "faker": "^4.1.0"
     },
