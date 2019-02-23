@@ -1,8 +1,9 @@
 import * as faker from 'faker';
+import FakerStatic = Faker.FakerStatic;
 
 import { IWidget } from '../../samples/DefaultAdapter/interfaces';
 import { Widget } from '../../samples/TypeormAdapter/Widget.entity';
-import { DeepEntityPartial, FixtureFactory } from '../../src';
+import { AdapterContext, DeepEntityPartial, FixtureFactory } from '../../src';
 import { FixtureBlueprint } from '../../src';
 
 const getMockContext = () => ({
@@ -25,7 +26,7 @@ describe('Fixture Blueprint', async () => {
     it('should allow factories to be defined with string keys', async () => {
         const blueprint = new FixtureBlueprint<IWidget>();
 
-        const callback = async faker => ({
+        const callback = async (fake: FakerStatic) => ({
             name: 'widgetizer',
         });
 
@@ -43,7 +44,7 @@ describe('Fixture Blueprint', async () => {
     it('should allow factories to be defined with function keys', async () => {
         const blueprint = new FixtureBlueprint<Widget>();
 
-        const callback = async faker => ({
+        const callback = async (fake: FakerStatic) => ({
             name: 'widgetizer',
         });
 
@@ -63,7 +64,7 @@ describe('Fixture Blueprint', async () => {
 
         const state = 'active';
 
-        const callback = async faker => ({
+        const callback = async (fake: FakerStatic) => ({
             active: true,
         });
 
@@ -83,7 +84,7 @@ describe('Fixture Blueprint', async () => {
 
         const state = 'active';
 
-        const callback = async faker => ({
+        const callback = async (fake: FakerStatic) => ({
             active: true,
         });
 
@@ -117,184 +118,97 @@ describe('Fixture Blueprint', async () => {
     it('should allow factory afterMaking callbacks to be defined with string keys', async () => {
         const blueprint = new FixtureBlueprint<IWidget>();
 
-        const callback = async (widget, context) => {
-            widget.active = false;
-        };
-        blueprint.afterMaking(callback);
+        blueprint.afterMaking(jest.fn());
 
         expect(blueprint.hasMakingCallbackMethod()).toBe(true);
-
-        const controlWidget = { active: true };
-        const widget = getMockWidgetObject({ active: true });
-
-        await callback(controlWidget, { factory: blueprint, faker });
-        await blueprint.getMakingCallbackMethod()(widget, getMockContext());
-
-        expect(widget.active).toEqual(controlWidget.active);
+        expect(blueprint.getMakingCallbackMethod()).toBeDefined();
     });
 
     it('should allow factory afterMaking callbacks to be defined with function keys', async () => {
         const blueprint = new FixtureBlueprint<Widget>();
 
-        const callback = async (widget, context) => {
-            widget.active = false;
-        };
-        blueprint.afterMaking(callback);
+        blueprint.afterMaking(jest.fn());
 
         expect(blueprint.hasMakingCallbackMethod()).toBe(true);
-        expect(blueprint.hasMakingCallbackMethod()).toBe(true);
-
-        const controlWidget = { active: true };
-        const widget = new Widget();
-
-        await callback(controlWidget, { factory: blueprint, faker });
-
-        await blueprint.getMakingCallbackMethod()(widget, getMockContext());
-
-        expect(widget.active).toEqual(controlWidget.active);
+        expect(blueprint.getMakingCallbackMethod()).toBeDefined();
     });
 
     it('should allow factory afterMakingState callbacks to be defined with string keys', async () => {
         const blueprint = new FixtureBlueprint<IWidget>();
 
-        const callback = async (widget, context) => {
-            widget.active = false;
-        };
-
-        blueprint.afterMakingState('inactive', callback);
+        blueprint.afterMakingState('inactive', jest.fn());
 
         expect(blueprint.hasMakingCallbackMethod('inactive')).toBe(true);
-
-        const controlWidget = { active: true };
-        const widget = getMockWidgetObject({ active: true });
-
-        await callback(controlWidget, { factory: blueprint, faker });
-        await blueprint.getMakingCallbackMethod('inactive')(
-            widget,
-            getMockContext(),
-        );
-
-        expect(widget.active).toEqual(controlWidget.active);
+        expect(blueprint.getMakingCallbackMethod('inactive')).toBeDefined();
     });
 
     it('should allow factory afterMakingState callbacks to be defined with function keys', async () => {
         const blueprint = new FixtureBlueprint<Widget>();
 
-        const callback = async (widget, context) => {
-            widget.active = false;
-        };
-        blueprint.afterMakingState('inactive', callback);
+        blueprint.afterMakingState('inactive', jest.fn());
 
         expect(blueprint.hasMakingCallbackMethod('inactive')).toBe(true);
-
-        const controlWidget = { active: true };
-        const widget = new Widget();
-
-        await callback(controlWidget, { factory: blueprint, faker });
-        await blueprint.getMakingCallbackMethod('inactive')(
-            widget,
-            getMockContext(),
-        );
-
-        expect(widget.active).toEqual(controlWidget.active);
+        expect(blueprint.getMakingCallbackMethod('inactive')).toBeDefined();
     });
 
     it('should allow afterCreating callbacks to be defined with string keys', async () => {
         const blueprint = new FixtureBlueprint<IWidget>();
 
-        const callback = async (widget, context) => {
-            widget.active = false;
-        };
-
-        blueprint.afterCreating(callback);
+        blueprint.afterCreating(jest.fn());
 
         expect(blueprint.hasCreatingCallbackMethod()).toBe(true);
-
-        const controlWidget = { active: true };
-        const widget = getMockWidgetObject({ active: true });
-
-        await callback(controlWidget, { factory: blueprint, faker });
-        await blueprint.getCreatingCallbackMethod()(widget, getMockContext());
-
-        expect(widget.active).toEqual(controlWidget.active);
+        expect(blueprint.getCreatingCallbackMethod()).toBeDefined();
     });
 
     it('should allow afterCreating callbacks to be defined with function keys', async () => {
         const blueprint = new FixtureBlueprint<Widget>();
 
-        const callback = async (widget, context) => {
-            widget.active = false;
-        };
+        blueprint.afterCreating(jest.fn());
 
-        blueprint.afterCreating(callback);
-
-        expect(blueprint.hasCreatingCallbackMethod()).toBe(true);
-
-        const controlWidget = { active: true };
-        const widget = new Widget();
-
-        await callback(controlWidget, { factory: blueprint, faker });
-        await blueprint.getCreatingCallbackMethod()(widget, getMockContext());
-
-        expect(widget.active).toEqual(controlWidget.active);
+        expect(blueprint.hasCreatingCallbackMethod()).toBeDefined();
+        expect(blueprint.getCreatingCallbackMethod()).toBeDefined();
     });
 
     it('should allow afterCreatingState callbacks to be defined with string keys', async () => {
         const blueprint = new FixtureBlueprint<IWidget>();
 
-        const callback = async (widget, context) => {
-            widget.active = false;
-        };
-        blueprint.afterCreatingState('inactive', callback);
+        blueprint.afterCreatingState('inactive', jest.fn());
 
         expect(blueprint.hasCreatingCallbackMethod('inactive')).toBe(true);
-
-        const controlWidget = { active: true };
-        const widget = getMockWidgetObject({ active: true });
-
-        await callback(controlWidget, { factory: blueprint, faker });
-        await blueprint.getCreatingCallbackMethod('inactive')(
-            widget,
-            getMockContext(),
-        );
-
-        expect(widget.active).toEqual(controlWidget.active);
+        expect(blueprint.getCreatingCallbackMethod('inactive')).toBeDefined();
     });
 
     it('should allow afterCreatingState callbacks to be defined with function keys', async () => {
         const factory = new FixtureBlueprint<IWidget>();
 
-        const callback = async (widget, context) => {
-            widget.active = false;
-        };
-        factory.afterCreatingState('inactive', callback);
+        factory.afterCreatingState('inactive', jest.fn());
 
         expect(factory.hasCreatingCallbackMethod('inactive')).toBe(true);
 
-        const controlWidget = { active: true };
-        const widget = new Widget();
-
-        await callback(controlWidget, { factory, faker });
-        await factory.getCreatingCallbackMethod('inactive')(
-            widget,
-            getMockContext(),
-        );
-
-        expect(widget.active).toEqual(controlWidget.active);
+        expect(factory.getCreatingCallbackMethod('inactive')).toBeDefined();
     });
 
-    it('show throw error if type not defined for blueprint', async () => {
+    it('should throw error if type not defined for blueprint', async () => {
         const blueprint = new FixtureBlueprint();
 
         expect(() => blueprint.getFactoryMethod('widget')).toThrow();
     });
 
-    it('show throw error if getFactoryMethod is called for non-existent factory method', async () => {
+    it('should throw error if getFactoryMethod is called for non-existent factory method', async () => {
         const blueprint = new FixtureBlueprint();
         blueprint.setType('widget');
 
         expect(() => blueprint.getFactoryMethod('widget')).toThrowError(
             'Factory method not defined for entity widget',
         );
+    });
+
+    it('should allow the setting of context', async () => {
+        const blueprint = new FixtureBlueprint<Widget, AdapterContext>();
+        blueprint.setContext({
+            type: 'Widget',
+        });
+
+        expect(blueprint.getContext().type).toEqual('Widget');
     });
 });

@@ -1,13 +1,11 @@
-import { User } from '../test/entities';
 import { DefaultAdapter } from './adapters/DefaultAdapter';
 import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
-import { Blueprint } from './blueprint/Blueprint';
 import { FixtureBlueprint } from './blueprint/FixtureBlueprint';
 import { Builder } from './Builder';
 import { FactoryExecutor } from './common/FactoryExecutor';
+import { FixtureFactoryOptions } from './common/FixtureFactoryOptions';
 import { FixtureFactoryRegisterCallback } from './common/FixtureFactoryRegisterCallback';
 import { FixtureObjectType } from './common/FixtureObjectType';
-import { FixtureFactoryOptions } from './common/FixtureFactoryOptions';
 import { FixtureProfile } from './profile/FixtureProfile';
 import { FixtureProfileLoader } from './profile/FixtureProfileLoader';
 import { getName, isFunction } from './utils';
@@ -43,22 +41,18 @@ export class FixtureFactory implements FactoryExecutor {
      * @param entity
      */
     public for(entity: string): Builder<Record<string, any>>;
-    public for<EntityType>(entity: string): Builder<EntityType>;
-    public for<EntityType>(
-        entity: FixtureObjectType<EntityType>,
+    public for<EntityType = any>(
+        entity: string | FixtureObjectType<EntityType>,
     ): Builder<EntityType>;
-    public for<EntityType>(
+    public for<EntityType = any>(
         entity: FixtureObjectType<EntityType> | string,
     ): any {
-        if (!this.blueprints.has(entity)) {
+        const blueprint = this.blueprints.get(entity);
+        if (!blueprint) {
             throw new Error(
                 `No blueprint exists for entity ${getName(entity)}`,
             );
         }
-
-        const blueprint = <FixtureBlueprint<EntityType>>(
-            this.blueprints.get(entity)
-        );
 
         return new Builder<EntityType>(blueprint, this, this.adapter);
     }
@@ -78,9 +72,8 @@ export class FixtureFactory implements FactoryExecutor {
      * @param entity
      */
     public getBlueprint(entity: string): FixtureBlueprint<Record<string, any>>;
-    public getBlueprint<Entity>(entity: string): FixtureBlueprint<Entity>;
     public getBlueprint<Entity>(
-        entity: FixtureObjectType<Entity>,
+        entity: string | FixtureObjectType<Entity>,
     ): FixtureBlueprint<Entity>;
     public getBlueprint<Entity = Record<string, any>>(
         entity: FixtureObjectType<Entity> | string,
@@ -94,19 +87,23 @@ export class FixtureFactory implements FactoryExecutor {
             | FixtureProfile<any, any>
             | FixtureFactoryRegisterCallback,
     ): FixtureFactory {
-        let blueprint: FixtureBlueprint<any, any>;
+        let blueprint: FixtureBlueprint<any, any>; // = new FixtureBlueprint();
 
         if (fixture instanceof FixtureBlueprint) {
             blueprint = fixture;
+
+            this.blueprints.set(blueprint.getType(), blueprint);
         } else if (fixture instanceof FixtureProfile) {
             blueprint = new FixtureBlueprint<any, any>();
             fixture.register(blueprint);
+
+            this.blueprints.set(blueprint.getType(), blueprint);
         } else if (isFunction(fixture)) {
             blueprint = new FixtureBlueprint<any, any>();
             fixture(blueprint);
-        }
 
-        this.blueprints.set(blueprint.getType(), blueprint);
+            this.blueprints.set(blueprint.getType(), blueprint);
+        }
 
         return this;
     }

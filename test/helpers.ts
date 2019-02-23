@@ -1,8 +1,9 @@
 import { ConnectionOptions } from 'typeorm';
+import { Post } from '../samples/TypeormAdapter/Post.entity';
+import { User } from '../samples/TypeormAdapter/User.entity';
 import { FixtureFactory } from '../src';
 import { Blueprint } from '../src/blueprint/Blueprint';
 import { FixtureBlueprint } from '../src/blueprint/FixtureBlueprint';
-import { User, Post } from './entities';
 
 export const ormConfig: ConnectionOptions = {
     type: 'sqlite',

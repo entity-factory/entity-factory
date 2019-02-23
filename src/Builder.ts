@@ -2,8 +2,8 @@ import * as faker from 'faker';
 import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
 import { FixtureBlueprint } from './blueprint/FixtureBlueprint';
 import { DeepEntityPartial } from './common/DeepEntityPartial';
-import { FactoryCallBackContext } from './common/FactoryCallBackContext';
 import { DeepFactoryPartialMethod } from './common/DeepFactoryPartial';
+import { FactoryCallBackContext } from './common/FactoryCallBackContext';
 import {
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
@@ -18,7 +18,7 @@ interface StateBuilderObject<Entity> {
 }
 
 export class Builder<Entity = Record<string, any>> {
-    private stateFactories: StateBuilderObject<Entity>[] = [];
+    private stateFactories: Array<StateBuilderObject<Entity>> = [];
 
     private partial: DeepEntityPartial<Entity> = {};
 
@@ -36,24 +36,11 @@ export class Builder<Entity = Record<string, any>> {
      * @param state
      */
     public state(...state: string[]): Builder<Entity> {
-        state.forEach(state => {
-            this.stateFactories.push(this.getStateBuilder(state));
+        state.forEach(s => {
+            this.stateFactories.push(this.getStateBuilder(s));
         });
 
         return this;
-    }
-
-    /**
-     * Get the state builder object from the blueprint
-     *
-     * @param state
-     */
-    private getStateBuilder(state?: string): StateBuilderObject<Entity> {
-        return {
-            stateFactory: this.blueprint.getFactoryMethod(state),
-            afterMaking: this.blueprint.getMakingCallbackMethod(state),
-            afterCreating: this.blueprint.getCreatingCallbackMethod(state),
-        };
     }
 
     /**
@@ -62,10 +49,10 @@ export class Builder<Entity = Record<string, any>> {
      *
      * @param partial
      */
-    with(partial: DeepEntityPartial<Entity>): Builder<Entity> {
+    public with(partial: DeepEntityPartial<Entity>): Builder<Entity> {
         this.partial = {
-            ...this.partial,
-            ...partial,
+            ...(this.partial as any),
+            ...(partial as any),
         };
 
         return this;
@@ -74,7 +61,7 @@ export class Builder<Entity = Record<string, any>> {
     /**
      * Instantiate a single entity
      */
-    async make(): Promise<Entity>;
+    public async make(): Promise<Entity>;
 
     /**
      * Instantiate a single entity with an optional override for values
@@ -82,14 +69,17 @@ export class Builder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    async make(count: 1, partial?: DeepEntityPartial<Entity>): Promise<Entity>;
+    public async make(
+        count: 1,
+        partial?: DeepEntityPartial<Entity>,
+    ): Promise<Entity>;
 
     /**
      * Instantiate multiple entities and return them in an array
      * @param count
      * @param partial
      */
-    async make(
+    public async make(
         count: number,
         partial?: DeepEntityPartial<Entity>,
     ): Promise<Entity[]>;
@@ -100,18 +90,18 @@ export class Builder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    async make(
+    public async make(
         count: number = 1,
         partial?: DeepEntityPartial<Entity>,
     ): Promise<any> {
         if (partial) {
             this.partial = {
-                ...this.partial,
-                ...partial,
+                ...(this.partial as any),
+                ...(partial as any),
             };
         }
 
-        let objects: DeepEntityPartial<Entity>[] = [];
+        const objects: Array<DeepEntityPartial<Entity>> = [];
 
         for (let makeCount = 0; makeCount < count; makeCount++) {
             const builtObject = await this.resolveStates();
@@ -124,18 +114,14 @@ export class Builder<Entity = Record<string, any>> {
         );
 
         // fire after making for each
-        for (let i = 0; i < preparedEntities.length; i++) {
+        for (const prepared of preparedEntities) {
             const context = this.getCallbackContext();
             // loop through state afterMaking callbacks
-            for (
-                let stateIdx = 0;
-                stateIdx < this.stateFactories.length;
-                stateIdx++
-            ) {
-                const callback = this.stateFactories[stateIdx].afterMaking;
+            for (const factory of this.stateFactories) {
+                const callback = factory.afterMaking;
 
                 if (callback) {
-                    await callback(preparedEntities[i], context);
+                    await callback(prepared, context);
                 }
             }
         }
@@ -146,7 +132,7 @@ export class Builder<Entity = Record<string, any>> {
     /**
      * Create and persist a single entity
      */
-    async create(): Promise<Entity>;
+    public async create(): Promise<Entity>;
 
     /**
      * Create and persist a single entity with optional override
@@ -154,7 +140,7 @@ export class Builder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    async create(
+    public async create(
         count: 1,
         partial?: DeepEntityPartial<Entity>,
     ): Promise<Entity>;
@@ -164,7 +150,7 @@ export class Builder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    async create(
+    public async create(
         count: number,
         partial?: DeepEntityPartial<Entity>,
     ): Promise<Entity[]>;
@@ -175,7 +161,7 @@ export class Builder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    async create(
+    public async create(
         count: number = 1,
         partial?: DeepEntityPartial<Entity>,
     ): Promise<any> {
@@ -191,16 +177,12 @@ export class Builder<Entity = Record<string, any>> {
 
         const context = this.getCallbackContext();
 
-        for (let i = 0; i < entities.length; i++) {
-            for (
-                let stateIdx = 0;
-                stateIdx < this.stateFactories.length;
-                stateIdx++
-            ) {
-                const callback = this.stateFactories[stateIdx].afterCreating;
+        for (const entity of entities) {
+            for (const state of this.stateFactories) {
+                const callback = state.afterCreating;
 
                 if (callback) {
-                    await callback(entities[i], context);
+                    await callback(entity, context);
                 }
             }
         }
@@ -214,12 +196,10 @@ export class Builder<Entity = Record<string, any>> {
     private async resolveStates(): Promise<DeepEntityPartial<Entity>> {
         let builtObject = {};
 
-        for (let i = 0; i < this.stateFactories.length; i++) {
+        for (const factory of this.stateFactories) {
             builtObject = {
                 ...builtObject,
-                ...(await this.resolveStateFactory(
-                    this.stateFactories[i].stateFactory,
-                )),
+                ...(await this.resolveStateFactory(factory.stateFactory)),
             };
         }
 
@@ -251,8 +231,8 @@ export class Builder<Entity = Record<string, any>> {
         }
 
         return {
-            ...derived,
-            ...this.partial,
+            ...(derived as any),
+            ...(this.partial as any),
         };
     }
 
@@ -263,6 +243,19 @@ export class Builder<Entity = Record<string, any>> {
         return {
             factory: this.factory,
             faker,
+        };
+    }
+
+    /**
+     * Get the state builder object from the blueprint
+     *
+     * @param state
+     */
+    private getStateBuilder(state?: string): StateBuilderObject<Entity> {
+        return {
+            stateFactory: this.blueprint.getFactoryMethod(state),
+            afterMaking: this.blueprint.getMakingCallbackMethod(state),
+            afterCreating: this.blueprint.getCreatingCallbackMethod(state),
         };
     }
 }

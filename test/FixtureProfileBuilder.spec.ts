@@ -1,5 +1,6 @@
+import { Post } from '../samples/TypeormAdapter/Post.entity';
+import { User } from '../samples/TypeormAdapter/User.entity';
 import { FixtureFactory } from '../src';
-import { User, Post } from './entities';
 import {
     definePostBlueprint,
     defineUserBlueprint,
@@ -57,8 +58,10 @@ describe('Builder', () => {
                 })
                 .make(2);
 
-            for (let idx in users) {
-                expect(users[idx].username).toEqual(expected);
+            for (const idx in users) {
+                if (users[idx]) {
+                    expect(users[idx].username).toEqual(expected);
+                }
             }
         });
 
@@ -90,7 +93,7 @@ describe('Builder', () => {
             definePostBlueprint(factory);
 
             blueprint.state('with-posts', async faker => ({
-                posts: async factory => await factory.for(Post).make(2),
+                posts: async fac => await fac.for(Post).make(2),
             }));
 
             const user = await factory
@@ -191,16 +194,18 @@ describe('Builder', () => {
             const users = await factory
                 .for(User)
                 .with({
-                    name: 'Chuck',
-                    username: 'with-username',
+                    username: 'Chuck',
+                    email: 'email@example.com',
                 })
                 .create(2, {
                     username: 'overridden-username',
                 });
 
-            for (let idx in users) {
-                expect(users[idx].username).toEqual('overridden-username');
-                expect(users[idx].name).toEqual('Chuck');
+            for (const idx in users) {
+                if (users[idx]) {
+                    expect(users[idx].username).toEqual('overridden-username');
+                    expect(users[idx].email).toEqual('email@example.com');
+                }
             }
         });
     });
@@ -212,12 +217,12 @@ describe('Builder', () => {
             const user = await factory
                 .for(User)
                 .with({
-                    name: 'Chuck',
+                    email: 'email@example.com',
                     username: 'with-username',
                 })
                 .create();
 
-            expect(user.name).toEqual('Chuck');
+            expect(user.email).toEqual('email@example.com');
             expect(user.username).toEqual('with-username');
         });
 
@@ -225,9 +230,9 @@ describe('Builder', () => {
             const blueprint = defineUserBlueprint(factory);
             definePostBlueprint(factory);
 
-            blueprint.afterCreating(async (user, context) => {
-                user.posts = await context.factory.for(Post).create(3, {
-                    author: user,
+            blueprint.afterCreating(async (usr, context) => {
+                usr.posts = await context.factory.for(Post).create(3, {
+                    author: usr,
                 });
             });
 
@@ -235,10 +240,12 @@ describe('Builder', () => {
 
             expect(user.posts).toHaveLength(3);
 
-            for (let postId in user.posts) {
-                expect(user.posts[postId]).toHaveProperty('title');
-                expect(user.posts[postId]).toHaveProperty('body');
-                expect(user.posts[postId].author.username).toBeDefined();
+            for (const postId in user.posts) {
+                if (user.posts[postId]) {
+                    expect(user.posts[postId]).toHaveProperty('title');
+                    expect(user.posts[postId]).toHaveProperty('body');
+                    expect(user.posts[postId].author.username).toBeDefined();
+                }
             }
         });
     });

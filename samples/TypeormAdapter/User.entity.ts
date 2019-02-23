@@ -1,24 +1,24 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Post } from './Post.entity';
 import { Comment } from './Comment.entity';
+import { Post } from './Post.entity';
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number;
+    public id: number;
 
     @Column()
-    username: string;
+    public username: string;
 
     @Column()
-    email: string;
+    public email: string;
 
     @Column()
-    active: boolean;
+    public active: boolean;
 
     @OneToMany(type => Post, post => post.author)
-    posts: Post[];
+    public posts: Post[];
 
     @OneToMany(type => Comment, comment => comment.user)
-    comments: Comment[];
+    public comments: Comment[];
 }

@@ -15,8 +15,8 @@ describe('FixtureProfileLoader', () => {
         const profiles = loader.getProfiles();
 
         expect(profiles.length).toEqual(2);
-        for (let i = 0; i < profiles.length; i++) {
-            expect(profiles[i]).toBeInstanceOf(FixtureProfile);
+        for (const profile of profiles) {
+            expect(profile).toBeInstanceOf(FixtureProfile);
         }
 
         expect(profiles[1]).toBeInstanceOf(FixtureProfile);
@@ -30,9 +30,6 @@ describe('FixtureProfileLoader', () => {
         const profiles = loader.getProfiles();
         if (profiles) {
             expect(profiles.length).toEqual(4);
-            for (let i = 0; i < profiles.length; i++) {
-                expect(profiles[i]).toBeInstanceOf(FixtureProfile);
-            }
         }
     });
 
@@ -45,8 +42,8 @@ describe('FixtureProfileLoader', () => {
 
         const profiles = loader.getProfiles();
         expect(profiles.length).toEqual(3);
-        for (let i = 0; i < profiles.length; i++) {
-            expect(profiles[i]).toBeInstanceOf(FixtureProfile);
+        for (const profile of profiles) {
+            expect(profile).toBeInstanceOf(FixtureProfile);
         }
     });
 
@@ -61,8 +58,8 @@ describe('FixtureProfileLoader', () => {
 
         expect(profiles.length).toEqual(1);
 
-        for (let i = 0; i < profiles.length; i++) {
-            expect(profiles[i]).toBeInstanceOf(FixtureProfile);
+        for (const profile of profiles) {
+            expect(profile).toBeInstanceOf(FixtureProfile);
         }
     });
 });

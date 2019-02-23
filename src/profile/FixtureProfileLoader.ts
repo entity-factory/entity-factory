@@ -1,8 +1,5 @@
-import * as glob from 'glob';
-import * as path from 'path';
+import { isFunction, loadDep } from '../utils';
 import { FixtureProfile } from './FixtureProfile';
-
-import { isFunction } from '../utils';
 
 export class FixtureProfileLoader {
     constructor(
@@ -51,7 +48,7 @@ export class FixtureProfileLoader {
      * @param cls
      */
     private resolveClasses(cls: any[]) {
-        const profiles = [];
+        const profiles: FixtureProfile[] = [];
         this.getClasses(cls).forEach(c => {
             const instance = this.createFactoryProfileInstance(c);
             if (instance) {
@@ -72,12 +69,20 @@ export class FixtureProfileLoader {
             (v): v is string => typeof v === 'string',
         );
 
+        // prevent call to glob
+        if (patterns.length === 0) {
+            return [];
+        }
+
         return patterns
-            .reduce((paths, pattern) => {
-                return [...paths, ...glob.sync(pattern)];
+            .reduce((paths: string[], pattern) => {
+                return [...paths, ...loadDep('glob').sync(pattern)];
             }, [])
             .map(filePath => {
-                return require(path.resolve(process.cwd(), filePath));
+                return require(loadDep('path').resolve(
+                    process.cwd(),
+                    filePath,
+                ));
             });
     }
 

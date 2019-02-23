@@ -3,7 +3,7 @@ import { Blueprint } from '../../src';
 import { IPost, IUser } from './interfaces';
 
 export class UserFixture extends FixtureProfile<IUser> {
-    register(blueprint: Blueprint<IUser>): void {
+    public register(blueprint: Blueprint<IUser>): void {
         blueprint.define('user', async faker => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),

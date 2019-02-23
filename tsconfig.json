@@ -6,10 +6,19 @@
       ],
       "target": "es5",
       "module": "commonjs",
+      "declaration": true,
       "moduleResolution": "node",
-      "outDir": "./build",
+      "outDir": "./dist",
+      "strict": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "sourceMap": true
-   }
+      "sourceMap": true,
+      "strictPropertyInitialization": false
+   },
+   "include": ["src", "test", "samples"],
+   "exclude": [
+      "node_modules"
+//      "samples",
+//      "test"
+   ]
 }

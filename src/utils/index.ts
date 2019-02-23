@@ -1,7 +1,3 @@
-import { FixtureObjectType } from '../common/FixtureObjectType';
-
-export const DEFAULT_KEY = '__default';
-
 /**
  * Get the firstName of an object
  *
@@ -16,9 +12,20 @@ export const getName = (entity: any): string => {
  *
  * @param functionToCheck
  */
-export const isFunction = (functionToCheck): boolean => {
+export const isFunction = (functionToCheck: any): boolean => {
     return (
         functionToCheck &&
         {}.toString.call(functionToCheck) === '[object Function]'
     );
+};
+
+export const loadDep = (type: string): any => {
+    switch (type) {
+        case 'glob':
+            return require('glob');
+        case 'path':
+            return require('path');
+        default:
+            return;
+    }
 };

@@ -1,5 +1,4 @@
-import { AdapterContext } from '..';
-import { DeepFactoryPartial } from '..';
+import { AdapterContext, DeepFactoryPartial } from '..';
 import {
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
@@ -9,7 +8,7 @@ import { getName, isFunction } from '../utils';
 import { Blueprint } from './Blueprint';
 
 export class FixtureBlueprint<
-    Entity = Record<string, any>,
+    Entity = any,
     Context extends AdapterContext = AdapterContext
 > implements Blueprint<Entity, Context> {
     /**
@@ -64,7 +63,7 @@ export class FixtureBlueprint<
     public setContext(context: Context): Blueprint<Entity, Context> {
         this.context = {
             ...this.context,
-            ...context,
+            ...(context as Record<string, any>),
         };
 
         return this;
@@ -184,19 +183,20 @@ export class FixtureBlueprint<
      */
     public getFactoryMethod(state?: string): FactoryProfileMethod<Entity> {
         if (!this.getContext().type) {
-            throw new Error(`Type not defined for blueprint ${<any>(
-                this.constructor.name
-            )}: blueprint.define() or blueprint.setType() must be called.
+            throw new Error(`Type not defined for blueprint ${this.constructor
+                .name as any}: blueprint.define() or blueprint.setType() must be called.
             `);
         }
-        if (!this.hasFactoryMethod(state)) {
+        const method = this.factoryMethods.get(this.getKey(state));
+        if (!method) {
             throw new Error(
                 `Factory method not defined for entity ${getName(
                     this.getContext().type,
                 )} ${state ? 'with state ' + state : ''}`,
             );
         }
-        return this.factoryMethods.get(this.getKey(state));
+
+        return method;
     }
 
     /**
@@ -215,7 +215,7 @@ export class FixtureBlueprint<
      */
     public getMakingCallbackMethod(
         state?: string,
-    ): FactoryProfileCallbackMethod<Entity> {
+    ): FactoryProfileCallbackMethod<Entity> | undefined {
         return this.callbackMethods.get(this.getKey(state, 'afterMake'));
     }
 
@@ -235,7 +235,7 @@ export class FixtureBlueprint<
      */
     public getCreatingCallbackMethod(
         state?: string,
-    ): FactoryProfileCallbackMethod<Entity> {
+    ): FactoryProfileCallbackMethod<Entity> | undefined {
         return this.callbackMethods.get(this.getKey(state, 'afterCreate'));
     }
 

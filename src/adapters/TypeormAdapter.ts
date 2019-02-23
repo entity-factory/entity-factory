@@ -11,7 +11,7 @@ import { TypeormAdapterContext } from './TypeormAdapterContext';
 
 export class TypeormAdapter
     implements FixtureFactoryAdapter<TypeormAdapterContext> {
-    private connection: Connection;
+    private connection!: Connection;
 
     constructor(private readonly options?: string | ConnectionOptions) {}
 
@@ -22,14 +22,16 @@ export class TypeormAdapter
      * @param objects
      * @param context
      */
-    async make<Entity>(
-        objects: DeepEntityPartial<Entity>[],
+    public async make<Entity>(
+        objects: Array<DeepEntityPartial<Entity>>,
         context: TypeormAdapterContext,
     ): Promise<Entity[]> {
         const type = context.type;
         const conn = await this.getConnection();
 
-        return conn.manager.create(type, <DeepPartial<Entity>[]>objects);
+        return conn.manager.create(type, (objects as any) as DeepPartial<
+            Entity
+        >);
     }
 
     /**
@@ -38,11 +40,10 @@ export class TypeormAdapter
      * @param objects
      * @param context
      */
-    async create<Entity>(
+    public async create<Entity>(
         objects: Entity[],
         context: TypeormAdapterContext,
     ): Promise<Entity[]> {
-        const type = context.type;
         const conn = await this.getConnection();
 
         return await conn.manager.save(objects);
@@ -83,8 +84,12 @@ export class TypeormAdapter
      * Attempt to retrieve a connection from the connection manager.
      */
     private async getExistingConnection(): Promise<Connection | undefined> {
-        const connName =
-            typeof this.options === 'string' ? this.options : this.options.name;
+        let connName = 'default';
+        if (typeof this.options === 'string') {
+            connName = this.options;
+        } else if (this.options && this.options.name) {
+            connName = this.options.name;
+        }
 
         let connection: Connection;
         try {
@@ -93,10 +98,12 @@ export class TypeormAdapter
             } else {
                 connection = getConnection(connName);
             }
+
+            return connection;
         } catch (ex) {
             // do nothing
         }
 
-        return connection;
+        return;
     }
 }

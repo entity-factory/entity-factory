@@ -3,11 +3,11 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Widget {
     @PrimaryGeneratedColumn()
-    id: number;
+    public id: number;
 
     @Column()
-    name: string;
+    public name: string;
 
     @Column()
-    active: boolean;
+    public active: boolean;
 }

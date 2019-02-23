@@ -11,10 +11,20 @@ const widgetPartial2: DeepEntityPartial<Widget> = {
     active: true,
 };
 
+class CustomObject {
+    public customid: number;
+    public name: string;
+}
+
+interface CustomObjectInterface {
+    _id: number;
+    name: string;
+}
+
 describe('DefaultAdapter', async () => {
     it('should return and entity based on a partial', async () => {
         const adapter = new DefaultAdapter();
-        let result = await adapter.make([widgetPartial, widgetPartial2], {
+        const result = await adapter.make([widgetPartial, widgetPartial2], {
             type: Widget,
         });
 
@@ -36,34 +46,42 @@ describe('DefaultAdapter', async () => {
         expect(result[1].id).toEqual(2);
     });
 
-    it('should allow custom mappings for id attributes as functions', async () => {
-        class CustomObject {
-            _id: number;
-            name: string;
-        }
+    it('should allow custom mappings to be created as an array', async () => {
         const customPartial: DeepEntityPartial<CustomObject> = {
             name: 'custom',
         };
 
         const adapter = new DefaultAdapter({
-            idAttributeMap: new Map([[CustomObject, '_id']]),
+            idAttributeMap: [[CustomObject, 'customId']],
         });
 
         const context = { type: CustomObject };
 
-        let foos = await adapter.make([{ name: 'widget' }], context);
         let widgets = await adapter.make([customPartial], context);
         widgets = await adapter.create(widgets, context);
 
-        expect(widgets[0]._id).toEqual(1);
+        expect(widgets[0].customId).toEqual(1);
+    });
+
+    it('should allow custom mappings for id attributes as functions', async () => {
+        const customPartial: DeepEntityPartial<CustomObject> = {
+            name: 'custom',
+        };
+
+        const adapter = new DefaultAdapter({
+            idAttributeMap: new Map([[CustomObject, 'customId']]),
+        });
+
+        const context = { type: CustomObject };
+
+        let widgets = await adapter.make([customPartial], context);
+        widgets = await adapter.create(widgets, context);
+
+        expect(widgets[0].customId).toEqual(1);
     });
 
     it('should allow custom mappings for id attributes as strings', async () => {
-        interface CustomObject {
-            _id: number;
-            name: string;
-        }
-        const customPartial: DeepEntityPartial<CustomObject> = {
+        const customPartial: DeepEntityPartial<CustomObjectInterface> = {
             name: 'custom',
         };
 
@@ -84,7 +102,6 @@ describe('DefaultAdapter', async () => {
 
         const context = { type: 'widget' };
 
-        let foos = await adapter.make([widgetPartial], context);
         let results = await adapter.make([widgetPartial], context);
 
         expect(results[0].name).toEqual('widgetA');
@@ -108,13 +125,9 @@ describe('DefaultAdapter', async () => {
     });
 
     it('should allow the default id attribute to be changed', async () => {
-        interface CustomObject {
-            _id: number;
-            name: string;
-        }
         const context = { type: 'customObject' };
 
-        const customPartial: DeepEntityPartial<CustomObject> = {
+        const customPartial: DeepEntityPartial<CustomObjectInterface> = {
             name: 'custom',
         };
 
