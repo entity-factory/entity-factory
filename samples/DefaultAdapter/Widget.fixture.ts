@@ -14,7 +14,7 @@ export class WidgetFixture extends FixtureProfile<
             idAttribute: 'widgetId',
         });
 
-        blueprint.define('widget', async faker => {
+        blueprint.define(async faker => {
             return {
                 name: faker.fake('{{name.firstName}} {{name.lastName}}'),
                 active: true,

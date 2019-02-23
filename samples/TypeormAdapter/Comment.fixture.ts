@@ -12,11 +12,9 @@ export class CommentFixture extends FixtureProfile<
     public register(
         blueprint: Blueprint<Comment, TypeormAdapterContext>,
     ): void {
-        blueprint.context({
-            type: Comment,
-        });
+        blueprint.setType(Comment);
 
-        blueprint.define(Comment, async faker => ({
+        blueprint.define(async faker => ({
             body: faker.lorem.sentences(2),
         }));
 

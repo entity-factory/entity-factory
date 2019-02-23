@@ -4,11 +4,9 @@ import { IPost } from './interfaces';
 
 export class PostFixture extends FixtureProfile<IPost, DefaultAdapterContext> {
     public register(blueprint: Blueprint<IPost, DefaultAdapterContext>): void {
-        blueprint.context({
-            type: 'post',
-        });
+        blueprint.setType('post');
 
-        blueprint.define('post', async faker => ({
+        blueprint.define(async faker => ({
             title: faker.company.catchPhrase(),
             body: faker.lorem.paragraphs(2, '\n\n'),
         }));

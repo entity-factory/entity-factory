@@ -14,7 +14,8 @@ export const defineUserBlueprint = (
 ): Blueprint<User> => {
     const blueprint = new FixtureBlueprint<User>();
 
-    blueprint.define(User, async faker => ({
+    blueprint.setType(User);
+    blueprint.define(async faker => ({
         username: faker.internet.userName(),
         email: faker.internet.email(),
         active: true,
@@ -30,7 +31,8 @@ export const definePostBlueprint = (
     factory: FixtureFactory,
 ): FixtureBlueprint<Post> => {
     const blueprint = new FixtureBlueprint<Post>();
-    blueprint.define(Post, async faker => ({
+    blueprint.setType(Post);
+    blueprint.define(async faker => ({
         title: faker.company.catchPhrase(),
         body: faker.lorem.paragraphs(2, '\n\n'),
     }));

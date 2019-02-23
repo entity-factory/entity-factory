@@ -82,12 +82,7 @@ export class FixtureBlueprint<
      * @param entity
      * @param factory
      */
-    public define(
-        entity: FixtureObjectType<Entity> | string,
-        factory: FactoryProfileMethod<Entity>,
-    ): Blueprint<Entity> {
-        this.setType(entity);
-
+    public define(factory: FactoryProfileMethod<Entity>): Blueprint<Entity> {
         return this.state(this.DEFAULT_KEY, factory);
     }
 

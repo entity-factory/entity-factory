@@ -1,7 +1,7 @@
 {
-    "name": "typeorm-fixture-factory",
-    "version": "0.0.1",
-    "description": "",
+    "name": "entity-factory",
+    "version": "0.1.0",
+    "description": "Create entities on the fly for mocking and testing",
     "main": "dist/index.js",
     "directories": {
         "test": "test"

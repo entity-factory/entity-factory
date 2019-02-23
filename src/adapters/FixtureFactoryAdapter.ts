@@ -12,7 +12,7 @@ export interface FixtureFactoryAdapter<
      * @param context
      */
     make<Entity>(
-        objects: DeepEntityPartial<Entity>[], //Record<string, any>,
+        objects: Array<DeepEntityPartial<Entity>>,
         context: Context,
     ): Promise<Entity[]>;
 

@@ -25,7 +25,8 @@ describe('FixtureFactory', () => {
 
         it('should allow "for" to be called with a string and return a builder instance', async () => {
             const blueprint = new FixtureBlueprint<IUser>();
-            blueprint.define('user', jest.fn());
+            blueprint.setType('user');
+            blueprint.define(jest.fn());
 
             const factory = new FixtureFactory();
             factory.register(blueprint);
@@ -37,7 +38,8 @@ describe('FixtureFactory', () => {
 
         it('should allow "for" to be called with a function and return a builder instance', async () => {
             const blueprint = new FixtureBlueprint<User>();
-            blueprint.define(User, jest.fn());
+            blueprint.setType(User);
+            blueprint.define(jest.fn());
 
             const factory = new FixtureFactory();
             factory.register(blueprint);

@@ -30,7 +30,7 @@ describe('Typeorm Adapter', async () => {
 
             await adapter.create([widget], { type: Widget });
 
-            expect(widget.id).toEqual(1);
+            expect(widget.widgetId).toEqual(1);
 
             await connection.close();
         });
@@ -51,13 +51,13 @@ describe('Typeorm Adapter', async () => {
 
             await adapter.create([widget], { type: Widget });
 
-            expect(widget.id).toEqual(1);
+            expect(widget.widgetId).toEqual(1);
 
             const result = await connection.manager.query(
-                `select * from widget where id = 1`,
+                `select * from widget where widgetId = 1`,
             );
 
-            expect(result[0].id).toEqual(1);
+            expect(result[0].widgetId).toEqual(1);
 
             await connection.close();
         });
@@ -163,12 +163,12 @@ describe('Typeorm Adapter', async () => {
             });
 
             expect(result[0]).toBeInstanceOf(Widget);
-            expect(result[0].id).toEqual(1);
+            expect(result[0].widgetId).toEqual(1);
             expect(result[0].name).toEqual(partial.name);
             expect(result[0].active).toEqual(partial.active);
 
             expect(result[1]).toBeInstanceOf(Widget);
-            expect(result[1].id).toEqual(2);
+            expect(result[1].widgetId).toEqual(2);
             expect(result[1].name).toEqual(partial2.name);
             expect(result[1].active).toEqual(partial2.active);
 

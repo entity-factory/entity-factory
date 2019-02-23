@@ -29,13 +29,9 @@ export interface Blueprint<
     /**
      * Define a new entity factory
      *
-     * @param entity
      * @param factory
      */
-    define(
-        entity: FixtureObjectType<Entity> | string,
-        factory: FactoryProfileMethod<Entity>,
-    ): Blueprint<Entity, Context>;
+    define(factory: FactoryProfileMethod<Entity>): Blueprint<Entity, Context>;
 
     /**
      * Define a factory state transformation

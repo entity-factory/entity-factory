@@ -4,11 +4,9 @@ import { IPost, IUser } from './interfaces';
 
 export class UserFixture extends FixtureProfile<IUser, DefaultAdapterContext> {
     public register(blueprint: Blueprint<IUser, DefaultAdapterContext>): void {
-        blueprint.context({
-            type: 'user',
-        });
+        blueprint.setType('user');
 
-        blueprint.define('user', async faker => ({
+        blueprint.define(async faker => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
             active: true,

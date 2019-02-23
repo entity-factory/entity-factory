@@ -5,11 +5,9 @@ import { User } from './User.entity';
 
 export class UserFixture extends FixtureProfile<User, TypeormAdapterContext> {
     public register(blueprint: Blueprint<User, TypeormAdapterContext>): void {
-        blueprint.context({
-            type: User,
-        });
+        blueprint.setType(User);
 
-        blueprint.define(User, async faker => ({
+        blueprint.define(async faker => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
             active: true,

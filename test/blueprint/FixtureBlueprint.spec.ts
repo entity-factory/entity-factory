@@ -13,7 +13,8 @@ describe('Fixture Blueprint', async () => {
             name: 'widgetizer',
         });
 
-        blueprint.define('widget', callback);
+        blueprint.setType('widget');
+        blueprint.define(callback);
 
         expect(blueprint.hasFactoryMethod()).toBe(true);
 
@@ -31,7 +32,8 @@ describe('Fixture Blueprint', async () => {
             name: 'widgetizer',
         });
 
-        blueprint.define(Widget, callback);
+        blueprint.setType(Widget);
+        blueprint.define(callback);
 
         expect(blueprint.hasFactoryMethod()).toBe(true);
 

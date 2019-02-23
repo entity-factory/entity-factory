@@ -6,11 +6,9 @@ import { User } from './User.entity';
 
 export class PostFixture extends FixtureProfile<Post, TypeormAdapterContext> {
     public register(blueprint: Blueprint<Post, TypeormAdapterContext>): void {
-        blueprint.context({
-            type: Post,
-        });
+        blueprint.setType(Post);
 
-        blueprint.define(Post, async faker => ({
+        blueprint.define(async faker => ({
             title: faker.company.catchPhrase(),
             body: faker.lorem.paragraphs(2, '\n\n'),
         }));
