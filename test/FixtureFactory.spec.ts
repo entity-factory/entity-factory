@@ -1,5 +1,5 @@
 import { CommentFixture as DefaultCommentFixture } from '../samples/DefaultAdapter/Comment.fixture';
-import { IPost, IUser } from '../samples/DefaultAdapter/interfaces';
+import { IPost, IUser, IWidget } from '../samples/DefaultAdapter/interfaces';
 import { PostFixture as DefaultPostFixture } from '../samples/DefaultAdapter/Post.fixture';
 import { UserFixture as DefaultUserFixture } from '../samples/DefaultAdapter/User.fixture';
 import { Comment } from '../samples/TypeormAdapter/Comment.entity';
@@ -9,7 +9,12 @@ import { PostFixture as TypeormPostFixture } from '../samples/TypeormAdapter/Pos
 import { User } from '../samples/TypeormAdapter/User.entity';
 import { UserFixture as TypeormUserFixture } from '../samples/TypeormAdapter/User.fixture';
 import { Widget } from '../samples/TypeormAdapter/Widget.entity';
-import { DefaultAdapter, FixtureFactory, TypeormAdapter } from '../src';
+import {
+    Blueprint,
+    DefaultAdapter,
+    FixtureFactory,
+    TypeormAdapter,
+} from '../src';
 import { FixtureBlueprint } from '../src';
 import { Builder } from '../src/Builder';
 
@@ -64,6 +69,24 @@ describe('FixtureFactory', () => {
             });
 
             expect(factory.getBlueprint(Widget)).toBeDefined();
+        });
+
+        it('should allow a factory to be registered via callback', async () => {
+            const factory = new FixtureFactory();
+            factory.register((blueprint: Blueprint<IWidget>) => {
+                blueprint.setType('widget');
+                blueprint.define(async faker => ({
+                    name: faker.lorem.word(),
+                    active: true,
+                }));
+            });
+
+            expect(factory.getBlueprint('widget')).toBeDefined();
+
+            const result = await factory.for('widget').make();
+
+            expect(result.name).toBeDefined();
+            expect(result.active).toEqual(true);
         });
     });
 

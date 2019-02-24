@@ -1,6 +1,6 @@
 import FakerStatic = Faker.FakerStatic;
-import { FactoryCallBackContext } from './FactoryCallBackContext';
 import { DeepFactoryPartial } from './DeepFactoryPartial';
+import { FactoryCallBackContext } from './FactoryCallBackContext';
 
 /**
  * Method used when defining a base factory and state factory

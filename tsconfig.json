@@ -1,24 +1,24 @@
 {
    "compilerOptions": {
-      "lib": [
-         "es5",
-         "es6"
-      ],
+      "lib": ["es5", "es6"],
       "target": "es5",
       "module": "commonjs",
       "declaration": true,
+      "removeComments": true,
       "moduleResolution": "node",
-      "outDir": "./dist",
+      "noLib": false,
+      "baseUrl": "./",
+      "outDir": "dist",
+      "sourceRoot": "src",
       "strict": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true,
       "strictPropertyInitialization": false
    },
-   "include": ["src", "test", "samples"],
    "exclude": [
-      "node_modules"
-//      "samples",
-//      "test"
+      "node_modules",
+      "test",
+      "samples"
    ]
 }

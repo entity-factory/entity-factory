@@ -1,9 +1,6 @@
 import { BaseAdapterContext, DeepFactoryPartial } from '..';
-import {
-    FactoryProfileCallbackMethod,
-    FactoryProfileMethod,
-} from '../common/FactoryProfileMethod';
-import { FixtureObjectType } from '../common/FixtureObjectType';
+import { FactoryProfileCallbackMethod, FactoryProfileMethod } from '..';
+import { FixtureObjectType } from '..';
 import { getName, isFunction } from '../utils';
 import { Blueprint } from './Blueprint';
 

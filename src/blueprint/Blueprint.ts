@@ -1,10 +1,7 @@
 import { BaseAdapterContext } from '..';
 import { DeepFactoryPartial } from '..';
-import {
-    FactoryProfileCallbackMethod,
-    FactoryProfileMethod,
-} from '../common/FactoryProfileMethod';
-import { FixtureObjectType } from '../common/FixtureObjectType';
+import { FactoryProfileCallbackMethod, FactoryProfileMethod } from '..';
+import { FixtureObjectType } from '..';
 
 export interface Blueprint<
     Entity = Record<string, any>,

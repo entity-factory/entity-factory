@@ -1,4 +1,4 @@
-import { FixtureObjectType } from '../common/FixtureObjectType';
+import { FixtureObjectType } from '..';
 import { isFunction } from '../utils';
 import { DefaultAdapterContext } from './DefaultAdapterContext';
 import { FixtureFactoryAdapter } from './FixtureFactoryAdapter';

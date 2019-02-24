@@ -215,7 +215,8 @@ export class Builder<Entity = Record<string, any>> {
         stateFactory: FactoryProfileMethod<Entity>,
     ) {
         const derived = await stateFactory(faker);
-
+        // @ts-ignore
+        // console.log('new derived', await derived(faker));
         for (const key in derived) {
             const value = derived[key];
 

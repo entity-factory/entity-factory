@@ -1,0 +1,16 @@
+# dot files
+.gitignore
+.prettierrc
+.DS_Store
+
+ormconfig.json
+
+tsconfig*
+
+tslint.json
+
+coverage/
+.idea/
+node_modules/
+samples/
+test/
