@@ -15,7 +15,8 @@ export const getName = (entity: any): string => {
 export const isFunction = (functionToCheck: any): boolean => {
     return (
         functionToCheck &&
-        {}.toString.call(functionToCheck) === '[object Function]'
+        ({}.toString.call(functionToCheck) === '[object Function]' ||
+            {}.toString.call(functionToCheck) === '[object AsyncFunction]')
     );
 };
 
