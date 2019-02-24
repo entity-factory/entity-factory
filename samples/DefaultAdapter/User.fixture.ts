@@ -1,9 +1,8 @@
-import { DefaultAdapterContext, FixtureProfile } from '../../src';
-import { Blueprint } from '../../src';
-import { IPost, IUser } from './interfaces';
+import { ObjectBlueprint, ObjectProfile } from '../../src';
+import { IUser } from './interfaces';
 
-export class UserFixture extends FixtureProfile<IUser, DefaultAdapterContext> {
-    public register(blueprint: Blueprint<IUser, DefaultAdapterContext>): void {
+export class UserFixture extends ObjectProfile<IUser> {
+    public register(blueprint: ObjectBlueprint<IUser>): void {
         blueprint.setType('user');
 
         blueprint.define(async faker => ({

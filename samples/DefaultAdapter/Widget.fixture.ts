@@ -1,14 +1,8 @@
-import { DefaultAdapterContext, FixtureProfile } from '../../src';
-import { Blueprint } from '../../src';
+import { ObjectBlueprint, ObjectProfile } from '../../src';
 import { IWidget } from './interfaces';
 
-export class WidgetFixture extends FixtureProfile<
-    IWidget,
-    DefaultAdapterContext
-> {
-    public register(
-        blueprint: Blueprint<IWidget, DefaultAdapterContext>,
-    ): void {
+export class WidgetFixture extends ObjectProfile<IWidget> {
+    public register(blueprint: ObjectBlueprint<IWidget>): void {
         blueprint.context({
             type: 'widget',
             idAttribute: 'widgetId',

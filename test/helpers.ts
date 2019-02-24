@@ -1,18 +1,25 @@
-import { ConnectionOptions } from 'typeorm';
 import { Post } from '../samples/TypeormAdapter/Post.entity';
 import { User } from '../samples/TypeormAdapter/User.entity';
-import { FixtureFactory } from '../src';
-import { Blueprint } from '../src';
-import { FixtureBlueprint } from '../src';
+import {
+    EntityFactory,
+    ProfileBlueprint,
+    TypeormAdapter,
+    TypeormBlueprint,
+    TypeormContext,
+} from '../src';
 
 export const getDefaultFactory = () => {
-    return new FixtureFactory();
+    return new EntityFactory();
 };
 
 export const defineUserBlueprint = (
-    factory: FixtureFactory,
-): Blueprint<User> => {
-    const blueprint = new FixtureBlueprint<User>();
+    factory: EntityFactory,
+): TypeormBlueprint<User> => {
+    const blueprint = new ProfileBlueprint<
+        User,
+        TypeormAdapter,
+        TypeormContext
+    >();
 
     blueprint.setType(User);
     blueprint.define(async faker => ({
@@ -28,9 +35,13 @@ export const defineUserBlueprint = (
 };
 
 export const definePostBlueprint = (
-    factory: FixtureFactory,
-): FixtureBlueprint<Post> => {
-    const blueprint = new FixtureBlueprint<Post>();
+    factory: EntityFactory,
+): ProfileBlueprint<Post, TypeormAdapter, TypeormContext> => {
+    const blueprint = new ProfileBlueprint<
+        Post,
+        TypeormAdapter,
+        TypeormContext
+    >();
     blueprint.setType(Post);
     blueprint.define(async faker => ({
         title: faker.company.catchPhrase(),

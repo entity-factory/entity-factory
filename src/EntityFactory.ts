@@ -1,32 +1,34 @@
-import { DefaultAdapter } from './adapters/DefaultAdapter';
-import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
-import { FixtureBlueprint } from './blueprint/FixtureBlueprint';
-import { Builder } from './Builder';
-import { FactoryExecutor } from './common/FactoryExecutor';
-import { FixtureFactoryOptions } from './common/FixtureFactoryOptions';
-import { FixtureFactoryRegisterCallback } from './common/FixtureFactoryRegisterCallback';
-import { FixtureObjectType } from './common/FixtureObjectType';
-import { FixtureProfile } from './profile/FixtureProfile';
-import { FixtureProfileLoader } from './profile/FixtureProfileLoader';
+import { ObjectAdapter } from './adapters/object/ObjectAdapter';
+import {
+    BaseAdapter,
+    FactoryExecutor,
+    FixtureFactoryOptions,
+    FixtureFactoryRegisterCallback,
+    FixtureObjectType,
+} from './interfaces';
+import { BaseProfile } from './profile/BaseProfile';
+import { ProfileBlueprint } from './profile/ProfileBlueprint';
+import { ProfileBuilder } from './profile/ProfileBuilder';
+import { ProfileLoader } from './profile/ProfileLoader';
 import { getName, isFunction } from './utils';
 
-export class FixtureFactory implements FactoryExecutor {
+export class EntityFactory implements FactoryExecutor {
     private readonly blueprints = new Map<
         string | FixtureObjectType<any>,
-        FixtureBlueprint
+        ProfileBlueprint
     >();
 
-    private readonly adapter: FixtureFactoryAdapter;
+    private readonly adapter: BaseAdapter;
 
     /**
-     * Create a new FixtureFactory
+     * Create a new EntityFactory
      *
      * @param options
      */
     constructor(private readonly options: FixtureFactoryOptions = {}) {
-        this.adapter = options.adapter || new DefaultAdapter();
+        this.adapter = options.adapter || new ObjectAdapter();
         if (options.fixtures) {
-            const loader = new FixtureProfileLoader(options.fixtures);
+            const loader = new ProfileLoader(options.fixtures);
             const profiles = loader.getProfiles();
 
             profiles.forEach(profile => {
@@ -40,10 +42,10 @@ export class FixtureFactory implements FactoryExecutor {
      *
      * @param entity
      */
-    public for(entity: string): Builder<Record<string, any>>;
+    public for(entity: string): ProfileBuilder<Record<string, any>>;
     public for<EntityType = any>(
         entity: string | FixtureObjectType<EntityType>,
-    ): Builder<EntityType>;
+    ): ProfileBuilder<EntityType>;
     public for<EntityType = any>(
         entity: FixtureObjectType<EntityType> | string,
     ): any {
@@ -54,7 +56,7 @@ export class FixtureFactory implements FactoryExecutor {
             );
         }
 
-        return new Builder<EntityType>(blueprint, this, this.adapter);
+        return new ProfileBuilder<EntityType>(blueprint, this, this.adapter);
     }
 
     /**
@@ -71,10 +73,10 @@ export class FixtureFactory implements FactoryExecutor {
      *
      * @param entity
      */
-    public getBlueprint(entity: string): FixtureBlueprint<Record<string, any>>;
+    public getBlueprint(entity: string): ProfileBlueprint<Record<string, any>>;
     public getBlueprint<Entity>(
         entity: string | FixtureObjectType<Entity>,
-    ): FixtureBlueprint<Entity>;
+    ): ProfileBlueprint<Entity>;
     public getBlueprint<Entity = Record<string, any>>(
         entity: FixtureObjectType<Entity> | string,
     ): any {
@@ -83,23 +85,23 @@ export class FixtureFactory implements FactoryExecutor {
 
     public register(
         fixture:
-            | FixtureBlueprint<any, any>
-            | FixtureProfile<any, any>
+            | ProfileBlueprint<any, any, any>
+            | BaseProfile<any, any>
             | FixtureFactoryRegisterCallback,
-    ): FixtureFactory {
-        let blueprint: FixtureBlueprint<any, any>; // = new FixtureBlueprint();
+    ): EntityFactory {
+        let blueprint: ProfileBlueprint<any, any>; // = new FixtureBlueprint();
 
-        if (fixture instanceof FixtureBlueprint) {
+        if (fixture instanceof ProfileBlueprint) {
             blueprint = fixture;
 
             this.blueprints.set(blueprint.getType(), blueprint);
-        } else if (fixture instanceof FixtureProfile) {
-            blueprint = new FixtureBlueprint<any, any>();
+        } else if (fixture instanceof BaseProfile) {
+            blueprint = new ProfileBlueprint<any, any>();
             fixture.register(blueprint);
 
             this.blueprints.set(blueprint.getType(), blueprint);
         } else if (isFunction(fixture)) {
-            blueprint = new FixtureBlueprint<any, any>();
+            blueprint = new ProfileBlueprint<any, any>();
             fixture(blueprint);
 
             this.blueprints.set(blueprint.getType(), blueprint);

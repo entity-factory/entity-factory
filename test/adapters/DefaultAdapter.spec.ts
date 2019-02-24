@@ -1,9 +1,5 @@
 import { Widget } from '../../samples/TypeormAdapter/Widget.entity';
-import {
-    DeepEntityPartial,
-    DefaultAdapter,
-    DefaultAdapterContext,
-} from '../../src';
+import { DeepEntityPartial, ObjectAdapter, ObjectContext } from '../../src';
 
 const widgetPartial: DeepEntityPartial<Widget> = {
     name: 'widgetA',
@@ -25,9 +21,9 @@ interface CustomObjectInterface {
     name: string;
 }
 
-describe('DefaultAdapter', async () => {
+describe('ObjectAdapter', async () => {
     it('should return and entity based on a partial', async () => {
-        const adapter = new DefaultAdapter();
+        const adapter = new ObjectAdapter();
         const result = await adapter.make([widgetPartial, widgetPartial2], {
             type: Widget,
         });
@@ -37,7 +33,7 @@ describe('DefaultAdapter', async () => {
     });
 
     it('should create sequential ids when calling create by default', async () => {
-        const adapter = new DefaultAdapter();
+        const adapter = new ObjectAdapter();
         const context = { type: Widget };
 
         let result = await adapter.make(
@@ -55,9 +51,9 @@ describe('DefaultAdapter', async () => {
             name: 'custom',
         };
 
-        const adapter = new DefaultAdapter();
+        const adapter = new ObjectAdapter();
 
-        const context: DefaultAdapterContext = {
+        const context: ObjectContext = {
             type: 'customObject',
             idAttribute: '_id',
         };
@@ -69,7 +65,7 @@ describe('DefaultAdapter', async () => {
     });
 
     it('should allow string types to be used', async () => {
-        const adapter = new DefaultAdapter();
+        const adapter = new ObjectAdapter();
 
         const context = { type: 'widget' };
 
@@ -84,7 +80,7 @@ describe('DefaultAdapter', async () => {
     });
 
     it('should allow for id generation to be disabled', async () => {
-        const adapter = new DefaultAdapter({
+        const adapter = new ObjectAdapter({
             generateId: false,
         });
         const context = { type: Widget };
@@ -102,7 +98,7 @@ describe('DefaultAdapter', async () => {
             name: 'custom',
         };
 
-        const adapter = new DefaultAdapter({
+        const adapter = new ObjectAdapter({
             defaultIdAttribute: '_id',
         });
 

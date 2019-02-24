@@ -1,4 +1,4 @@
-import { Blueprint, FixtureFactory } from '../../src';
+import { EntityFactory, ObjectBlueprint } from '../../src';
 
 interface User {
     id: number;
@@ -7,8 +7,8 @@ interface User {
     active: boolean;
 }
 
-const fixtureFactory = new FixtureFactory();
-fixtureFactory.register((blueprint: Blueprint<User>) => {
+const fixtureFactory = new EntityFactory();
+fixtureFactory.register((blueprint: ObjectBlueprint<User>) => {
     blueprint.setType('user');
 
     blueprint.define(async faker => {

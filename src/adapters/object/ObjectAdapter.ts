@@ -1,15 +1,12 @@
-import { FixtureObjectType } from '..';
-import { isFunction } from '../utils';
-import { DefaultAdapterContext } from './DefaultAdapterContext';
-import { FixtureFactoryAdapter } from './FixtureFactoryAdapter';
+import {
+    BaseAdapter,
+    FixtureObjectType,
+    ObjectAdapterOptions,
+    ObjectContext,
+} from '../..';
+import { isFunction } from '../../utils';
 
-interface DefaultAdapterOptions {
-    generateId?: boolean;
-    defaultIdAttribute?: string;
-}
-
-export class DefaultAdapter
-    implements FixtureFactoryAdapter<DefaultAdapterContext> {
+export class ObjectAdapter implements BaseAdapter<ObjectContext> {
     private readonly options = {
         generateId: true,
         defaultIdAttribute: 'id',
@@ -25,7 +22,7 @@ export class DefaultAdapter
      *
      * @param options
      */
-    constructor(options: DefaultAdapterOptions = {}) {
+    constructor(options: ObjectAdapterOptions = {}) {
         if (options.generateId !== undefined) {
             this.options.generateId = options.generateId;
         }
@@ -43,7 +40,7 @@ export class DefaultAdapter
      */
     public async make<Entity = any>(
         objects: Array<Record<string, any>>,
-        context: DefaultAdapterContext,
+        context: ObjectContext,
     ): Promise<Entity[]> {
         const type = context.type;
         return objects.map((object: Record<string, any>) => {
@@ -72,7 +69,7 @@ export class DefaultAdapter
      */
     public async create<Entity = any>(
         objects: Entity[],
-        context: DefaultAdapterContext,
+        context: ObjectContext,
     ): Promise<Entity[]> {
         const { type, idAttribute } = context;
 

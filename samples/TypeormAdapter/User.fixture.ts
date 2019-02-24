@@ -1,10 +1,9 @@
-import { FixtureProfile, TypeormAdapterContext } from '../../src';
-import { Blueprint } from '../../src';
+import { TypeormBlueprint, TypeormProfile } from '../../src';
 import { Post } from './Post.entity';
 import { User } from './User.entity';
 
-export class UserFixture extends FixtureProfile<User, TypeormAdapterContext> {
-    public register(blueprint: Blueprint<User, TypeormAdapterContext>): void {
+export class UserFixture extends TypeormProfile<User> {
+    public register(blueprint: TypeormBlueprint<User>): void {
         blueprint.setType(User);
 
         blueprint.define(async faker => ({
@@ -20,16 +19,5 @@ export class UserFixture extends FixtureProfile<User, TypeormAdapterContext> {
         blueprint.state('with-posts', async faker => ({
             posts: async factory => await factory.for(Post).make(3),
         }));
-
-        // blueprint.afterMaking(async (user, { factory, faker }) => {
-        //     user.posts = await factory
-        //         .for<IPost>('post')
-        //         .with({
-        //             title: 'foobar',
-        //         })
-        //         .make(3, {
-        //             body: 'nope',
-        //         });
-        // });
     }
 }

@@ -3,11 +3,11 @@ import FakerStatic = Faker.FakerStatic;
 
 import { IWidget } from '../../samples/DefaultAdapter/interfaces';
 import { Widget } from '../../samples/TypeormAdapter/Widget.entity';
-import { FixtureBlueprint } from '../../src';
+import { ProfileBlueprint } from '../../src';
 
 describe('Fixture Blueprint', async () => {
     it('should allow factories to be defined with string keys', async () => {
-        const blueprint = new FixtureBlueprint<IWidget>();
+        const blueprint = new ProfileBlueprint<IWidget>();
 
         const callback = async (fake: FakerStatic) => ({
             name: 'widgetizer',
@@ -26,7 +26,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow factories to be defined with function keys', async () => {
-        const blueprint = new FixtureBlueprint<Widget>();
+        const blueprint = new ProfileBlueprint<Widget>();
 
         const callback = async (fake: FakerStatic) => ({
             name: 'widgetizer',
@@ -44,7 +44,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow factory states to be defined with string keys', async () => {
-        const blueprint = new FixtureBlueprint<IWidget>();
+        const blueprint = new ProfileBlueprint<IWidget>();
         blueprint.setType('widget');
 
         const state = 'active';
@@ -64,7 +64,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow factory states to be defined with function keys', async () => {
-        const blueprint = new FixtureBlueprint<Widget>();
+        const blueprint = new ProfileBlueprint<Widget>();
         blueprint.setType('widget');
 
         const state = 'active';
@@ -84,7 +84,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow factory states to be defined as deep partials', async () => {
-        const blueprint = new FixtureBlueprint<IWidget>();
+        const blueprint = new ProfileBlueprint<IWidget>();
         blueprint.setType('widget');
 
         const state = 'active';
@@ -101,7 +101,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow factory afterMaking callbacks to be defined with string keys', async () => {
-        const blueprint = new FixtureBlueprint<IWidget>();
+        const blueprint = new ProfileBlueprint<IWidget>();
 
         blueprint.afterMaking(jest.fn());
 
@@ -110,7 +110,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow factory afterMaking callbacks to be defined with function keys', async () => {
-        const blueprint = new FixtureBlueprint<Widget>();
+        const blueprint = new ProfileBlueprint<Widget>();
 
         blueprint.afterMaking(jest.fn());
 
@@ -119,7 +119,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow factory afterMakingState callbacks to be defined with string keys', async () => {
-        const blueprint = new FixtureBlueprint<IWidget>();
+        const blueprint = new ProfileBlueprint<IWidget>();
 
         blueprint.afterMakingState('inactive', jest.fn());
 
@@ -128,7 +128,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow factory afterMakingState callbacks to be defined with function keys', async () => {
-        const blueprint = new FixtureBlueprint<Widget>();
+        const blueprint = new ProfileBlueprint<Widget>();
 
         blueprint.afterMakingState('inactive', jest.fn());
 
@@ -137,7 +137,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow afterCreating callbacks to be defined with string keys', async () => {
-        const blueprint = new FixtureBlueprint<IWidget>();
+        const blueprint = new ProfileBlueprint<IWidget>();
 
         blueprint.afterCreating(jest.fn());
 
@@ -146,7 +146,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow afterCreating callbacks to be defined with function keys', async () => {
-        const blueprint = new FixtureBlueprint<Widget>();
+        const blueprint = new ProfileBlueprint<Widget>();
 
         blueprint.afterCreating(jest.fn());
 
@@ -155,7 +155,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow afterCreatingState callbacks to be defined with string keys', async () => {
-        const blueprint = new FixtureBlueprint<IWidget>();
+        const blueprint = new ProfileBlueprint<IWidget>();
 
         blueprint.afterCreatingState('inactive', jest.fn());
 
@@ -164,7 +164,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow afterCreatingState callbacks to be defined with function keys', async () => {
-        const factory = new FixtureBlueprint<IWidget>();
+        const factory = new ProfileBlueprint<IWidget>();
 
         factory.afterCreatingState('inactive', jest.fn());
 
@@ -174,13 +174,13 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should throw error if type not defined for blueprint', async () => {
-        const blueprint = new FixtureBlueprint();
+        const blueprint = new ProfileBlueprint();
 
         expect(() => blueprint.getFactoryMethod('widget')).toThrow();
     });
 
     it('should throw error if getFactoryMethod is called for non-existent factory method', async () => {
-        const blueprint = new FixtureBlueprint();
+        const blueprint = new ProfileBlueprint();
         blueprint.setType('widget');
 
         expect(() => blueprint.getFactoryMethod('widget')).toThrowError(
@@ -189,7 +189,7 @@ describe('Fixture Blueprint', async () => {
     });
 
     it('should allow the setting of context', async () => {
-        const blueprint = new FixtureBlueprint<Widget>();
+        const blueprint = new ProfileBlueprint<Widget>();
         blueprint.context({
             type: 'Widget',
         });

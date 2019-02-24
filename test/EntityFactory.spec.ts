@@ -11,17 +11,18 @@ import { UserFixture as TypeormUserFixture } from '../samples/TypeormAdapter/Use
 import { Widget } from '../samples/TypeormAdapter/Widget.entity';
 import {
     Blueprint,
-    DefaultAdapter,
-    FixtureFactory,
+    EntityFactory,
+    ObjectAdapter,
+    ObjectBlueprint,
     TypeormAdapter,
 } from '../src';
-import { FixtureBlueprint } from '../src';
-import { Builder } from '../src/Builder';
+import { ProfileBlueprint } from '../src';
+import { ProfileBuilder } from '../src/profile/ProfileBuilder';
 
-describe('FixtureFactory', () => {
+describe('EntityFactory', () => {
     describe('Basic Functions', async () => {
         it('should load profiles', () => {
-            const factory = new FixtureFactory({
+            const factory = new EntityFactory({
                 fixtures: [TypeormUserFixture],
             });
 
@@ -29,33 +30,33 @@ describe('FixtureFactory', () => {
         });
 
         it('should allow "for" to be called with a string and return a builder instance', async () => {
-            const blueprint = new FixtureBlueprint<IUser>();
+            const blueprint = new ProfileBlueprint<IUser>();
             blueprint.setType('user');
             blueprint.define(jest.fn());
 
-            const factory = new FixtureFactory();
+            const factory = new EntityFactory();
             factory.register(blueprint);
 
             const builder = factory.for('user');
 
-            expect(builder).toBeInstanceOf(Builder);
+            expect(builder).toBeInstanceOf(ProfileBuilder);
         });
 
         it('should allow "for" to be called with a function and return a builder instance', async () => {
-            const blueprint = new FixtureBlueprint<User>();
+            const blueprint = new ProfileBlueprint<User>();
             blueprint.setType(User);
             blueprint.define(jest.fn());
 
-            const factory = new FixtureFactory();
+            const factory = new EntityFactory();
             factory.register(blueprint);
 
             const builder = factory.for(User);
 
-            expect(builder).toBeInstanceOf(Builder);
+            expect(builder).toBeInstanceOf(ProfileBuilder);
         });
 
         it('show throw error if getFactoryMethod is called for non-existent factory method', async () => {
-            const factory = new FixtureFactory();
+            const factory = new EntityFactory();
 
             expect(() => factory.for('user')).toThrowError(
                 'No blueprint exists for entity user',
@@ -63,7 +64,7 @@ describe('FixtureFactory', () => {
         });
 
         it('should return a registered factory', async () => {
-            const factory = new FixtureFactory();
+            const factory = new EntityFactory();
             factory.register(blueprint => {
                 blueprint.setType(Widget);
             });
@@ -72,8 +73,8 @@ describe('FixtureFactory', () => {
         });
 
         it('should allow a factory to be registered via callback', async () => {
-            const factory = new FixtureFactory();
-            factory.register((blueprint: Blueprint<IWidget>) => {
+            const factory = new EntityFactory();
+            factory.register((blueprint: ObjectBlueprint<IWidget>) => {
                 blueprint.setType('widget');
                 blueprint.define(async faker => ({
                     name: faker.lorem.word(),
@@ -90,12 +91,12 @@ describe('FixtureFactory', () => {
         });
     });
 
-    describe('DefaultAdapter', async () => {
-        let factory: FixtureFactory;
+    describe('ObjectAdapter', async () => {
+        let factory: EntityFactory;
 
         beforeEach(async () => {
-            const adapter = new DefaultAdapter();
-            factory = new FixtureFactory({
+            const adapter = new ObjectAdapter();
+            factory = new EntityFactory({
                 adapter,
                 fixtures: [
                     DefaultCommentFixture,
@@ -137,7 +138,7 @@ describe('FixtureFactory', () => {
     });
 
     describe('TypeormAdapter', async () => {
-        let factory: FixtureFactory;
+        let factory: EntityFactory;
         let adapter: TypeormAdapter;
 
         beforeEach(async () => {
@@ -147,7 +148,7 @@ describe('FixtureFactory', () => {
                 synchronize: true,
                 entities: [User, Post, Comment],
             });
-            factory = new FixtureFactory({
+            factory = new EntityFactory({
                 adapter,
                 fixtures: [
                     TypeormCommentFixture,

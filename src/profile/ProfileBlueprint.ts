@@ -1,13 +1,19 @@
-import { BaseAdapterContext, DeepFactoryPartial } from '..';
-import { FactoryProfileCallbackMethod, FactoryProfileMethod } from '..';
-import { FixtureObjectType } from '..';
+import {
+    BaseAdapter,
+    BaseAdapterContext,
+    Blueprint,
+    DeepFactoryPartial,
+    FactoryProfileCallbackMethod,
+    FactoryProfileMethod,
+    FixtureObjectType,
+} from '..';
 import { getName, isFunction } from '../utils';
-import { Blueprint } from './Blueprint';
 
-export class FixtureBlueprint<
+export class ProfileBlueprint<
     Entity = any,
+    Adapter extends BaseAdapter = BaseAdapter,
     Context extends BaseAdapterContext = BaseAdapterContext
-> implements Blueprint<Entity, Context> {
+> implements Blueprint<Entity, Adapter, Context> {
     /**
      * key used as default state when saving to defining
      * factories and states
@@ -21,7 +27,7 @@ export class FixtureBlueprint<
 
     private readonly callbackMethods = new Map<
         string,
-        FactoryProfileCallbackMethod<Entity>
+        FactoryProfileCallbackMethod<Entity, Adapter>
     >();
 
     private fixtureContext: Record<string, any>;
@@ -39,7 +45,7 @@ export class FixtureBlueprint<
      */
     public setType(
         type: string | FixtureObjectType<Entity>,
-    ): Blueprint<Entity, Context> {
+    ): Blueprint<Entity, Adapter, Context> {
         this.fixtureContext.type = type;
 
         return this;
@@ -57,7 +63,7 @@ export class FixtureBlueprint<
      *
      * @param context
      */
-    public context(context: Context): Blueprint<Entity, Context> {
+    public context(context: Context): Blueprint<Entity, Adapter, Context> {
         this.fixtureContext = {
             ...this.fixtureContext,
             ...(context as Record<string, any>),
@@ -79,7 +85,9 @@ export class FixtureBlueprint<
      * @param entity
      * @param factory
      */
-    public define(factory: FactoryProfileMethod<Entity>): Blueprint<Entity> {
+    public define(
+        factory: FactoryProfileMethod<Entity>,
+    ): Blueprint<Entity, Adapter, Context> {
         return this.state(this.DEFAULT_KEY, factory);
     }
 
@@ -92,7 +100,7 @@ export class FixtureBlueprint<
     public state(
         state: string,
         factory: FactoryProfileMethod<Entity> | DeepFactoryPartial<Entity>,
-    ): Blueprint<Entity> {
+    ): Blueprint<Entity, Adapter, Context> {
         const key = this.getKey(state);
 
         let factoryMethod: FactoryProfileMethod<Entity>;
@@ -113,8 +121,8 @@ export class FixtureBlueprint<
      * @param callback
      */
     public afterMaking(
-        callback: FactoryProfileCallbackMethod<Entity>,
-    ): Blueprint<Entity> {
+        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
+    ): Blueprint<Entity, Adapter, Context> {
         return this.afterMakingState(this.DEFAULT_KEY, callback);
     }
 
@@ -126,8 +134,8 @@ export class FixtureBlueprint<
      */
     public afterMakingState(
         state: string,
-        callback: FactoryProfileCallbackMethod<Entity>,
-    ): Blueprint<Entity> {
+        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
+    ): Blueprint<Entity, Adapter, Context> {
         this.callbackMethods.set(this.getKey(state, 'afterMake'), callback);
 
         return this;
@@ -139,8 +147,8 @@ export class FixtureBlueprint<
      * @param callback
      */
     public afterCreating(
-        callback: FactoryProfileCallbackMethod<Entity>,
-    ): Blueprint<Entity> {
+        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
+    ): Blueprint<Entity, Adapter, Context> {
         return this.afterCreatingState(this.DEFAULT_KEY, callback);
     }
 
@@ -152,8 +160,8 @@ export class FixtureBlueprint<
      */
     public afterCreatingState(
         state: string,
-        callback: FactoryProfileCallbackMethod<Entity>,
-    ): Blueprint<Entity> {
+        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
+    ): Blueprint<Entity, Adapter, Context> {
         this.callbackMethods.set(this.getKey(state, 'afterCreate'), callback);
 
         return this;
@@ -207,7 +215,7 @@ export class FixtureBlueprint<
      */
     public getMakingCallbackMethod(
         state?: string,
-    ): FactoryProfileCallbackMethod<Entity> | undefined {
+    ): FactoryProfileCallbackMethod<Entity, Adapter> | undefined {
         return this.callbackMethods.get(this.getKey(state, 'afterMake'));
     }
 
@@ -227,7 +235,7 @@ export class FixtureBlueprint<
      */
     public getCreatingCallbackMethod(
         state?: string,
-    ): FactoryProfileCallbackMethod<Entity> | undefined {
+    ): FactoryProfileCallbackMethod<Entity, Adapter> | undefined {
         return this.callbackMethods.get(this.getKey(state, 'afterCreate'));
     }
 

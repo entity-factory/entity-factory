@@ -10,15 +10,20 @@
       "baseUrl": "./",
       "outDir": "dist",
       "sourceRoot": "src",
+      "noImplicitAny": false,
       "strict": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true,
       "strictPropertyInitialization": false
    },
+   "include": [
+      "samples/**/*.ts",
+      "src/**/*.ts",
+      "test/**/*.ts"
+   ],
    "exclude": [
       "node_modules",
-      "test",
-      "samples"
+      "dist"
    ]
 }

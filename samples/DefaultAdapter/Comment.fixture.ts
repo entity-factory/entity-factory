@@ -1,14 +1,8 @@
-import { DefaultAdapterContext, FixtureProfile } from '../../src';
-import { Blueprint } from '../../src';
+import { ObjectBlueprint, ObjectProfile } from '../../src';
 import { IComment } from './interfaces';
 
-export class CommentFixture extends FixtureProfile<
-    IComment,
-    DefaultAdapterContext
-> {
-    public register(
-        blueprint: Blueprint<IComment, DefaultAdapterContext>,
-    ): void {
+export class CommentFixture extends ObjectProfile<IComment> {
+    public register(blueprint: ObjectBlueprint<IComment>): void {
         blueprint.setType('comment');
 
         blueprint.define(async faker => ({

@@ -1,12 +1,8 @@
-import { FixtureProfile, TypeormAdapterContext } from '../../src';
-import { Blueprint } from '../../src';
+import { TypeormBlueprint, TypeormProfile } from '../../src';
 import { Widget } from './Widget.entity';
 
-export class WidgetFixture extends FixtureProfile<
-    Widget,
-    TypeormAdapterContext
-> {
-    public register(blueprint: Blueprint<Widget, TypeormAdapterContext>): void {
+export class WidgetFixture extends TypeormProfile<Widget> {
+    public register(blueprint: TypeormBlueprint<Widget>): void {
         blueprint.setType(Widget);
 
         blueprint.define(async faker => {

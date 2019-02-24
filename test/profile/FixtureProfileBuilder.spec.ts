@@ -1,14 +1,14 @@
-import { Post } from '../samples/TypeormAdapter/Post.entity';
-import { User } from '../samples/TypeormAdapter/User.entity';
-import { FixtureFactory } from '../src';
+import { Post } from '../../samples/TypeormAdapter/Post.entity';
+import { User } from '../../samples/TypeormAdapter/User.entity';
+import { EntityFactory } from '../../src';
 import {
     definePostBlueprint,
     defineUserBlueprint,
     getDefaultFactory,
-} from './helpers';
+} from '../helpers';
 
-describe('Builder', () => {
-    let factory: FixtureFactory;
+describe('ProfileBuilder', () => {
+    let factory: EntityFactory;
     beforeEach(() => {
         factory = getDefaultFactory();
     });

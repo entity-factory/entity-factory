@@ -1,31 +1,31 @@
 import * as faker from 'faker';
-import { FixtureFactoryAdapter } from './adapters/FixtureFactoryAdapter';
-import { FixtureBlueprint } from './blueprint/FixtureBlueprint';
-import { DeepEntityPartial } from './common/DeepEntityPartial';
-import { DeepFactoryPartialMethod } from './common/DeepFactoryPartial';
-import { FactoryCallBackContext } from './common/FactoryCallBackContext';
+import { EntityFactory } from '../EntityFactory';
 import {
+    BaseAdapter,
+    DeepEntityPartial,
+    DeepFactoryPartialMethod,
+    FactoryCallBackContext,
     FactoryProfileCallbackMethod,
     FactoryProfileMethod,
-} from './common/FactoryProfileMethod';
-import { FixtureFactory } from './FixtureFactory';
-import { isFunction } from './utils';
+} from '../interfaces';
+import { isFunction } from '../utils';
+import { ProfileBlueprint } from './ProfileBlueprint';
 
 interface StateBuilderObject<Entity> {
     stateFactory: FactoryProfileMethod<Entity>;
-    afterMaking?: FactoryProfileCallbackMethod<Entity>;
-    afterCreating?: FactoryProfileCallbackMethod<Entity>;
+    afterMaking?: FactoryProfileCallbackMethod<Entity, BaseAdapter>;
+    afterCreating?: FactoryProfileCallbackMethod<Entity, BaseAdapter>;
 }
 
-export class Builder<Entity = Record<string, any>> {
+export class ProfileBuilder<Entity = Record<string, any>> {
     private stateFactories: Array<StateBuilderObject<Entity>> = [];
 
     private partial: DeepEntityPartial<Entity> = {};
 
     constructor(
-        private readonly blueprint: FixtureBlueprint<Entity>,
-        private readonly factory: FixtureFactory,
-        private readonly adapter: FixtureFactoryAdapter,
+        private readonly blueprint: ProfileBlueprint<Entity>,
+        private readonly factory: EntityFactory,
+        private readonly adapter: BaseAdapter,
     ) {
         this.stateFactories.push(this.getStateBuilder());
     }
@@ -35,7 +35,7 @@ export class Builder<Entity = Record<string, any>> {
      *
      * @param state
      */
-    public state(...state: string[]): Builder<Entity> {
+    public state(...state: string[]): ProfileBuilder<Entity> {
         state.forEach(s => {
             this.stateFactories.push(this.getStateBuilder(s));
         });
@@ -49,7 +49,7 @@ export class Builder<Entity = Record<string, any>> {
      *
      * @param partial
      */
-    public with(partial: DeepEntityPartial<Entity>): Builder<Entity> {
+    public with(partial: DeepEntityPartial<Entity>): ProfileBuilder<Entity> {
         this.partial = {
             ...(this.partial as any),
             ...(partial as any),
@@ -238,10 +238,11 @@ export class Builder<Entity = Record<string, any>> {
     /**
      * Get context for callback methods.
      */
-    private getCallbackContext(): FactoryCallBackContext {
+    private getCallbackContext(): FactoryCallBackContext<BaseAdapter> {
         return {
             factory: this.factory,
             faker,
+            adapter: this.adapter,
         };
     }
 

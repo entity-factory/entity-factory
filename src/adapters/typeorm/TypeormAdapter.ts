@@ -1,19 +1,20 @@
 import {
     Connection,
-    ConnectionOptions,
     createConnection,
     DeepPartial,
     getConnection,
 } from 'typeorm';
-import { DeepEntityPartial } from '..';
-import { FixtureFactoryAdapter } from './FixtureFactoryAdapter';
-import { TypeormAdapterContext } from './TypeormAdapterContext';
+import {
+    BaseAdapter,
+    DeepEntityPartial,
+    TypeormAdapterOptions,
+    TypeormContext,
+} from '../..';
 
-export class TypeormAdapter
-    implements FixtureFactoryAdapter<TypeormAdapterContext> {
+export class TypeormAdapter implements BaseAdapter<TypeormContext> {
     private connection!: Connection;
 
-    constructor(private readonly options?: string | ConnectionOptions) {}
+    constructor(private readonly options?: TypeormAdapterOptions) {}
 
     /**
      * Prepare entities by converting object literals to
@@ -24,7 +25,7 @@ export class TypeormAdapter
      */
     public async make<Entity>(
         objects: Array<DeepEntityPartial<Entity>>,
-        context: TypeormAdapterContext,
+        context: TypeormContext,
     ): Promise<Entity[]> {
         const type = context.type;
         const conn = await this.getConnection();
@@ -42,7 +43,7 @@ export class TypeormAdapter
      */
     public async create<Entity>(
         objects: Entity[],
-        context: TypeormAdapterContext,
+        context: TypeormContext,
     ): Promise<Entity[]> {
         const conn = await this.getConnection();
 

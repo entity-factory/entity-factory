@@ -1,11 +1,10 @@
-import { FixtureProfile, TypeormAdapterContext } from '../../src';
-import { Blueprint } from '../../src';
+import { TypeormBlueprint, TypeormProfile } from '../../src';
 import { Comment } from './Comment.entity';
 import { Post } from './Post.entity';
 import { User } from './User.entity';
 
-export class PostFixture extends FixtureProfile<Post, TypeormAdapterContext> {
-    public register(blueprint: Blueprint<Post, TypeormAdapterContext>): void {
+export class PostFixture extends TypeormProfile<Post> {
+    public register(blueprint: TypeormBlueprint<Post>): void {
         blueprint.setType(Post);
 
         blueprint.define(async faker => ({

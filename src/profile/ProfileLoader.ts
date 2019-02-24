@@ -1,15 +1,14 @@
 import { isFunction, loadDep } from '../utils';
-import { FixtureProfile } from './FixtureProfile';
+import { BaseProfile } from './BaseProfile';
 
-export class FixtureProfileLoader {
+export class ProfileLoader {
     constructor(
         private readonly fixtureProfiles: Array<
-            // tslint:disable-next-line
-            Function | string | FixtureProfile
+            Function | string | BaseProfile
         >,
     ) {}
 
-    public getProfiles(): FixtureProfile[] {
+    public getProfiles(): BaseProfile[] {
         const files = this.getImportsFromPath(this.fixtureProfiles);
 
         return [
@@ -24,8 +23,8 @@ export class FixtureProfileLoader {
      * @param value
      * @param profiles
      */
-    private resolveFilePaths(value: any, profiles: FixtureProfile[]) {
-        if (isFunction(value) || value instanceof FixtureProfile) {
+    private resolveFilePaths(value: any, profiles: BaseProfile[]) {
+        if (isFunction(value) || value instanceof BaseProfile) {
             const instance = this.createFactoryProfileInstance(value);
 
             if (instance) {
@@ -48,7 +47,7 @@ export class FixtureProfileLoader {
      * @param cls
      */
     private resolveClasses(cls: any[]) {
-        const profiles: FixtureProfile[] = [];
+        const profiles: BaseProfile[] = [];
         this.getClasses(cls).forEach(c => {
             const instance = this.createFactoryProfileInstance(c);
             if (instance) {
@@ -100,15 +99,15 @@ export class FixtureProfileLoader {
      * @param cls
      */
     private createFactoryProfileInstance(
-        cls: Function | FixtureProfile,
-    ): FixtureProfile | undefined {
-        if (cls instanceof FixtureProfile) {
+        cls: Function | BaseProfile,
+    ): BaseProfile | undefined {
+        if (cls instanceof BaseProfile) {
             return cls;
         }
 
         if (cls instanceof Function) {
-            const created = new (cls as new () => FixtureProfile)();
-            if (created instanceof FixtureProfile) {
+            const created = new (cls as new () => BaseProfile)();
+            if (created instanceof BaseProfile) {
                 return created;
             }
         }
