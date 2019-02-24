@@ -20,7 +20,7 @@ npm install --save fixture-factory
 Create a Fixture Factory instance
 
 ```typescript
-import { FixtureFactory } from 'fixture-factory'
+import { FixtureFactory, Blueprint } from 'fixture-factory'
 
 interface User {
     id: number;
@@ -29,7 +29,16 @@ interface User {
 }
 
 const factory = new FixtureFactory();
-factory.define((blueprint: Blueprint<IUser>) => {
+factory.register((blueprint: Blueprint<User>) => {
+    blueprint.setType('user');
     
+    blueprint.define(async faker => {
+        return {
+            username: faker.internet.userName(),
+            email: faker.internet.email(),
+        }
+    })
 })
+
+await factory.for<User>('user').make(3);
 ```
