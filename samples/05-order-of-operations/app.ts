@@ -1,17 +1,11 @@
-import { EntityFactory, ObjectBlueprint } from '../../src';
-
-interface User {
-    id: number;
-    username: string;
-    email: string;
-    active: boolean;
-}
+import { EntityFactory, ObjectProfile } from '../../src';
+import { IUser } from '../00-entities/interfaces';
 
 const factory = new EntityFactory();
-factory.register((blueprint: ObjectBlueprint<User>) => {
-    blueprint.setType('user');
+factory.register((profile: ObjectProfile<IUser>) => {
+    profile.setType('user');
 
-    blueprint.define(async faker => {
+    profile.define(async faker => {
         console.log(`Building entity`);
         return {
             username: faker.internet.userName(),
@@ -20,33 +14,46 @@ factory.register((blueprint: ObjectBlueprint<User>) => {
         };
     });
 
-    blueprint.state('active', async faker => {
+    profile.state('active', async faker => {
         console.log(`Applying state 'active'`);
         return {
             active: true,
         };
     });
 
-    blueprint.afterMaking(async (user, context) => {
+    profile.state('with-posts', async faker => {
+        console.log(`Applying state 'with-posts'`);
+        return {};
+    });
+
+    profile.afterMaking(async (user, context) => {
         console.log(`After making`);
     });
 
-    blueprint.afterMakingState('active', async (user, context) => {
+    profile.afterMakingState('active', async (user, context) => {
         console.log(`After making state 'active'`);
     });
 
-    blueprint.afterCreating(async (user, context) => {
+    profile.afterMakingState('with-posts', async (user, context) => {
+        console.log(`After making state 'with-posts'`);
+    });
+
+    profile.afterCreating(async (user, context) => {
         console.log(`After creating`);
     });
 
-    blueprint.afterCreatingState('active', async (user, context) => {
+    profile.afterCreatingState('active', async (user, context) => {
         console.log(`After creating state 'active'`);
+    });
+
+    profile.afterCreatingState('with-posts', async (user, context) => {
+        console.log(`After creating state 'with-posts'`);
     });
 });
 
 factory
-    .for<User>('user')
-    .state('active')
+    .for<IUser>('user')
+    .state('active', 'with-posts')
     .create()
     .then(users => {
         console.log('Entities have been created with ids: ', users);
@@ -54,7 +61,10 @@ factory
 // output:
 // Building entity
 // Applying state 'active'
+// Applying state 'with-posts'
 // After making
 // After making state 'active'
+// After making state 'with-posts'
 // After creating
 // After creating state 'active'
+// After creating state 'with-posts'

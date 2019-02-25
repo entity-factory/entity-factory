@@ -1,21 +1,23 @@
-import { TypeormBlueprint, TypeormProfile } from '../../src';
-import { Comment } from './Comment.entity';
-import { Post } from './Post.entity';
-import { User } from './User.entity';
+import { TypeormProfile } from '../../src';
+import { Comment } from '../00-entities/Comment.entity';
+import { Post } from '../00-entities/Post.entity';
+import { User } from '../00-entities/User.entity';
 
 export class CommentFixture extends TypeormProfile<Comment> {
-    public register(blueprint: TypeormBlueprint<Comment>): void {
-        blueprint.setType(Comment);
+    constructor() {
+        super();
 
-        blueprint.define(async faker => ({
+        this.setType(Comment);
+
+        this.define(async faker => ({
             body: faker.lorem.sentences(2),
         }));
 
-        blueprint.state('with-user', async faker => ({
+        this.state('with-user', async faker => ({
             user: async factory => factory.for(User).create(),
         }));
 
-        blueprint.state('with-post', async faker => ({
+        this.state('with-post', async faker => ({
             user: async factory => factory.for(Post).create(),
         }));
     }

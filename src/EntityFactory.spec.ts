@@ -69,7 +69,7 @@ describe('EntityFactory', () => {
                 blueprint.setType(Widget);
             });
 
-            expect(factory.getBlueprint(Widget)).toBeDefined();
+            expect(factory.getProfile(Widget)).toBeDefined();
         });
 
         it('should allow a factory to be registered via callback', async () => {
@@ -82,7 +82,7 @@ describe('EntityFactory', () => {
                 }));
             });
 
-            expect(factory.getBlueprint('widget')).toBeDefined();
+            expect(factory.getProfile('widget')).toBeDefined();
 
             const result = await factory.for('widget').make();
 

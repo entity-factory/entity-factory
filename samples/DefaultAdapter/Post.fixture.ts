@@ -1,20 +1,22 @@
-import { ObjectBlueprint, ObjectProfile } from '../../src';
-import { IPost } from './interfaces';
+import { ObjectProfile } from '../../src';
+import { IPost } from '../00-entities/interfaces';
 
 export class PostFixture extends ObjectProfile<IPost> {
-    public register(blueprint: ObjectBlueprint<IPost>): void {
-        blueprint.setType('post');
+    constructor() {
+        super();
 
-        blueprint.define(async faker => ({
+        this.setType('post');
+
+        this.define(async faker => ({
             title: faker.company.catchPhrase(),
             body: faker.lorem.paragraphs(2, '\n\n'),
         }));
 
-        blueprint.state('with-author', async faker => ({
+        this.state('with-author', async faker => ({
             author: async factory => factory.for('user').create(),
         }));
 
-        blueprint.state('with-comments', async faker => ({
+        this.state('with-comments', async faker => ({
             comments: async factory =>
                 factory
                     .for('comment')

@@ -1,11 +1,13 @@
-import { TypeormBlueprint, TypeormProfile } from '../../src';
-import { Widget } from './Widget.entity';
+import { TypeormProfile } from '../../src';
+import { Widget } from '../00-entities/Widget.entity';
 
 export class WidgetFixture extends TypeormProfile<Widget> {
-    public register(blueprint: TypeormBlueprint<Widget>): void {
-        blueprint.setType(Widget);
+    constructor() {
+        super();
 
-        blueprint.define(async faker => {
+        this.setType(Widget);
+
+        this.define(async faker => {
             return {
                 name: faker.fake('{{name.firstName}} {{name.lastName}}'),
                 active: true,

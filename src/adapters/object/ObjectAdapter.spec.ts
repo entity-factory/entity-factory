@@ -1,5 +1,5 @@
-import { Widget } from '../../samples/TypeormAdapter/Widget.entity';
-import { DeepEntityPartial, ObjectAdapter, ObjectContext } from '../../src';
+import { Widget } from '../../../samples/TypeormAdapter/Widget.entity';
+import { DeepEntityPartial, ObjectAdapter, ObjectContext } from '../..';
 
 const widgetPartial: DeepEntityPartial<Widget> = {
     name: 'widgetA',

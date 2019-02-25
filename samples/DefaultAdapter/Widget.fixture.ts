@@ -1,14 +1,16 @@
-import { ObjectBlueprint, ObjectProfile } from '../../src';
-import { IWidget } from './interfaces';
+import { ObjectProfile } from '../../src';
+import { IWidget } from '../00-entities/interfaces';
 
 export class WidgetFixture extends ObjectProfile<IWidget> {
-    public register(blueprint: ObjectBlueprint<IWidget>): void {
-        blueprint.context({
+    constructor() {
+        super();
+
+        this.context({
             type: 'widget',
             idAttribute: 'widgetId',
         });
 
-        blueprint.define(async faker => {
+        this.define(async faker => {
             return {
                 name: faker.fake('{{name.firstName}} {{name.lastName}}'),
                 active: true,
