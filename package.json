@@ -59,6 +59,7 @@
             "ts"
         ],
         "roots": [
+            "samples",
             "src",
             "test"
         ],

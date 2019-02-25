@@ -7,15 +7,14 @@ import {
     FixtureObjectType,
 } from './interfaces';
 import { BaseProfile } from './profile/BaseProfile';
-import { ProfileBlueprint } from './profile/ProfileBlueprint';
 import { ProfileBuilder } from './profile/ProfileBuilder';
 import { ProfileLoader } from './profile/ProfileLoader';
 import { getName, isFunction } from './utils';
 
 export class EntityFactory implements FactoryExecutor {
-    private readonly blueprints = new Map<
+    private readonly profiles = new Map<
         string | FixtureObjectType<any>,
-        ProfileBlueprint
+        BaseProfile<any, any, any>
     >();
 
     private readonly adapter: BaseAdapter;
@@ -49,7 +48,7 @@ export class EntityFactory implements FactoryExecutor {
     public for<EntityType = any>(
         entity: FixtureObjectType<EntityType> | string,
     ): any {
-        const blueprint = this.blueprints.get(entity);
+        const blueprint = this.profiles.get(entity);
         if (!blueprint) {
             throw new Error(
                 `No blueprint exists for entity ${getName(entity)}`,
@@ -65,7 +64,7 @@ export class EntityFactory implements FactoryExecutor {
      * @param entity
      */
     public hasBlueprint(entity: FixtureObjectType<any> | string): boolean {
-        return this.blueprints.has(entity);
+        return this.profiles.has(entity);
     }
 
     /**
@@ -73,38 +72,33 @@ export class EntityFactory implements FactoryExecutor {
      *
      * @param entity
      */
-    public getBlueprint(entity: string): ProfileBlueprint<Record<string, any>>;
-    public getBlueprint<Entity>(
+    public getProfile(
+        entity: string,
+    ): BaseProfile<Record<string, any>, any, any>;
+    public getProfile<Entity>(
         entity: string | FixtureObjectType<Entity>,
-    ): ProfileBlueprint<Entity>;
-    public getBlueprint<Entity = Record<string, any>>(
+    ): BaseProfile<Entity, any, any>;
+    public getProfile<Entity = Record<string, any>>(
         entity: FixtureObjectType<Entity> | string,
     ): any {
-        return this.blueprints.get(entity);
+        return this.profiles.get(entity);
     }
 
     public register(
-        fixture:
-            | ProfileBlueprint<any, any, any>
-            | BaseProfile<any, any>
-            | FixtureFactoryRegisterCallback,
+        fixture: BaseProfile<any, any, any> | FixtureFactoryRegisterCallback,
     ): EntityFactory {
-        let blueprint: ProfileBlueprint<any, any>; // = new FixtureBlueprint();
+        let profile: BaseProfile<any, any, any>; // = new FixtureBlueprint();
 
-        if (fixture instanceof ProfileBlueprint) {
-            blueprint = fixture;
+        if (fixture instanceof BaseProfile) {
+            profile = fixture;
 
-            this.blueprints.set(blueprint.getType(), blueprint);
-        } else if (fixture instanceof BaseProfile) {
-            blueprint = new ProfileBlueprint<any, any>();
-            fixture.register(blueprint);
-
-            this.blueprints.set(blueprint.getType(), blueprint);
+            this.profiles.set(profile.getType(), profile);
         } else if (isFunction(fixture)) {
-            blueprint = new ProfileBlueprint<any, any>();
-            fixture(blueprint);
+            profile = new BaseProfile<any, any, any>();
 
-            this.blueprints.set(blueprint.getType(), blueprint);
+            fixture(profile);
+
+            this.profiles.set(profile.getType(), profile);
         }
 
         return this;

@@ -9,7 +9,7 @@ import {
     FactoryProfileMethod,
 } from '../interfaces';
 import { isFunction } from '../utils';
-import { ProfileBlueprint } from './ProfileBlueprint';
+import { BaseProfile } from './BaseProfile';
 
 interface StateBuilderObject<Entity> {
     stateFactory: FactoryProfileMethod<Entity>;
@@ -23,7 +23,7 @@ export class ProfileBuilder<Entity = Record<string, any>> {
     private partial: DeepEntityPartial<Entity> = {};
 
     constructor(
-        private readonly blueprint: ProfileBlueprint<Entity>,
+        private readonly profile: BaseProfile<Entity, any, any>,
         private readonly factory: EntityFactory,
         private readonly adapter: BaseAdapter,
     ) {
@@ -110,7 +110,7 @@ export class ProfileBuilder<Entity = Record<string, any>> {
 
         const preparedEntities = await this.adapter.make(
             objects,
-            this.blueprint.getContext(),
+            this.profile.getContext(),
         );
 
         // fire after making for each
@@ -172,7 +172,7 @@ export class ProfileBuilder<Entity = Record<string, any>> {
 
         entities = await this.adapter.create(
             entities,
-            this.blueprint.getContext(),
+            this.profile.getContext(),
         );
 
         const context = this.getCallbackContext();
@@ -215,8 +215,6 @@ export class ProfileBuilder<Entity = Record<string, any>> {
         stateFactory: FactoryProfileMethod<Entity>,
     ) {
         const derived = await stateFactory(faker);
-        // @ts-ignore
-        // console.log('new derived', await derived(faker));
         for (const key in derived) {
             const value = derived[key];
 
@@ -253,9 +251,9 @@ export class ProfileBuilder<Entity = Record<string, any>> {
      */
     private getStateBuilder(state?: string): StateBuilderObject<Entity> {
         return {
-            stateFactory: this.blueprint.getFactoryMethod(state),
-            afterMaking: this.blueprint.getMakingCallbackMethod(state),
-            afterCreating: this.blueprint.getCreatingCallbackMethod(state),
+            stateFactory: this.profile.getFactoryMethod(state),
+            afterMaking: this.profile.getMakingCallbackMethod(state),
+            afterCreating: this.profile.getCreatingCallbackMethod(state),
         };
     }
 }

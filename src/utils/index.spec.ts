@@ -1,5 +1,5 @@
-import { User } from '../../samples/TypeormAdapter/User.entity';
-import { getName, isFunction, loadDep } from '../../src/utils';
+import { getName, isFunction, loadDep } from '.';
+import { User } from '../../samples/00-entities/User.entity';
 
 describe('utils', async () => {
     describe('getName', async () => {

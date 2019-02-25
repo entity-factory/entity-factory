@@ -1,14 +1,13 @@
 import FakerStatic = Faker.FakerStatic;
-import { BaseProfile, Blueprint, ObjectAdapter, TypeormAdapter } from '.';
 import { EntityFactory } from './EntityFactory';
+import { BaseProfile } from './profile/BaseProfile';
 import { ProfileBuilder } from './profile/ProfileBuilder';
 
 /**
  * Table of Contents
  *
  * 1. Adapter Interfaces
- * 2. Profile Interfaces
- * 3. Common Interfaces
+ * 2. Common Interfaces
  */
 
 /**********************
@@ -54,93 +53,7 @@ export interface BaseAdapterContext {
 }
 
 /**********************
- * 2. Profile Interfaces
- **********************/
-
-export interface Blueprint<
-    Entity = Record<string, any>,
-    Adapter extends BaseAdapter = BaseAdapter,
-    Context extends BaseAdapterContext = BaseAdapterContext
-> {
-    /**
-     * Set the type entity being defined
-     *
-     * @param entity
-     */
-    setType(
-        entity: FixtureObjectType<Entity> | string,
-    ): Blueprint<Entity, Adapter, Context>;
-
-    /**
-     * Set the blueprint context
-     *
-     * @param context
-     */
-    context(context: Context): Blueprint<Entity, Adapter, Context>;
-
-    /**
-     * Define a new entity factory
-     *
-     * @param factory
-     */
-    define(
-        factory: FactoryProfileMethod<Entity>,
-    ): Blueprint<Entity, Adapter, Context>;
-
-    /**
-     * Define a factory state transformation
-     *
-     * @param state
-     * @param factory
-     */
-    state(
-        state: string,
-        factory: FactoryProfileMethod<Entity> | DeepFactoryPartial<Entity>,
-    ): Blueprint<Entity, Adapter, Context>;
-
-    /**
-     * Define an after making callback
-     *
-     * @param callback
-     */
-    afterMaking(
-        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
-    ): Blueprint<Entity, Adapter, Context>;
-
-    /**
-     * Define an after making callback for a state transformation
-     *
-     * @param state
-     * @param callback
-     */
-    afterMakingState(
-        state: string,
-        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
-    ): Blueprint<Entity, Adapter, Context>;
-
-    /**
-     * Define an after creating method
-     *
-     * @param callback
-     */
-    afterCreating(
-        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
-    ): Blueprint<Entity, Adapter, Context>;
-
-    /**
-     * Define an after creating method for a state transformation
-     *
-     * @param state
-     * @param callback
-     */
-    afterCreatingState(
-        state: string,
-        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
-    ): Blueprint<Entity, Adapter, Context>;
-}
-
-/**********************
- * 3. Common Interfaces
+ * 2. Common Interfaces
  **********************/
 
 /**
@@ -206,7 +119,7 @@ export type FactoryProfileCallbackMethod<EntityType, Adapter> = (
  */
 export interface FixtureFactoryOptions {
     adapter?: BaseAdapter;
-    fixtures?: Array<Function | string | BaseProfile<any>>;
+    fixtures?: Array<Function | string | BaseProfile<any, any, any>>;
 }
 
 /**
@@ -214,7 +127,7 @@ export interface FixtureFactoryOptions {
  * creating a profile.
  */
 export type FixtureFactoryRegisterCallback = (
-    blueprint: Blueprint<any, any, any>,
+    blueprint: BaseProfile<any, any, any>,
 ) => void;
 
 /**

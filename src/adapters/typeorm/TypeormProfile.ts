@@ -1,14 +1,9 @@
-import {
-    BaseProfile,
-    TypeormAdapter,
-    TypeormBlueprint,
-    TypeormContext,
-} from '../..';
+import { BaseProfile } from '../../profile/BaseProfile';
+import { TypeormAdapter } from './TypeormAdapter';
+import { TypeormContext } from './TypeormContext';
 
-export abstract class TypeormProfile<Entity> extends BaseProfile<
+export class TypeormProfile<Entity> extends BaseProfile<
     Entity,
     TypeormAdapter,
     TypeormContext
-> {
-    public abstract register(blueprint: TypeormBlueprint<Entity>): void;
-}
+> {}

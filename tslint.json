@@ -10,7 +10,8 @@
         "object-literal-sort-keys": [false],
         "unified-signatures": [false],
         "forin": [false],
-        "no-empty-interface": [false]
+        "no-empty-interface": [false],
+        "callable-types": [false]
     },
     "rulesDirectory": []
 }

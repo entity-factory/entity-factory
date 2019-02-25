@@ -1,6 +1,6 @@
 import { createConnection } from 'typeorm';
-import { Widget } from '../../samples/TypeormAdapter/Widget.entity';
-import { TypeormAdapter } from '../../src';
+import { Widget } from '../../../samples/00-entities/Widget.entity';
+import { TypeormAdapter } from './TypeormAdapter';
 
 describe('Typeorm Adapter', async () => {
     describe('Connection Management', async () => {

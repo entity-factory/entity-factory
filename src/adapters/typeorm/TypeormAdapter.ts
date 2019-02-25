@@ -4,12 +4,9 @@ import {
     DeepPartial,
     getConnection,
 } from 'typeorm';
-import {
-    BaseAdapter,
-    DeepEntityPartial,
-    TypeormAdapterOptions,
-    TypeormContext,
-} from '../..';
+import { BaseAdapter, DeepEntityPartial } from '../../interfaces';
+import { TypeormAdapterOptions } from './TypeormAdapterOptions';
+import { TypeormContext } from './TypeormContext';
 
 export class TypeormAdapter implements BaseAdapter<TypeormContext> {
     private connection!: Connection;

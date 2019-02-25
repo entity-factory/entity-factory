@@ -1,5 +1,5 @@
-import { Post } from '../../samples/TypeormAdapter/Post.entity';
-import { User } from '../../samples/TypeormAdapter/User.entity';
+import { Post } from '../../samples/00-entities/Post.entity';
+import { User } from '../../samples/00-entities/User.entity';
 import {
     definePostProfile,
     defineUserProfile,

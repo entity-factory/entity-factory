@@ -1,5 +1,7 @@
-import { Widget } from '../../../samples/TypeormAdapter/Widget.entity';
-import { DeepEntityPartial, ObjectAdapter, ObjectContext } from '../..';
+import { Widget } from '../../../samples/00-entities/Widget.entity';
+import { DeepEntityPartial } from '../../interfaces';
+import { ObjectAdapter } from './ObjectAdapter';
+import { ObjectContext } from './ObjectContext';
 
 const widgetPartial: DeepEntityPartial<Widget> = {
     name: 'widgetA',
@@ -14,11 +16,17 @@ const widgetPartial2: DeepEntityPartial<Widget> = {
 class CustomObject {
     public customid: number;
     public name: string;
+    public active: boolean;
+
+    public getName() {
+        return this.name;
+    }
 }
 
 interface CustomObjectInterface {
-    _id: number;
+    customId: number;
     name: string;
+    active: boolean;
 }
 
 describe('ObjectAdapter', async () => {
@@ -55,13 +63,13 @@ describe('ObjectAdapter', async () => {
 
         const context: ObjectContext = {
             type: 'customObject',
-            idAttribute: '_id',
+            idAttribute: 'customId',
         };
 
         let results = await adapter.make([customPartial], context);
         results = await adapter.create(results, context);
 
-        expect(results[0]._id).toEqual(1);
+        expect(results[0].customId).toEqual(1);
     });
 
     it('should allow string types to be used', async () => {
@@ -92,19 +100,36 @@ describe('ObjectAdapter', async () => {
     });
 
     it('should allow the default id attribute to be changed', async () => {
-        const context = { type: 'customObject' };
+        const context = { type: CustomObject };
 
         const customPartial: DeepEntityPartial<CustomObjectInterface> = {
             name: 'custom',
         };
 
         const adapter = new ObjectAdapter({
-            defaultIdAttribute: '_id',
+            defaultIdAttribute: 'customId',
         });
 
         let results = await adapter.make([customPartial], context);
         results = await adapter.create(results, context);
 
-        expect(results[0]._id).toEqual(1);
+        expect(results[0].customId).toEqual(1);
+    });
+
+    it('should make an object with a false value', async () => {
+        const adapter = new ObjectAdapter();
+        const partial: DeepEntityPartial<CustomObjectInterface> = {
+            active: false,
+        };
+
+        const results = await adapter.make<CustomObject>([partial], {
+            type: CustomObject,
+        });
+
+        expect(results[0]).toBeInstanceOf(CustomObject);
+        expect(results[0].getName()).toEqual(results[0].name);
+        expect(results[0]).toBeInstanceOf(CustomObject);
+        expect(results[0]).toHaveProperty('active');
+        expect(results[0].active).toEqual(false);
     });
 });

@@ -1,23 +1,19 @@
 import { CommentFixture as DefaultCommentFixture } from '../samples/DefaultAdapter/Comment.fixture';
-import { IPost, IUser, IWidget } from '../samples/DefaultAdapter/interfaces';
+import { IPost, IUser, IWidget } from '../samples/00-entities/interfaces';
 import { PostFixture as DefaultPostFixture } from '../samples/DefaultAdapter/Post.fixture';
 import { UserFixture as DefaultUserFixture } from '../samples/DefaultAdapter/User.fixture';
-import { Comment } from '../samples/TypeormAdapter/Comment.entity';
+import { Comment } from '../samples/00-entities/Comment.entity';
 import { CommentFixture as TypeormCommentFixture } from '../samples/TypeormAdapter/Comment.fixture';
-import { Post } from '../samples/TypeormAdapter/Post.entity';
+import { Post } from '../samples/00-entities/Post.entity';
 import { PostFixture as TypeormPostFixture } from '../samples/TypeormAdapter/Post.fixture';
-import { User } from '../samples/TypeormAdapter/User.entity';
+import { User } from '../samples/00-entities/User.entity';
 import { UserFixture as TypeormUserFixture } from '../samples/TypeormAdapter/User.fixture';
-import { Widget } from '../samples/TypeormAdapter/Widget.entity';
-import {
-    Blueprint,
-    EntityFactory,
-    ObjectAdapter,
-    ObjectBlueprint,
-    TypeormAdapter,
-} from '../src';
-import { ProfileBlueprint } from '../src';
-import { ProfileBuilder } from '../src/profile/ProfileBuilder';
+import { Widget } from '../samples/00-entities/Widget.entity';
+import { ObjectAdapter } from './adapters/object/ObjectAdapter';
+import { TypeormAdapter } from './adapters/typeorm/TypeormAdapter';
+import { EntityFactory } from './EntityFactory';
+import { BaseProfile } from './profile/BaseProfile';
+import { ProfileBuilder } from './profile/ProfileBuilder';
 
 describe('EntityFactory', () => {
     describe('Basic Functions', async () => {
@@ -30,7 +26,7 @@ describe('EntityFactory', () => {
         });
 
         it('should allow "for" to be called with a string and return a builder instance', async () => {
-            const blueprint = new ProfileBlueprint<IUser>();
+            const blueprint = new BaseProfile<IUser>();
             blueprint.setType('user');
             blueprint.define(jest.fn());
 
@@ -43,7 +39,7 @@ describe('EntityFactory', () => {
         });
 
         it('should allow "for" to be called with a function and return a builder instance', async () => {
-            const blueprint = new ProfileBlueprint<User>();
+            const blueprint = new BaseProfile<User>();
             blueprint.setType(User);
             blueprint.define(jest.fn());
 
@@ -74,9 +70,9 @@ describe('EntityFactory', () => {
 
         it('should allow a factory to be registered via callback', async () => {
             const factory = new EntityFactory();
-            factory.register((blueprint: ObjectBlueprint<IWidget>) => {
-                blueprint.setType('widget');
-                blueprint.define(async faker => ({
+            factory.register((profile: BaseProfile<IWidget>) => {
+                profile.setType('widget');
+                profile.define(async faker => ({
                     name: faker.lorem.word(),
                     active: true,
                 }));

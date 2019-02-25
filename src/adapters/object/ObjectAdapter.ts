@@ -1,10 +1,7 @@
-import {
-    BaseAdapter,
-    FixtureObjectType,
-    ObjectAdapterOptions,
-    ObjectContext,
-} from '../..';
+import { BaseAdapter, FixtureObjectType } from '../../interfaces';
 import { isFunction } from '../../utils';
+import { ObjectAdapterOptions } from './ObjectAdapterOptions';
+import { ObjectContext } from './ObjectContext';
 
 export class ObjectAdapter implements BaseAdapter<ObjectContext> {
     private readonly options = {
@@ -52,9 +49,7 @@ export class ObjectAdapter implements BaseAdapter<ObjectContext> {
             }
 
             for (const key in object) {
-                if (object[key]) {
-                    created[key] = object[key];
-                }
+                created[key] = object[key];
             }
 
             return created;

@@ -2,20 +2,19 @@
    "compilerOptions": {
       "lib": ["es5" ,"es6"],
       "target": "es5",
+      "moduleResolution": "node",
       "module": "commonjs",
       "declaration": true,
       "removeComments": true,
-      "moduleResolution": "node",
       "noLib": false,
-      "baseUrl": "./",
-      "outDir": "dist",
-      "sourceRoot": "src",
       "noImplicitAny": false,
       "strict": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true,
-      "strictPropertyInitialization": false
+      "strictPropertyInitialization": false,
+      "baseUrl": ".",
+      "outDir": "dist"
    },
    "include": [
       "samples/**/*.ts",

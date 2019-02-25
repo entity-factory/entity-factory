@@ -1,8 +1,9 @@
-import { Comment } from '../../samples/TypeormAdapter/Comment.entity';
+import { Comment } from '../../samples/00-entities/Comment.entity';
 import { CommentFixture } from '../../samples/TypeormAdapter/Comment.fixture';
 import { PostFixture } from '../../samples/TypeormAdapter/Post.fixture';
 import { UserFixture } from '../../samples/TypeormAdapter/User.fixture';
-import { BaseProfile, ProfileLoader } from '../../src';
+import { BaseProfile } from './BaseProfile';
+import { ProfileLoader } from './ProfileLoader';
 
 describe('ProfileLoader', () => {
     it('should load function entities', async () => {

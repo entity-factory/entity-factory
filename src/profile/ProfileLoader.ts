@@ -1,14 +1,15 @@
 import { isFunction, loadDep } from '../utils';
 import { BaseProfile } from './BaseProfile';
+import any = jasmine.any;
 
 export class ProfileLoader {
     constructor(
         private readonly fixtureProfiles: Array<
-            Function | string | BaseProfile
+            Function | string | BaseProfile<any, any, any>
         >,
     ) {}
 
-    public getProfiles(): BaseProfile[] {
+    public getProfiles(): Array<BaseProfile<any, any, any>> {
         const files = this.getImportsFromPath(this.fixtureProfiles);
 
         return [
@@ -23,7 +24,10 @@ export class ProfileLoader {
      * @param value
      * @param profiles
      */
-    private resolveFilePaths(value: any, profiles: BaseProfile[]) {
+    private resolveFilePaths(
+        value: any,
+        profiles: Array<BaseProfile<any, any, any>>,
+    ) {
         if (isFunction(value) || value instanceof BaseProfile) {
             const instance = this.createFactoryProfileInstance(value);
 
@@ -47,7 +51,7 @@ export class ProfileLoader {
      * @param cls
      */
     private resolveClasses(cls: any[]) {
-        const profiles: BaseProfile[] = [];
+        const profiles: Array<BaseProfile<any, any, any>> = [];
         this.getClasses(cls).forEach(c => {
             const instance = this.createFactoryProfileInstance(c);
             if (instance) {
@@ -99,14 +103,14 @@ export class ProfileLoader {
      * @param cls
      */
     private createFactoryProfileInstance(
-        cls: Function | BaseProfile,
-    ): BaseProfile | undefined {
+        cls: Function | BaseProfile<any, any, any>,
+    ): BaseProfile<any, any, any> | undefined {
         if (cls instanceof BaseProfile) {
             return cls;
         }
 
         if (cls instanceof Function) {
-            const created = new (cls as new () => BaseProfile)();
+            const created = new (cls as new () => BaseProfile<any, any, any>)();
             if (created instanceof BaseProfile) {
                 return created;
             }
