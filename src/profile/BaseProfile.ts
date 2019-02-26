@@ -42,7 +42,7 @@ export class BaseProfile<
      *
      * @param type
      */
-    public setType(type: string | FixtureObjectType<Entity>): void {
+    public type(type: string | FixtureObjectType<Entity>): void {
         this.fixtureContext.type = type;
     }
 

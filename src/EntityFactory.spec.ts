@@ -19,7 +19,7 @@ describe('EntityFactory', () => {
     describe('Basic Functions', async () => {
         it('should load profiles', () => {
             const factory = new EntityFactory({
-                fixtures: [TypeormUserFixture],
+                profiles: [TypeormUserFixture],
             });
 
             expect(factory.hasBlueprint(User)).toBe(true);
@@ -27,7 +27,7 @@ describe('EntityFactory', () => {
 
         it('should allow "for" to be called with a string and return a builder instance', async () => {
             const blueprint = new BaseProfile<IUser>();
-            blueprint.setType('user');
+            blueprint.type('user');
             blueprint.define(jest.fn());
 
             const factory = new EntityFactory();
@@ -40,7 +40,7 @@ describe('EntityFactory', () => {
 
         it('should allow "for" to be called with a function and return a builder instance', async () => {
             const blueprint = new BaseProfile<User>();
-            blueprint.setType(User);
+            blueprint.type(User);
             blueprint.define(jest.fn());
 
             const factory = new EntityFactory();
@@ -62,7 +62,7 @@ describe('EntityFactory', () => {
         it('should return a registered factory', async () => {
             const factory = new EntityFactory();
             factory.register(blueprint => {
-                blueprint.setType(Widget);
+                blueprint.type(Widget);
             });
 
             expect(factory.getProfile(Widget)).toBeDefined();
@@ -71,7 +71,7 @@ describe('EntityFactory', () => {
         it('should allow a factory to be registered via callback', async () => {
             const factory = new EntityFactory();
             factory.register((profile: BaseProfile<IWidget>) => {
-                profile.setType('widget');
+                profile.type('widget');
                 profile.define(async faker => ({
                     name: faker.lorem.word(),
                     active: true,
@@ -94,7 +94,7 @@ describe('EntityFactory', () => {
             const adapter = new ObjectAdapter();
             factory = new EntityFactory({
                 adapter,
-                fixtures: [
+                profiles: [
                     DefaultCommentFixture,
                     DefaultPostFixture,
                     DefaultUserFixture,
@@ -146,7 +146,7 @@ describe('EntityFactory', () => {
             });
             factory = new EntityFactory({
                 adapter,
-                fixtures: [
+                profiles: [
                     TypeormCommentFixture,
                     TypeormPostFixture,
                     TypeormUserFixture,

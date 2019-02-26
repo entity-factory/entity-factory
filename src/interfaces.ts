@@ -119,7 +119,7 @@ export type FactoryProfileCallbackMethod<EntityType, Adapter> = (
  */
 export interface FixtureFactoryOptions {
     adapter?: BaseAdapter;
-    fixtures?: Array<Function | string | BaseProfile<any, any, any>>;
+    profiles?: Array<Function | string | BaseProfile<any, any, any>>;
 }
 
 /**

@@ -6,7 +6,7 @@ export class UserFixture extends TypeormProfile<User> {
     constructor() {
         super();
 
-        this.setType(User);
+        this.type(User);
 
         this.define(async faker => ({
             username: faker.internet.userName(),

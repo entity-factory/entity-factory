@@ -26,8 +26,8 @@ export class EntityFactory implements FactoryExecutor {
      */
     constructor(private readonly options: FixtureFactoryOptions = {}) {
         this.adapter = options.adapter || new ObjectAdapter();
-        if (options.fixtures) {
-            const loader = new ProfileLoader(options.fixtures);
+        if (options.profiles) {
+            const loader = new ProfileLoader(options.profiles);
             const profiles = loader.getProfiles();
 
             profiles.forEach(profile => {

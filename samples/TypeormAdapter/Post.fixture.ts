@@ -7,7 +7,7 @@ export class PostFixture extends TypeormProfile<Post> {
     constructor() {
         super();
 
-        this.setType(Post);
+        this.type(Post);
 
         this.define(async faker => ({
             title: faker.company.catchPhrase(),

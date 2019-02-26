@@ -13,7 +13,7 @@ describe('Fixture Blueprint', async () => {
             name: 'widgetizer',
         });
 
-        blueprint.setType('widget');
+        blueprint.type('widget');
         blueprint.define(callback);
 
         expect(blueprint.hasFactoryMethod()).toBe(true);
@@ -32,7 +32,7 @@ describe('Fixture Blueprint', async () => {
             name: 'widgetizer',
         });
 
-        blueprint.setType(Widget);
+        blueprint.type(Widget);
         blueprint.define(callback);
 
         expect(blueprint.hasFactoryMethod()).toBe(true);
@@ -45,7 +45,7 @@ describe('Fixture Blueprint', async () => {
 
     it('should allow factory states to be defined with string keys', async () => {
         const blueprint = new BaseProfile<IWidget>();
-        blueprint.setType('widget');
+        blueprint.type('widget');
 
         const state = 'active';
 
@@ -65,7 +65,7 @@ describe('Fixture Blueprint', async () => {
 
     it('should allow factory states to be defined with function keys', async () => {
         const blueprint = new BaseProfile<Widget>();
-        blueprint.setType('widget');
+        blueprint.type('widget');
 
         const state = 'active';
 
@@ -85,7 +85,7 @@ describe('Fixture Blueprint', async () => {
 
     it('should allow factory states to be defined as deep partials', async () => {
         const blueprint = new BaseProfile<IWidget>();
-        blueprint.setType('widget');
+        blueprint.type('widget');
 
         const state = 'active';
 
@@ -181,7 +181,7 @@ describe('Fixture Blueprint', async () => {
 
     it('should throw error if getFactoryMethod is called for non-existent factory method', async () => {
         const blueprint = new BaseProfile();
-        blueprint.setType('widget');
+        blueprint.type('widget');
 
         expect(() => blueprint.getFactoryMethod('widget')).toThrowError(
             'Factory method not defined for entity widget',

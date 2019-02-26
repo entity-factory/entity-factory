@@ -5,7 +5,7 @@ export class PostFixture extends ObjectProfile<IPost> {
     constructor() {
         super();
 
-        this.setType('post');
+        this.type('post');
 
         this.define(async faker => ({
             title: faker.company.catchPhrase(),

@@ -5,7 +5,7 @@ export class UserFixture extends ObjectProfile<IUser> {
     constructor() {
         super();
 
-        this.setType('user');
+        this.type('user');
 
         this.define(async faker => ({
             username: faker.internet.userName(),

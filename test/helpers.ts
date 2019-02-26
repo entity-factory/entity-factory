@@ -11,7 +11,7 @@ export const defineUserProfile = (
 ): TypeormProfile<User> => {
     const profile = new TypeormProfile<User>();
 
-    profile.setType(User);
+    profile.type(User);
     profile.define(async faker => ({
         username: faker.internet.userName(),
         email: faker.internet.email(),
@@ -28,7 +28,7 @@ export const definePostProfile = (
     factory: EntityFactory,
 ): TypeormProfile<Post> => {
     const profile = new TypeormProfile<Post>();
-    profile.setType(Post);
+    profile.type(Post);
     profile.define(async faker => ({
         title: faker.company.catchPhrase(),
         body: faker.lorem.paragraphs(2, '\n\n'),

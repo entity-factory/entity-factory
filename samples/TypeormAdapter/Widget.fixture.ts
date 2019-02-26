@@ -5,7 +5,7 @@ export class WidgetFixture extends TypeormProfile<Widget> {
     constructor() {
         super();
 
-        this.setType(Widget);
+        this.type(Widget);
 
         this.define(async faker => {
             return {

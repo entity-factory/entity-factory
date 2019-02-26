@@ -3,7 +3,7 @@ import { IUser } from '../00-entities/interfaces';
 
 const factory = new EntityFactory();
 factory.register((profile: ObjectProfile<IUser>) => {
-    profile.setType('user');
+    profile.type('user');
 
     profile.define(async faker => {
         console.log(`Building entity`);

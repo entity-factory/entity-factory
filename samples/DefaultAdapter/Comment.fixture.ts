@@ -5,7 +5,7 @@ export class CommentFixture extends ObjectProfile<IComment> {
     constructor() {
         super();
 
-        this.setType('comment');
+        this.type('comment');
 
         this.define(async faker => ({
             body: faker.lorem.sentences(2),
