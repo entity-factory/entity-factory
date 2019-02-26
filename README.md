@@ -12,7 +12,7 @@ test data. Currently the library supports plain JS objects and Typeorm entities.
     * [Profile Declaration](#profile-declaration)
 
 
-#Features
+## Features
 * Generate plain javascript objects on demand
 * Generate objects with nested relations
 * Typeorm Support

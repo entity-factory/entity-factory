@@ -13,7 +13,7 @@
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "start": "ts-node src/index.ts"
     },
-    "author": "",
+    "author": "jcloutz",
     "license": "MIT",
     "dependencies": {
         "faker": "^4.1.0"

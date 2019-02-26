@@ -9,6 +9,7 @@ export interface Widget {
     widgetId: number;
     name: string;
 }
+
 // Set teh default id attribute to '_id'. WHen generating id's the ObjectAdapter will use this key.
 const objectAdapter = new ObjectAdapter({
     defaultIdAttribute: '_id',

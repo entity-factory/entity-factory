@@ -13,12 +13,12 @@ export class PostFixture extends ObjectProfile<IPost> {
         }));
 
         this.state('with-author', async faker => ({
-            author: async factory => factory.for('user').create(),
+            author: async factory => await factory.for('user').create(),
         }));
 
         this.state('with-comments', async faker => ({
             comments: async factory =>
-                factory
+                await factory
                     .for('comment')
                     .state('with-user')
                     .create(3),
