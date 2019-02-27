@@ -1,14 +1,11 @@
-import {
-    Connection,
-    createConnection,
-    DeepPartial,
-    getConnection,
-} from 'typeorm';
-import { BaseAdapter, DeepEntityPartial } from '../../interfaces';
+import { Connection, createConnection, DeepPartial, getConnection } from 'typeorm';
+import { BlueprintOptions } from '../../blueprint/BlueprintTypeOption';
+import { DeepEntityPartial } from '../../common/DeepEntityPartial';
+import { Adapter } from '../Adapter';
 import { TypeormAdapterOptions } from './TypeormAdapterOptions';
-import { TypeormContext } from './TypeormContext';
+import { TypeormBlueprintOptions } from './TypeormBlueprintOptions';
 
-export class TypeormAdapter implements BaseAdapter<TypeormContext> {
+export class TypeormAdapter implements Adapter<TypeormBlueprintOptions> {
     private connection!: Connection;
 
     constructor(private readonly options?: TypeormAdapterOptions) {}
@@ -22,14 +19,12 @@ export class TypeormAdapter implements BaseAdapter<TypeormContext> {
      */
     public async make<Entity>(
         objects: Array<DeepEntityPartial<Entity>>,
-        context: TypeormContext,
+        context: BlueprintOptions<TypeormBlueprintOptions>,
     ): Promise<Entity[]> {
-        const type = context.type;
+        const type = context.__type;
         const conn = await this.getConnection();
 
-        return await conn.manager.create(type, (objects as any) as DeepPartial<
-            Entity
-        >);
+        return await conn.manager.create(type, (objects as any) as DeepPartial<Entity>);
     }
 
     /**
@@ -40,7 +35,7 @@ export class TypeormAdapter implements BaseAdapter<TypeormContext> {
      */
     public async create<Entity>(
         objects: Entity[],
-        context: TypeormContext,
+        context: BlueprintOptions<TypeormBlueprintOptions>,
     ): Promise<Entity[]> {
         const conn = await this.getConnection();
 

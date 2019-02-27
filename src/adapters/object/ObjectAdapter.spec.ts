@@ -1,7 +1,8 @@
 import { Widget } from '../../../samples/00-entities/Widget.entity';
-import { DeepEntityPartial } from '../../interfaces';
+import { BlueprintOptions } from '../../blueprint/BlueprintTypeOption';
+import { DeepEntityPartial } from '../../common/DeepEntityPartial';
 import { ObjectAdapter } from './ObjectAdapter';
-import { ObjectContext } from './ObjectContext';
+import { ObjectBlueprintOptions } from './ObjectBlueprintOptions';
 
 const widgetPartial: DeepEntityPartial<Widget> = {
     name: 'widgetA',
@@ -33,7 +34,7 @@ describe('ObjectAdapter', async () => {
     it('should return and entity based on a partial', async () => {
         const adapter = new ObjectAdapter();
         const result = await adapter.make([widgetPartial, widgetPartial2], {
-            type: Widget,
+            __type: Widget,
         });
 
         expect(result[0].id).toBeUndefined();
@@ -42,27 +43,24 @@ describe('ObjectAdapter', async () => {
 
     it('should create sequential ids when calling create by default', async () => {
         const adapter = new ObjectAdapter();
-        const context = { type: Widget };
+        const context = { __type: Widget };
 
-        let result = await adapter.make(
-            [widgetPartial, widgetPartial2],
-            context,
-        );
+        let result = await adapter.make([widgetPartial, widgetPartial2], context);
         result = await adapter.create(result, context);
 
         expect(result[0].id).toEqual(1);
         expect(result[1].id).toEqual(2);
     });
 
-    it('should allow custom mappings for id attributes in context', async () => {
+    it('should allow custom mappings for id attributes in options', async () => {
         const customPartial: DeepEntityPartial<CustomObjectInterface> = {
             name: 'custom',
         };
 
         const adapter = new ObjectAdapter();
 
-        const context: ObjectContext = {
-            type: 'customObject',
+        const context: BlueprintOptions<ObjectBlueprintOptions> = {
+            __type: 'customObject',
             idAttribute: 'customId',
         };
 
@@ -75,7 +73,7 @@ describe('ObjectAdapter', async () => {
     it('should allow string types to be used', async () => {
         const adapter = new ObjectAdapter();
 
-        const context = { type: 'widget' };
+        const context = { __type: 'widget' };
 
         let results = await adapter.make([widgetPartial], context);
 
@@ -91,7 +89,37 @@ describe('ObjectAdapter', async () => {
         const adapter = new ObjectAdapter({
             generateId: false,
         });
-        const context = { type: Widget };
+        const context = { __type: Widget };
+
+        let results = await adapter.make([widgetPartial], context);
+        results = await adapter.create(results, context);
+
+        expect(results[0].id).toBeUndefined();
+    });
+
+    it('should allow for id generation overridden by profile (enabled)', async () => {
+        const adapter = new ObjectAdapter({
+            generateId: false,
+        });
+        const context: BlueprintOptions<ObjectBlueprintOptions> = {
+            __type: Widget,
+            generateId: true,
+        };
+
+        let results = await adapter.make([widgetPartial], context);
+        results = await adapter.create(results, context);
+
+        expect(results[0].id).toEqual(1);
+    });
+
+    it('should allow for id generation overridden by profile (disabled)', async () => {
+        const adapter = new ObjectAdapter({
+            generateId: true,
+        });
+        const context: BlueprintOptions<ObjectBlueprintOptions> = {
+            __type: Widget,
+            generateId: false,
+        };
 
         let results = await adapter.make([widgetPartial], context);
         results = await adapter.create(results, context);
@@ -100,7 +128,7 @@ describe('ObjectAdapter', async () => {
     });
 
     it('should allow the default id attribute to be changed', async () => {
-        const context = { type: CustomObject };
+        const context = { __type: CustomObject };
 
         const customPartial: DeepEntityPartial<CustomObjectInterface> = {
             name: 'custom',
@@ -123,7 +151,7 @@ describe('ObjectAdapter', async () => {
         };
 
         const results = await adapter.make<CustomObject>([partial], {
-            type: CustomObject,
+            __type: CustomObject,
         });
 
         expect(results[0]).toBeInstanceOf(CustomObject);

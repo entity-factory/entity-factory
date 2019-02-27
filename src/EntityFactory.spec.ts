@@ -1,19 +1,19 @@
-import { CommentFixture as DefaultCommentFixture } from '../samples/DefaultAdapter/Comment.fixture';
+import { Comment } from '../samples/00-entities/Comment.entity';
 import { IPost, IUser, IWidget } from '../samples/00-entities/interfaces';
+import { Post } from '../samples/00-entities/Post.entity';
+import { User } from '../samples/00-entities/User.entity';
+import { Widget } from '../samples/00-entities/Widget.entity';
+import { CommentFixture as DefaultCommentFixture } from '../samples/DefaultAdapter/Comment.fixture';
 import { PostFixture as DefaultPostFixture } from '../samples/DefaultAdapter/Post.fixture';
 import { UserFixture as DefaultUserFixture } from '../samples/DefaultAdapter/User.fixture';
-import { Comment } from '../samples/00-entities/Comment.entity';
 import { CommentFixture as TypeormCommentFixture } from '../samples/TypeormAdapter/Comment.fixture';
-import { Post } from '../samples/00-entities/Post.entity';
 import { PostFixture as TypeormPostFixture } from '../samples/TypeormAdapter/Post.fixture';
-import { User } from '../samples/00-entities/User.entity';
 import { UserFixture as TypeormUserFixture } from '../samples/TypeormAdapter/User.fixture';
-import { Widget } from '../samples/00-entities/Widget.entity';
 import { ObjectAdapter } from './adapters/object/ObjectAdapter';
 import { TypeormAdapter } from './adapters/typeorm/TypeormAdapter';
+import { Blueprint } from './blueprint/Blueprint';
+import { BlueprintBuilder } from './blueprint/BlueprintBuilder';
 import { EntityFactory } from './EntityFactory';
-import { BaseProfile } from './profile/BaseProfile';
-import { ProfileBuilder } from './profile/ProfileBuilder';
 
 describe('EntityFactory', () => {
     describe('Basic Functions', async () => {
@@ -26,7 +26,7 @@ describe('EntityFactory', () => {
         });
 
         it('should allow "for" to be called with a string and return a builder instance', async () => {
-            const blueprint = new BaseProfile<IUser>();
+            const blueprint = new Blueprint<IUser>();
             blueprint.type('user');
             blueprint.define(jest.fn());
 
@@ -35,11 +35,11 @@ describe('EntityFactory', () => {
 
             const builder = factory.for('user');
 
-            expect(builder).toBeInstanceOf(ProfileBuilder);
+            expect(builder).toBeInstanceOf(BlueprintBuilder);
         });
 
         it('should allow "for" to be called with a function and return a builder instance', async () => {
-            const blueprint = new BaseProfile<User>();
+            const blueprint = new Blueprint<User>();
             blueprint.type(User);
             blueprint.define(jest.fn());
 
@@ -48,20 +48,18 @@ describe('EntityFactory', () => {
 
             const builder = factory.for(User);
 
-            expect(builder).toBeInstanceOf(ProfileBuilder);
+            expect(builder).toBeInstanceOf(BlueprintBuilder);
         });
 
         it('show throw error if getFactoryMethod is called for non-existent factory method', async () => {
             const factory = new EntityFactory();
 
-            expect(() => factory.for('user')).toThrowError(
-                'No blueprint exists for entity user',
-            );
+            expect(() => factory.for('user')).toThrowError('No blueprint exists for entity user');
         });
 
         it('should return a registered factory', async () => {
             const factory = new EntityFactory();
-            factory.register(blueprint => {
+            factory.register((blueprint) => {
                 blueprint.type(Widget);
             });
 
@@ -70,9 +68,9 @@ describe('EntityFactory', () => {
 
         it('should allow a factory to be registered via callback', async () => {
             const factory = new EntityFactory();
-            factory.register((profile: BaseProfile<IWidget>) => {
+            factory.register((profile: Blueprint<IWidget>) => {
                 profile.type('widget');
-                profile.define(async faker => ({
+                profile.define(async (faker) => ({
                     name: faker.lorem.word(),
                     active: true,
                 }));
@@ -94,11 +92,7 @@ describe('EntityFactory', () => {
             const adapter = new ObjectAdapter();
             factory = new EntityFactory({
                 adapter,
-                profiles: [
-                    DefaultCommentFixture,
-                    DefaultPostFixture,
-                    DefaultUserFixture,
-                ],
+                profiles: [DefaultCommentFixture, DefaultPostFixture, DefaultUserFixture],
             });
         });
 
@@ -146,11 +140,7 @@ describe('EntityFactory', () => {
             });
             factory = new EntityFactory({
                 adapter,
-                profiles: [
-                    TypeormCommentFixture,
-                    TypeormPostFixture,
-                    TypeormUserFixture,
-                ],
+                profiles: [TypeormCommentFixture, TypeormPostFixture, TypeormUserFixture],
             });
         });
 

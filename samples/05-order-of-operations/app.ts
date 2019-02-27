@@ -1,11 +1,11 @@
-import { EntityFactory, ObjectProfile } from '../../src';
+import { EntityFactory, ObjectBlueprint } from '../../src';
 import { IUser } from '../00-entities/interfaces';
 
 const factory = new EntityFactory();
-factory.register((profile: ObjectProfile<IUser>) => {
+factory.register((profile: ObjectBlueprint<IUser>) => {
     profile.type('user');
 
-    profile.define(async faker => {
+    profile.define(async (faker) => {
         console.log(`Building entity`);
         return {
             username: faker.internet.userName(),
@@ -14,14 +14,14 @@ factory.register((profile: ObjectProfile<IUser>) => {
         };
     });
 
-    profile.state('active', async faker => {
+    profile.state('active', async (faker) => {
         console.log(`Applying state 'active'`);
         return {
             active: true,
         };
     });
 
-    profile.state('with-posts', async faker => {
+    profile.state('with-posts', async (faker) => {
         console.log(`Applying state 'with-posts'`);
         return {};
     });
@@ -55,7 +55,7 @@ factory
     .for<IUser>('user')
     .state('active', 'with-posts')
     .create()
-    .then(users => {
+    .then((users) => {
         console.log('Entities have been created with ids: ', users);
     });
 // output:

@@ -1,9 +1,11 @@
-import { BaseAdapter, FixtureObjectType } from '../../interfaces';
+import { BlueprintOptions } from '../../blueprint/BlueprintTypeOption';
+import { EntityObjectType } from '../../common/EntityObjectType';
 import { isFunction } from '../../utils';
+import { Adapter } from '../Adapter';
 import { ObjectAdapterOptions } from './ObjectAdapterOptions';
-import { ObjectContext } from './ObjectContext';
+import { ObjectBlueprintOptions } from './ObjectBlueprintOptions';
 
-export class ObjectAdapter implements BaseAdapter<ObjectContext> {
+export class ObjectAdapter implements Adapter<ObjectBlueprintOptions> {
     private readonly options = {
         generateId: true,
         defaultIdAttribute: 'id',
@@ -12,10 +14,10 @@ export class ObjectAdapter implements BaseAdapter<ObjectContext> {
     /**
      * Keep a running counter for entity id's
      */
-    private idCounter = new Map<FixtureObjectType<any> | string, number>();
+    private idCounter = new Map<EntityObjectType<any> | string, number>();
 
     /**
-     * Default Adapter
+     * Default AdapterType
      *
      * @param options
      */
@@ -37,9 +39,9 @@ export class ObjectAdapter implements BaseAdapter<ObjectContext> {
      */
     public async make<Entity = any>(
         objects: Array<Record<string, any>>,
-        context: ObjectContext,
+        context: BlueprintOptions<ObjectBlueprintOptions>,
     ): Promise<Entity[]> {
-        const type = context.type;
+        const type = context.__type;
         return objects.map((object: Record<string, any>) => {
             let created: any;
             if (isFunction(type)) {
@@ -64,15 +66,17 @@ export class ObjectAdapter implements BaseAdapter<ObjectContext> {
      */
     public async create<Entity = any>(
         objects: Entity[],
-        context: ObjectContext,
+        context: BlueprintOptions<ObjectBlueprintOptions>,
     ): Promise<Entity[]> {
-        const { type, idAttribute } = context;
+        const { __type, idAttribute } = context;
 
-        if (this.options.generateId) {
+        const generateId = context.generateId !== undefined ? context.generateId : this.options.generateId;
+
+        if (generateId) {
             const idKey = idAttribute || this.options.defaultIdAttribute;
             objects = objects.map((entity: any) => {
                 return {
-                    [idKey]: this.getNextId(type),
+                    [idKey]: this.getNextId(__type),
                     ...entity,
                 };
             });
@@ -86,7 +90,7 @@ export class ObjectAdapter implements BaseAdapter<ObjectContext> {
      *
      * @param entity
      */
-    private getNextId(entity: FixtureObjectType<any> | string): number {
+    private getNextId(entity: EntityObjectType<any> | string): number {
         if (!this.idCounter.has(entity)) {
             this.idCounter.set(entity, 0);
         }

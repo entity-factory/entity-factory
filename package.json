@@ -16,7 +16,8 @@
     "author": "jcloutz",
     "license": "MIT",
     "dependencies": {
-        "faker": "^4.1.0"
+        "faker": "^4.1.0",
+        "glob": "^7.1.3"
     },
     "devDependencies": {
         "@types/faker": "^4.1.5",
@@ -34,6 +35,11 @@
         "tslint-config-prettier": "^1.18.0",
         "typeorm": "^0.2.13",
         "typescript": "^3.0.1"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
     },
     "lint-staged": {
         "src/**/*.ts": [

@@ -1,4 +1,4 @@
-import { EntityFactory, ObjectAdapter, ObjectProfile } from '../../src';
+import { EntityFactory, ObjectAdapter, ObjectBlueprint } from '../../src';
 
 export interface ICustomObject {
     _id: number;
@@ -20,25 +20,24 @@ export const factory = new EntityFactory({
     adapter: objectAdapter,
 });
 
-factory.register((profile: ObjectProfile<ICustomObject>) => {
-    profile.context({
-        type: 'customObject',
-    });
+factory.register((profile: ObjectBlueprint<ICustomObject>) => {
+    profile.type('customObject');
 
-    profile.define(async faker => {
+    profile.define(async (faker) => {
         return {
             name: faker.company.bsBuzz(),
         };
     });
 });
 
-factory.register((profile: ObjectProfile<Widget>) => {
-    profile.context({
-        type: 'widget',
+factory.register((profile: ObjectBlueprint<Widget>) => {
+    profile.type('widget');
+
+    profile.options({
         idAttribute: 'widgetId',
     });
 
-    profile.define(async faker => {
+    profile.define(async (faker) => {
         return {
             name: faker.company.bsBuzz(),
         };

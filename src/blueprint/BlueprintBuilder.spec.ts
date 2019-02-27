@@ -1,13 +1,9 @@
 import { Post } from '../../samples/00-entities/Post.entity';
 import { User } from '../../samples/00-entities/User.entity';
-import {
-    definePostProfile,
-    defineUserProfile,
-    getDefaultFactory,
-} from '../../test/helpers';
+import { definePostProfile, defineUserProfile, getDefaultFactory } from '../../test/helpers';
 import { EntityFactory } from '../EntityFactory';
 
-describe('ProfileBuilder', () => {
+describe('BlueprintBuilder', () => {
     let factory: EntityFactory;
     beforeEach(() => {
         factory = getDefaultFactory();
@@ -92,8 +88,8 @@ describe('ProfileBuilder', () => {
             const blueprint = defineUserProfile(factory);
             definePostProfile(factory);
 
-            blueprint.state('with-posts', async faker => ({
-                posts: async fac => await fac.for(Post).make(2),
+            blueprint.state('with-posts', async (faker) => ({
+                posts: async (fac) => await fac.for(Post).make(2),
             }));
 
             const user = await factory
@@ -109,7 +105,7 @@ describe('ProfileBuilder', () => {
 
             const blueprint = defineUserProfile(factory);
 
-            blueprint.state('inactive', async faker => ({
+            blueprint.state('inactive', async (faker) => ({
                 active: false,
             }));
 

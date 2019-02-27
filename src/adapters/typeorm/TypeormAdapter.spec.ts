@@ -2,7 +2,7 @@ import { createConnection } from 'typeorm';
 import { Widget } from '../../../samples/00-entities/Widget.entity';
 import { TypeormAdapter } from './TypeormAdapter';
 
-describe('Typeorm Adapter', async () => {
+describe('Typeorm AdapterType', async () => {
     describe('Connection Management', async () => {
         it('should create a new connection using ormconfig.json', async () => {
             const adapter = new TypeormAdapter();
@@ -10,7 +10,7 @@ describe('Typeorm Adapter', async () => {
             widget.name = 'widget';
             widget.active = true;
 
-            await adapter.create([widget], { type: Widget });
+            await adapter.create([widget], { __type: Widget });
 
             await adapter.dispose();
         });
@@ -28,7 +28,7 @@ describe('Typeorm Adapter', async () => {
             widget.name = 'widget';
             widget.active = true;
 
-            await adapter.create([widget], { type: Widget });
+            await adapter.create([widget], { __type: Widget });
 
             expect(widget.widgetId).toEqual(1);
 
@@ -49,13 +49,11 @@ describe('Typeorm Adapter', async () => {
             widget.name = 'widget';
             widget.active = true;
 
-            await adapter.create([widget], { type: Widget });
+            await adapter.create([widget], { __type: Widget });
 
             expect(widget.widgetId).toEqual(1);
 
-            const result = await connection.manager.query(
-                `select * from widget where widgetId = 1`,
-            );
+            const result = await connection.manager.query(`select * from widget where widgetId = 1`);
 
             expect(result[0].widgetId).toEqual(1);
 
@@ -73,7 +71,7 @@ describe('Typeorm Adapter', async () => {
             widget.name = 'widget';
             widget.active = true;
 
-            await adapter.create([widget], { type: Widget });
+            await adapter.create([widget], { __type: Widget });
 
             await adapter.dispose();
         });
@@ -90,7 +88,7 @@ describe('Typeorm Adapter', async () => {
             widget.name = 'widget';
             widget.active = true;
 
-            await adapter.create([widget], { type: Widget });
+            await adapter.create([widget], { __type: Widget });
 
             await adapter.dispose();
         });
@@ -106,7 +104,7 @@ describe('Typeorm Adapter', async () => {
             widget.name = 'widget';
             widget.active = true;
 
-            await adapter.create([widget], { type: Widget });
+            await adapter.create([widget], { __type: Widget });
 
             await adapter.dispose();
         });
@@ -126,7 +124,7 @@ describe('Typeorm Adapter', async () => {
                 active: true,
             };
 
-            const result = await adapter.make([partial], { type: Widget });
+            const result = await adapter.make([partial], { __type: Widget });
 
             expect(result[0]).toBeInstanceOf(Widget);
             expect(result[0].name).toEqual(partial.name);
@@ -156,10 +154,10 @@ describe('Typeorm Adapter', async () => {
             };
 
             const prepared = await adapter.make<Widget>([partial, partial2], {
-                type: Widget,
+                __type: Widget,
             });
             const result = await adapter.create<Widget>(prepared, {
-                type: Widget,
+                __type: Widget,
             });
 
             expect(result[0]).toBeInstanceOf(Widget);

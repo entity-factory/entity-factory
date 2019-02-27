@@ -1,75 +1,65 @@
-import {
-    BaseAdapter,
-    BaseAdapterContext,
-    DeepFactoryPartial,
-    FactoryProfileCallbackMethod,
-    FactoryProfileMethod,
-    FixtureObjectType,
-} from '../interfaces';
+import { Adapter } from '../adapters/Adapter';
+import { AdapterOptions } from '../adapters/AdapterOptions';
+import { EntityObjectType } from '../common/EntityObjectType';
 import { getName, isFunction } from '../utils';
+import { BlueprintDeepPartial } from './BlueprintDeepPartial';
+import { BlueprintDefinitionAfterMethod } from './BlueprintDefinitionAfterMethod';
+import { BlueprintDefinitionMethod } from './BlueprintDefinitionMethod';
+import { BlueprintOptions } from './BlueprintTypeOption';
 
-export class BaseProfile<
-    Entity = any,
-    Adapter extends BaseAdapter = BaseAdapter,
-    Context extends BaseAdapterContext = BaseAdapterContext
-> {
+export class Blueprint<Entity = any, AdapterType extends Adapter = Adapter, Options extends AdapterOptions = {}> {
     /**
      * key used as default state when saving to defining
      * factories and states
      */
     private DEFAULT_KEY = '__default';
 
-    private readonly factoryMethods = new Map<
-        string,
-        FactoryProfileMethod<Entity>
-    >();
+    private entityType: EntityObjectType<any> | string = '';
 
-    private readonly callbackMethods = new Map<
-        string,
-        FactoryProfileCallbackMethod<Entity, Adapter>
-    >();
+    private blueprintOptions: Record<string, any> = {};
 
-    private fixtureContext: Record<string, any>;
+    private readonly factoryMethods = new Map<string, BlueprintDefinitionMethod<Entity>>();
 
-    constructor() {
-        this.fixtureContext = {
-            type: '',
-        };
-    }
+    private readonly callbackMethods = new Map<string, BlueprintDefinitionAfterMethod<Entity, AdapterType>>();
 
     /**
-     * Set the type of entity being defined
+     * Set the __type of entity being defined
      *
      * @param type
      */
-    public type(type: string | FixtureObjectType<Entity>): void {
-        this.fixtureContext.type = type;
+    public type(type: string | EntityObjectType<Entity>): void {
+        this.entityType = type;
     }
 
     /**
-     * Get the type of entity for the blueprint
+     * Get the __type of entity for the blueprint
      */
-    public getType(): string | FixtureObjectType<Entity> {
-        return this.fixtureContext.type;
+    public getType(): string | EntityObjectType<Entity> {
+        return this.entityType;
     }
 
     /**
-     * Set context values for the blueprint
+     * Set options values for the blueprint
      *
      * @param context
      */
-    public context(context: Context) {
-        this.fixtureContext = {
-            ...this.fixtureContext,
+    public options(context: Options) {
+        this.blueprintOptions = {
+            ...this.blueprintOptions,
             ...(context as Record<string, any>),
         };
     }
 
     /**
-     * Get blueprint context
+     * Get blueprint options
      */
-    public getContext(): Context {
-        return this.fixtureContext as Context;
+    public getOptions(): BlueprintOptions<Options> {
+        const options = {
+            ...this.blueprintOptions,
+            __type: this.entityType,
+        };
+
+        return options as any;
     }
 
     /**
@@ -77,7 +67,7 @@ export class BaseProfile<
      *
      * @param factory
      */
-    public define(factory: FactoryProfileMethod<Entity>): void {
+    public define(factory: BlueprintDefinitionMethod<Entity>): void {
         return this.state(this.DEFAULT_KEY, factory);
     }
 
@@ -87,17 +77,14 @@ export class BaseProfile<
      * @param state
      * @param factory
      */
-    public state(
-        state: string,
-        factory: FactoryProfileMethod<Entity> | DeepFactoryPartial<Entity>,
-    ): void {
+    public state(state: string, factory: BlueprintDefinitionMethod<Entity> | BlueprintDeepPartial<Entity>): void {
         const key = this.getKey(state);
 
-        let factoryMethod: FactoryProfileMethod<Entity>;
+        let factoryMethod: BlueprintDefinitionMethod<Entity>;
         if (!isFunction(factory)) {
-            factoryMethod = async () => factory as DeepFactoryPartial<Entity>;
+            factoryMethod = async () => factory as BlueprintDeepPartial<Entity>;
         } else {
-            factoryMethod = factory as FactoryProfileMethod<Entity>;
+            factoryMethod = factory as BlueprintDefinitionMethod<Entity>;
         }
 
         this.factoryMethods.set(key, factoryMethod);
@@ -108,9 +95,7 @@ export class BaseProfile<
      *
      * @param callback
      */
-    public afterMaking(
-        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
-    ): void {
+    public afterMaking(callback: BlueprintDefinitionAfterMethod<Entity, AdapterType>): void {
         return this.afterMakingState(this.DEFAULT_KEY, callback);
     }
 
@@ -120,10 +105,7 @@ export class BaseProfile<
      * @param state
      * @param callback
      */
-    public afterMakingState(
-        state: string,
-        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
-    ): void {
+    public afterMakingState(state: string, callback: BlueprintDefinitionAfterMethod<Entity, AdapterType>): void {
         this.callbackMethods.set(this.getKey(state, 'afterMake'), callback);
     }
 
@@ -132,9 +114,7 @@ export class BaseProfile<
      *
      * @param callback
      */
-    public afterCreating(
-        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
-    ): void {
+    public afterCreating(callback: BlueprintDefinitionAfterMethod<Entity, AdapterType>): void {
         return this.afterCreatingState(this.DEFAULT_KEY, callback);
     }
 
@@ -144,10 +124,7 @@ export class BaseProfile<
      * @param state
      * @param callback
      */
-    public afterCreatingState(
-        state: string,
-        callback: FactoryProfileCallbackMethod<Entity, Adapter>,
-    ): void {
+    public afterCreatingState(state: string, callback: BlueprintDefinitionAfterMethod<Entity, AdapterType>): void {
         this.callbackMethods.set(this.getKey(state, 'afterCreate'), callback);
     }
 
@@ -165,8 +142,8 @@ export class BaseProfile<
      *
      * @param state
      */
-    public getFactoryMethod(state?: string): FactoryProfileMethod<Entity> {
-        if (!this.getContext().type) {
+    public getFactoryMethod(state?: string): BlueprintDefinitionMethod<Entity> {
+        if (!this.getOptions().__type) {
             throw new Error(`Type not defined for blueprint ${this.constructor
                 .name as any}: blueprint.define() or blueprint.setType() must be called.
             `);
@@ -174,9 +151,9 @@ export class BaseProfile<
         const method = this.factoryMethods.get(this.getKey(state));
         if (!method) {
             throw new Error(
-                `Factory method not defined for entity ${getName(
-                    this.getContext().type,
-                )} ${state ? 'with state ' + state : ''}`,
+                `Factory method not defined for entity ${getName(this.getOptions().__type)} ${
+                    state ? 'with state ' + state : ''
+                }`,
             );
         }
 
@@ -197,9 +174,7 @@ export class BaseProfile<
      *
      * @param state
      */
-    public getMakingCallbackMethod(
-        state?: string,
-    ): FactoryProfileCallbackMethod<Entity, Adapter> | undefined {
+    public getMakingCallbackMethod(state?: string): BlueprintDefinitionAfterMethod<Entity, AdapterType> | undefined {
         return this.callbackMethods.get(this.getKey(state, 'afterMake'));
     }
 
@@ -217,9 +192,7 @@ export class BaseProfile<
      *
      * @param state
      */
-    public getCreatingCallbackMethod(
-        state?: string,
-    ): FactoryProfileCallbackMethod<Entity, Adapter> | undefined {
+    public getCreatingCallbackMethod(state?: string): BlueprintDefinitionAfterMethod<Entity, AdapterType> | undefined {
         return this.callbackMethods.get(this.getKey(state, 'afterCreate'));
     }
 
@@ -229,10 +202,7 @@ export class BaseProfile<
      * @param state
      * @param callbackType
      */
-    private getKey(
-        state?: string,
-        callbackType?: 'afterMake' | 'afterCreate',
-    ): string {
+    private getKey(state?: string, callbackType?: 'afterMake' | 'afterCreate'): string {
         let stateKey = this.DEFAULT_KEY;
         if (state) {
             stateKey = state;

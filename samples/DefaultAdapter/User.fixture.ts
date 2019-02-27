@@ -1,24 +1,24 @@
-import { ObjectProfile } from '../../src';
+import { ObjectBlueprint } from '../../src';
 import { IUser } from '../00-entities/interfaces';
 
-export class UserFixture extends ObjectProfile<IUser> {
+export class UserFixture extends ObjectBlueprint<IUser> {
     constructor() {
         super();
 
         this.type('user');
 
-        this.define(async faker => ({
+        this.define(async (faker) => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
             active: true,
         }));
 
-        this.state('inactive', async faker => ({
+        this.state('inactive', async (faker) => ({
             active: false,
         }));
 
-        this.state('with-posts', async faker => ({
-            posts: async factory => await factory.for('post').make(3),
+        this.state('with-posts', async (faker) => ({
+            posts: async (factory) => await factory.for('post').make(3),
         }));
 
         // this.afterMaking(async (user, { factory, faker }) => {

@@ -1,31 +1,29 @@
 import * as faker from 'faker';
+import { Adapter } from '../adapters/Adapter';
+import { DeepEntityPartial } from '../common/DeepEntityPartial';
 import { EntityFactory } from '../EntityFactory';
-import {
-    BaseAdapter,
-    DeepEntityPartial,
-    DeepFactoryPartialMethod,
-    FactoryCallBackContext,
-    FactoryProfileCallbackMethod,
-    FactoryProfileMethod,
-} from '../interfaces';
 import { isFunction } from '../utils';
-import { BaseProfile } from './BaseProfile';
+import { Blueprint } from './Blueprint';
+import { BlueprintDeepPartialMethod } from './BlueprintDeepPartialMethod';
+import { BlueprintDefinitionAfterMethod } from './BlueprintDefinitionAfterMethod';
+import { BlueprintDefinitionAfterMethodContext } from './BlueprintDefinitionAfterMethodContext';
+import { BlueprintDefinitionMethod } from './BlueprintDefinitionMethod';
 
 interface StateBuilderObject<Entity> {
-    stateFactory: FactoryProfileMethod<Entity>;
-    afterMaking?: FactoryProfileCallbackMethod<Entity, BaseAdapter>;
-    afterCreating?: FactoryProfileCallbackMethod<Entity, BaseAdapter>;
+    stateFactory: BlueprintDefinitionMethod<Entity>;
+    afterMaking?: BlueprintDefinitionAfterMethod<Entity, Adapter>;
+    afterCreating?: BlueprintDefinitionAfterMethod<Entity, Adapter>;
 }
 
-export class ProfileBuilder<Entity = Record<string, any>> {
+export class BlueprintBuilder<Entity = Record<string, any>> {
     private stateFactories: Array<StateBuilderObject<Entity>> = [];
 
     private partial: DeepEntityPartial<Entity> = {};
 
     constructor(
-        private readonly profile: BaseProfile<Entity, any, any>,
+        private readonly profile: Blueprint<Entity, any, any>,
         private readonly factory: EntityFactory,
-        private readonly adapter: BaseAdapter,
+        private readonly adapter: Adapter,
     ) {
         this.stateFactories.push(this.getStateBuilder());
     }
@@ -35,8 +33,8 @@ export class ProfileBuilder<Entity = Record<string, any>> {
      *
      * @param state
      */
-    public state(...state: string[]): ProfileBuilder<Entity> {
-        state.forEach(s => {
+    public state(...state: string[]): BlueprintBuilder<Entity> {
+        state.forEach((s) => {
             this.stateFactories.push(this.getStateBuilder(s));
         });
 
@@ -49,7 +47,7 @@ export class ProfileBuilder<Entity = Record<string, any>> {
      *
      * @param partial
      */
-    public with(partial: DeepEntityPartial<Entity>): ProfileBuilder<Entity> {
+    public with(partial: DeepEntityPartial<Entity>): BlueprintBuilder<Entity> {
         this.partial = {
             ...(this.partial as any),
             ...(partial as any),
@@ -69,20 +67,14 @@ export class ProfileBuilder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    public async make(
-        count: 1,
-        partial?: DeepEntityPartial<Entity>,
-    ): Promise<Entity>;
+    public async make(count: 1, partial?: DeepEntityPartial<Entity>): Promise<Entity>;
 
     /**
      * Instantiate multiple entities and return them in an array
      * @param count
      * @param partial
      */
-    public async make(
-        count: number,
-        partial?: DeepEntityPartial<Entity>,
-    ): Promise<Entity[]>;
+    public async make(count: number, partial?: DeepEntityPartial<Entity>): Promise<Entity[]>;
 
     /**
      * Instantiate one or more entities and return them
@@ -90,10 +82,7 @@ export class ProfileBuilder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    public async make(
-        count: number = 1,
-        partial?: DeepEntityPartial<Entity>,
-    ): Promise<any> {
+    public async make(count: number = 1, partial?: DeepEntityPartial<Entity>): Promise<any> {
         if (partial) {
             this.partial = {
                 ...(this.partial as any),
@@ -108,10 +97,7 @@ export class ProfileBuilder<Entity = Record<string, any>> {
             objects.push(builtObject as DeepEntityPartial<Entity>);
         }
 
-        const preparedEntities = await this.adapter.make(
-            objects,
-            this.profile.getContext(),
-        );
+        const preparedEntities = await this.adapter.make(objects, this.profile.getOptions());
 
         // fire after making for each
         for (const prepared of preparedEntities) {
@@ -140,20 +126,14 @@ export class ProfileBuilder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    public async create(
-        count: 1,
-        partial?: DeepEntityPartial<Entity>,
-    ): Promise<Entity>;
+    public async create(count: 1, partial?: DeepEntityPartial<Entity>): Promise<Entity>;
 
     /**
      * Create and persist an array of entities
      * @param count
      * @param partial
      */
-    public async create(
-        count: number,
-        partial?: DeepEntityPartial<Entity>,
-    ): Promise<Entity[]>;
+    public async create(count: number, partial?: DeepEntityPartial<Entity>): Promise<Entity[]>;
 
     /**
      * Create and persist entities
@@ -161,19 +141,13 @@ export class ProfileBuilder<Entity = Record<string, any>> {
      * @param count
      * @param partial
      */
-    public async create(
-        count: number = 1,
-        partial?: DeepEntityPartial<Entity>,
-    ): Promise<any> {
+    public async create(count: number = 1, partial?: DeepEntityPartial<Entity>): Promise<any> {
         let entities = await this.make(count, partial);
         if (!Array.isArray(entities)) {
             entities = [entities];
         }
 
-        entities = await this.adapter.create(
-            entities,
-            this.profile.getContext(),
-        );
+        entities = await this.adapter.create(entities, this.profile.getOptions());
 
         const context = this.getCallbackContext();
 
@@ -211,17 +185,13 @@ export class ProfileBuilder<Entity = Record<string, any>> {
      *
      * @param stateFactory
      */
-    private async resolveStateFactory(
-        stateFactory: FactoryProfileMethod<Entity>,
-    ) {
+    private async resolveStateFactory(stateFactory: BlueprintDefinitionMethod<Entity>) {
         const derived = await stateFactory(faker);
         for (const key in derived) {
             const value = derived[key];
 
             if (isFunction(value)) {
-                const callback = derived[key] as DeepFactoryPartialMethod<
-                    Entity
-                >;
+                const callback = derived[key] as BlueprintDeepPartialMethod<Entity>;
 
                 derived[key] = await callback(this.factory);
             }
@@ -234,9 +204,9 @@ export class ProfileBuilder<Entity = Record<string, any>> {
     }
 
     /**
-     * Get context for callback methods.
+     * Get options for callback methods.
      */
-    private getCallbackContext(): FactoryCallBackContext<BaseAdapter> {
+    private getCallbackContext(): BlueprintDefinitionAfterMethodContext<Adapter> {
         return {
             factory: this.factory,
             faker,
