@@ -6,11 +6,6 @@ export * from './adapters/object/ObjectAdapterOptions';
 export * from './adapters/object/ObjectBlueprint';
 export * from './adapters/object/ObjectBlueprintOptions';
 
-export * from './adapters/typeorm/TypeormAdapter';
-export * from './adapters/typeorm/TypeormAdapterOptions';
-export * from './adapters/typeorm/TypeormBlueprint';
-export * from './adapters/typeorm/TypeormBlueprintOptions';
-
 export * from './blueprint/Blueprint';
 export * from './blueprint/BlueprintBuilder';
 export * from './blueprint/BlueprintDeepPartial';
