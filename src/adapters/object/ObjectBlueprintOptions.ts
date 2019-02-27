@@ -1,6 +1,6 @@
-import { AdapterOptions } from '../AdapterOptions';
+import { AdapterBlueprintOptions } from '../AdapterBlueprintOptions';
 
-export interface ObjectBlueprintOptions extends AdapterOptions {
+export interface ObjectBlueprintOptions extends AdapterBlueprintOptions {
     generateId?: boolean;
     idAttribute?: string;
 }

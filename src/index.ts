@@ -1,5 +1,5 @@
 export * from './adapters/Adapter';
-export * from './adapters/AdapterOptions';
+export * from './adapters/AdapterBlueprintOptions';
 
 export * from './adapters/object/ObjectAdapter';
 export * from './adapters/object/ObjectAdapterOptions';

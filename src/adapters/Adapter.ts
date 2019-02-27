@@ -1,8 +1,8 @@
 import { BlueprintOptions } from '../blueprint/BlueprintTypeOption';
 import { DeepEntityPartial } from '../common/DeepEntityPartial';
-import { AdapterOptions } from './AdapterOptions';
+import { AdapterBlueprintOptions } from './AdapterBlueprintOptions';
 
-export interface Adapter<Options extends AdapterOptions = AdapterOptions> {
+export interface Adapter<Options extends AdapterBlueprintOptions = AdapterBlueprintOptions> {
     /**
      * Called during the make operation. Perform any task necessary to convert
      * from a plain object into a valid entity object.

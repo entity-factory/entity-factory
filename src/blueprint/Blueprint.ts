@@ -1,5 +1,5 @@
 import { Adapter } from '../adapters/Adapter';
-import { AdapterOptions } from '../adapters/AdapterOptions';
+import { AdapterBlueprintOptions } from '../adapters/AdapterBlueprintOptions';
 import { EntityObjectType } from '../common/EntityObjectType';
 import { getName, isFunction } from '../utils';
 import { BlueprintDeepPartial } from './BlueprintDeepPartial';
@@ -7,7 +7,11 @@ import { BlueprintDefinitionAfterMethod } from './BlueprintDefinitionAfterMethod
 import { BlueprintDefinitionMethod } from './BlueprintDefinitionMethod';
 import { BlueprintOptions } from './BlueprintTypeOption';
 
-export class Blueprint<Entity = any, AdapterType extends Adapter = Adapter, Options extends AdapterOptions = {}> {
+export class Blueprint<
+    Entity = any,
+    AdapterType extends Adapter = Adapter,
+    Options extends AdapterBlueprintOptions = {}
+> {
     /**
      * key used as default state when saving to defining
      * factories and states
