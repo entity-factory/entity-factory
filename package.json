@@ -43,14 +43,17 @@
     },
     "lint-staged": {
         "src/**/*.ts": [
+            "tslint src/**/*.ts",
             "prettier --write --print-width 120 --trailing-comma all --single-quote --parser typescript --arrow-parens always",
             "git add"
         ],
         "test/**/*.ts": [
+            "tslint samples/**/*.ts",
             "prettier --write --print-width 120 --trailing-comma all --single-quote --parser typescript --arrow-parens always",
             "git add"
         ],
         "samples/**/*.ts": [
+            "tslint samples/**/*.ts",
             "prettier --write --print-width 120 --trailing-comma all --single-quote --parser typescript --arrow-parens always",
             "git add"
         ],
