@@ -1,35 +1,23 @@
 # Entity Factory
 
-Entity Factory is a library used for quickly creating fixture data from plain 
-objects or classes using faker. Inspired by laravel's factories for generating 
+Entity Factory is a library used for quickly creating fixture data from plain
+objects or classes using faker. Inspired by laravel's factories for generating
 test data. Currently the library supports plain JS objects and Typeorm entities.
 
-## Table of Contents
-* [Features](#features)
-* [Installation](#installation)
-* [Example](#example)
-    * [Inline Declaration](#inline-declaration)
-    * [Profile Declaration](#profile-declaration)
-
-
-## Features
-* Generate plain javascript objects on demand
-* Generate objects with nested relations
-* Typeorm Support
-    * Generate Entities
-    * Persist Entities and nested relations
+[Additional Samples](https://github.com/jcloutz/entity-factory/tree/master/samples)
 
 ## Installation
-```
-npm install --save fixture-factory
-````
 
+```
+npm install --save entity-factory
+```
 
 ## Example
-Entity Profiles can also be defined within classes to enable better code separation.
+
+Entity blueprints can also be defined within classes to enable better code separation.
 
 ```typescript
-import { EntityFactory, ObjectProfile } from 'entity-factory'
+import { EntityFactory, ObjectBlueprint } from 'entity-factory';
 
 interface User {
     user_id: number;
@@ -38,7 +26,7 @@ interface User {
     active: boolean;
 }
 
-class UserProfile extends ObjectProfile<User> {
+class UserBlueprint extends ObjectBlueprint<User> {
     constructor() {
         super();
 
@@ -66,7 +54,9 @@ class UserProfile extends ObjectProfile<User> {
         });
 
         // called after make() on entity with a specific state transform
-        this.afterMakingState('active', async (user, { faker, factory, adapter }) => {
+        this.afterMakingState(
+            'active',
+            async (user, { faker, factory, adapter }) => {
                 // perform operation on entity
             },
         );
@@ -77,7 +67,9 @@ class UserProfile extends ObjectProfile<User> {
         });
 
         // called after create() on entity with a specific state transform
-        this.afterCreatingState('active', async (user, { faker, factory, adapter }) => {
+        this.afterCreatingState(
+            'active',
+            async (user, { faker, factory, adapter }) => {
                 // perform operation on entity
             },
         );
@@ -85,8 +77,8 @@ class UserProfile extends ObjectProfile<User> {
 }
 
 export const entityFactory = new EntityFactory({
-    // profiles can be an array of glob patterns, profile classes and/or profile instances
-    profiles: [UserProfile],
+    // blueprints can be an array of glob patterns, blueprint classes and/or blueprint instances
+    profiles: [UserBlueprint],
 });
 
 // Generate entities
@@ -97,18 +89,18 @@ entityFactory
     .create(3) // generate 3 users with incrementing id's
     .then(users => console.log(users));
 
-// output: 
-// [ 
+// output:
+// [
 //     { id: 1, username: 'john', email: 'Sarai71@gmail.com', active: true },
 //     { id: 2, username: 'john', email: 'Cierra.Olson50@yahoo.com', active: true },
 //     { id: 3, username: 'john', email: 'Tyrique_Homenick@hotmail.com', active: true }
-// ] 
+// ]
 ```
 
-### Alternate Inline Profile Declaration
+### Alternate Inline Blueprint Declaration
 
 ```typescript
-import { EntityFactory, ObjectProfile } from 'entity-factory'
+import { EntityFactory, ObjectBlueprint } from 'entity-factory';
 
 interface User {
     id: number;
@@ -119,7 +111,7 @@ interface User {
 
 export const entityFactory = new EntityFactory();
 
-entityFactory.register((profile: ObjectProfile<User>) => {
+entityFactory.register((profile: ObjectBlueprint<User>) => {
     // Set the key used for identifying an object in the factory.
     // The key can be a string or a class.
     profile.type('user');
@@ -140,14 +132,16 @@ entityFactory
     .then(users => console.log(users));
 
 // output:
-// [ 
+// [
 //     { id: 1, username: 'Mathias.Fay', email: 'Lisandro_Walker@yahoo.com', active: true },
 //     { id: 2, username: 'Ashlynn77', email: 'Edd_Jenkins@hotmail.com', active: false },
 //     { id: 3, username: 'Josefina99', email: 'Yesenia23@hotmail.com', active: true }
 // ]
 ```
-## Entity Profile
-*TODO*
 
-## Profile Builder
-*TODO*
+## TODO
+
+[ ] imporove docs
+[ ] resolve nested objects
+[ ] resolve nested array
+[ ] add method to generate random objects on the fly
