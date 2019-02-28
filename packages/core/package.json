@@ -1,5 +1,5 @@
 {
-    "name": "@entity-factory/factory",
+    "name": "@entity-factory/core",
     "version": "0.1.0",
     "description": "Create entities on the fly for mocking and testing",
     "author": "Jeremy Cloutier",

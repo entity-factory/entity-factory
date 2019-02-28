@@ -23,24 +23,17 @@ test data. Currently the library supports plain JS objects and Typeorm entities.
 ## Installation
 
 ```
-npm install --save fixture-factory
+npm install --save @entity-factory/core
 ```
 
 ## Example
 
 Entity Profiles can also be defined within classes to enable better code separation.
 
-```typescript
-import { EntityFactory, ObjectProfile } from 'entity-factory'
+```javascript
+import { EntityFactory, ObjectBlueprint } from '@entity-factory/core';
 
-interface User {
-    user_id: number;
-    username: string;
-    email: string;
-    active: boolean;
-}
-
-class UserProfile extends ObjectProfile<User> {
+class UserBlueprint extends ObjectBlueprint {
     constructor() {
         super();
 
@@ -68,7 +61,9 @@ class UserProfile extends ObjectProfile<User> {
         });
 
         // called after make() on entity with a specific state transform
-        this.afterMakingState('active', async (user, { faker, factory, adapter }) => {
+        this.afterMakingState(
+            'active',
+            async (user, { faker, factory, adapter }) => {
                 // perform operation on entity
             },
         );
@@ -79,7 +74,9 @@ class UserProfile extends ObjectProfile<User> {
         });
 
         // called after create() on entity with a specific state transform
-        this.afterCreatingState('active', async (user, { faker, factory, adapter }) => {
+        this.afterCreatingState(
+            'active',
+            async (user, { faker, factory, adapter }) => {
                 // perform operation on entity
             },
         );
@@ -87,15 +84,13 @@ class UserProfile extends ObjectProfile<User> {
 }
 
 export const entityFactory = new EntityFactory({
-    blueprints
-    profiles: [UserProfile],
+    blueprints: [UserBlueprint],
 });
 
 // Generate entities
 entityFactory
-    .for<User>('user') // get builder instance for 'user'
+    .for('user') // get builder instance for 'user'
     .state('active')
-    .with({ username: 'john' }) // override property with fixed value
     .create(3) // generate 3 users with incrementing id's
     .then(users => console.log(users));
 
