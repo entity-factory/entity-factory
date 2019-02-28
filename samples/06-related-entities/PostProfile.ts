@@ -1,4 +1,4 @@
-import { ObjectBlueprint } from '../../packages/src';
+import { ObjectBlueprint } from '@entity-factory/core';
 import { IPost } from '../00-entities/interfaces';
 
 export class PostProfile extends ObjectBlueprint<IPost> {

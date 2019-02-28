@@ -1,9 +1,9 @@
-import { TypeormBlueprint } from '@entity-factory/typeorm';
-import { Comment } from '../00-entities/Comment.entity';
-import { Post } from '../00-entities/Post.entity';
-import { User } from '../00-entities/User.entity';
+import { TypeormBlueprint } from '../../TypeormBlueprint';
+import { Comment } from '../entities/Comment.entity';
+import { Post } from '../entities/Post.entity';
+import { User } from '../entities/User.entity';
 
-export class CommentFixture extends TypeormBlueprint<Comment> {
+export class CommentBlueprint extends TypeormBlueprint<Comment> {
     constructor() {
         super();
 

@@ -21,8 +21,8 @@ export class EntityFactory implements EntityFactoryExecutor {
      */
     constructor(private readonly options: EntityFactoryOptions = {}) {
         this.adapter = options.adapter || new ObjectAdapter();
-        if (options.profiles) {
-            const loader = new BlueprintLoader(options.profiles);
+        if (options.blueprints) {
+            const loader = new BlueprintLoader(options.blueprints);
             const profiles = loader.getProfiles();
 
             profiles.forEach((profile) => {

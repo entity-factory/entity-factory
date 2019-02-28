@@ -1,8 +1,8 @@
-import { TypeormBlueprint } from '@entity-factory/typeorm';
-import { Post } from '../00-entities/Post.entity';
-import { User } from '../00-entities/User.entity';
+import { TypeormBlueprint } from '../../TypeormBlueprint';
+import { Post } from '../entities/Post.entity';
+import { User } from '../entities/User.entity';
 
-export class UserFixture extends TypeormBlueprint<User> {
+export class UserBlueprint extends TypeormBlueprint<User> {
     constructor() {
         super();
 

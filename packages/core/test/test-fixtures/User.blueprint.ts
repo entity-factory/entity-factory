@@ -1,7 +1,7 @@
-import { ObjectBlueprint } from '@entity-factory/core';
+import { ObjectBlueprint } from '../../adapters/object/ObjectBlueprint';
 import { IUser } from './User';
 
-export class UserFixture extends ObjectBlueprint<IUser> {
+export class UserBlueprint extends ObjectBlueprint<IUser> {
     constructor() {
         super();
 

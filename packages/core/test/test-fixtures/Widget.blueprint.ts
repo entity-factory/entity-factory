@@ -1,7 +1,7 @@
-import { ObjectBlueprint } from '@entity-factory/core';
+import { ObjectBlueprint } from '../../adapters/object/ObjectBlueprint';
 import { IWidget } from './Widget';
 
-export class WidgetFixture extends ObjectBlueprint<IWidget> {
+export class WidgetBlueprint extends ObjectBlueprint<IWidget> {
     constructor() {
         super();
 

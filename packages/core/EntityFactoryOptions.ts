@@ -6,5 +6,5 @@ import { Blueprint } from './blueprint/Blueprint';
  */
 export interface EntityFactoryOptions {
     adapter?: Adapter;
-    profiles?: Array<Function | string | Blueprint<any, any, any>>;
+    blueprints?: Array<Function | string | Blueprint<any, any, any>>;
 }

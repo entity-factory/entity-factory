@@ -1,21 +1,16 @@
 import { EntityFactory } from '@entity-factory/core';
 import { createConnection } from 'typeorm';
-import { Widget } from '../../../samples/00-entities/Widget.entity';
 import { TypeormAdapter } from '../TypeormAdapter';
+import { CommentBlueprint } from './blueprints/Comment.blueprint';
+import { PostBlueprint } from './blueprints/Post.blueprint';
+import { UserBlueprint } from './blueprints/User.blueprint';
+import { Comment } from './entities/Comment.entity';
+import { Post } from './entities/Post.entity';
+import { User } from './entities/User.entity';
+import { Widget } from './entities/Widget.entity';
 
-describe('Typeorm Adapter', async () => {
+describe('TypeORM Adapter', async () => {
     describe('Connection Management', async () => {
-        it('should create a new connection using ormconfig.json', async () => {
-            const adapter = new TypeormAdapter();
-            const widget = new Widget();
-            widget.name = 'widget';
-            widget.active = true;
-
-            await adapter.create([widget], { __type: Widget });
-
-            await adapter.dispose();
-        });
-
         it('should use existing connection', async () => {
             const connection = await createConnection({
                 type: 'sqlite',
@@ -181,14 +176,15 @@ describe('Typeorm Adapter', async () => {
 
         beforeEach(async () => {
             adapter = new TypeormAdapter({
+                name: 'e2e-tests',
                 type: 'sqlite',
                 database: ':memory:',
                 synchronize: true,
-                entities: [User, Post, Comment],
+                entities: [Post, Comment, User],
             });
             factory = new EntityFactory({
                 adapter,
-                profiles: [TypeormCommentFixture, TypeormPostFixture, TypeormUserFixture],
+                blueprints: [CommentBlueprint, PostBlueprint, UserBlueprint],
             });
         });
 

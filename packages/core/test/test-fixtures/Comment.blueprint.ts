@@ -1,7 +1,7 @@
-import { ObjectBlueprint } from '@entity-factory/core';
+import { ObjectBlueprint } from '../../adapters/object/ObjectBlueprint';
 import { IComment } from './Comment';
 
-export class CommentFixture extends ObjectBlueprint<IComment> {
+export class CommentBlueprint extends ObjectBlueprint<IComment> {
     constructor() {
         super();
 

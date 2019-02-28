@@ -1,7 +1,7 @@
 import { TypeormBlueprint } from '@entity-factory/typeorm';
-import { Widget } from '../00-entities/Widget.entity';
+import { Widget } from '../entities/Widget.entity';
 
-export class WidgetFixture extends TypeormBlueprint<Widget> {
+export class WidgetBlueprint extends TypeormBlueprint<Widget> {
     constructor() {
         super();
 

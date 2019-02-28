@@ -23,11 +23,11 @@ describe('BlueprintLoader', () => {
     });
 
     it('should load entities via glob pattern', async () => {
-        const loader = new BlueprintLoader(['samples/TypeormAdapter/*.fixture.ts']);
+        const loader = new BlueprintLoader(['packages/core/test/blueprint/blueprints/*.blueprint.ts']);
 
         const profiles = loader.getProfiles();
         if (profiles) {
-            expect(profiles.length).toEqual(4);
+            expect(profiles.length).toEqual(1);
         }
     });
 
@@ -45,7 +45,7 @@ describe('BlueprintLoader', () => {
         }
     });
 
-    it('should only load profiles', async () => {
+    it('should only load blueprints', async () => {
         const loader = new BlueprintLoader(['samples/TypeormAdapter/*.entity.ts', FooEntity, new FooBlueprint()]);
 
         const profiles = loader.getProfiles();

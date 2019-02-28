@@ -3,10 +3,10 @@ import { ObjectBlueprintOptions } from '../../adapters/object/ObjectBlueprintOpt
 import { BlueprintOptions } from '../../blueprint/BlueprintTypeOption';
 import { DeepEntityPartial } from '../../common/DeepEntityPartial';
 import { EntityFactory } from '../../EntityFactory';
-import { CommentFixture } from '../test-fixtures/Comment.fixture';
+import { CommentBlueprint } from '../test-fixtures/Comment.blueprint';
 import { Post } from '../test-fixtures/Post';
-import { PostFixture } from '../test-fixtures/Post.fixture';
-import { UserFixture } from '../test-fixtures/User.fixture';
+import { PostBlueprint } from '../test-fixtures/Post.blueprint';
+import { UserBlueprint } from '../test-fixtures/User.blueprint';
 
 interface IWidget {
     id: string;
@@ -179,7 +179,7 @@ describe('ObjectAdapter', async () => {
             const adapter = new ObjectAdapter();
             factory = new EntityFactory({
                 adapter,
-                profiles: [CommentFixture, PostFixture, UserFixture],
+                blueprints: [CommentBlueprint, PostBlueprint, UserBlueprint],
             });
         });
 

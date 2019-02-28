@@ -1,5 +1,5 @@
 {
-    "name": "@entity-factory/core",
+    "name": "@entity-factory/factory",
     "version": "0.1.0",
     "description": "Create entities on the fly for mocking and testing",
     "author": "Jeremy Cloutier",
@@ -7,7 +7,7 @@
     "typings": "index",
     "repository": {
         "type": "git",
-        "url": "https://github.com/jcloutz/entity-factory"
+        "url": "https://github.com/entity-factory/entity-factory"
     },
     "license": "MIT",
     "dependencies": {

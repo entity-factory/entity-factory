@@ -1,31 +1,33 @@
 # Entity Factory
 
-Entity Factory is a library used for quickly creating fixture data from plain 
-objects or classes using faker. Inspired by laravel's factories for generating 
+Entity Factory is a library used for quickly creating fixture data from plain
+objects or classes using faker. Inspired by laravel's factories for generating
 test data. Currently the library supports plain JS objects and Typeorm entities.
 
 ## Table of Contents
-* [Features](#features)
-* [Installation](#installation)
-* [Example](#example)
-    * [Inline Declaration](#inline-declaration)
-    * [Profile Declaration](#profile-declaration)
 
+-   [Features](#features)
+-   [Installation](#installation)
+-   [Example](#example)
+    -   [Inline Declaration](#inline-declaration)
+    -   [Profile Declaration](#profile-declaration)
 
 ## Features
-* Generate plain javascript objects on demand
-* Generate objects with nested relations
-* Typeorm Support
-    * Generate Entities
-    * Persist Entities and nested relations
+
+-   Generate plain javascript objects on demand
+-   Generate objects with nested relations
+-   Typeorm Support
+    -   Generate Entities
+    -   Persist Entities and nested relations
 
 ## Installation
+
 ```
 npm install --save fixture-factory
-````
-
+```
 
 ## Example
+
 Entity Profiles can also be defined within classes to enable better code separation.
 
 ```typescript
@@ -85,7 +87,7 @@ class UserProfile extends ObjectProfile<User> {
 }
 
 export const entityFactory = new EntityFactory({
-    // profiles can be an array of glob patterns, profile classes and/or profile instances
+    blueprints
     profiles: [UserProfile],
 });
 
@@ -97,18 +99,18 @@ entityFactory
     .create(3) // generate 3 users with incrementing id's
     .then(users => console.log(users));
 
-// output: 
-// [ 
+// output:
+// [
 //     { id: 1, username: 'john', email: 'Sarai71@gmail.com', active: true },
 //     { id: 2, username: 'john', email: 'Cierra.Olson50@yahoo.com', active: true },
 //     { id: 3, username: 'john', email: 'Tyrique_Homenick@hotmail.com', active: true }
-// ] 
+// ]
 ```
 
 ### Alternate Inline Profile Declaration
 
 ```typescript
-import { EntityFactory, ObjectProfile } from 'entity-factory'
+import { EntityFactory, ObjectProfile } from 'entity-factory';
 
 interface User {
     id: number;
@@ -140,14 +142,17 @@ entityFactory
     .then(users => console.log(users));
 
 // output:
-// [ 
+// [
 //     { id: 1, username: 'Mathias.Fay', email: 'Lisandro_Walker@yahoo.com', active: true },
 //     { id: 2, username: 'Ashlynn77', email: 'Edd_Jenkins@hotmail.com', active: false },
 //     { id: 3, username: 'Josefina99', email: 'Yesenia23@hotmail.com', active: true }
 // ]
 ```
+
 ## Entity Profile
-*TODO*
+
+_TODO_
 
 ## Profile Builder
-*TODO*
+
+_TODO_

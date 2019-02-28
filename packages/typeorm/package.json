@@ -14,7 +14,7 @@
         "@entity-factory/core": "^0.1.0",
         "typeorm": "^0.2.14"
     },
-    "devDependencies": {
+    "dependencies": {
         "typeorm": "^0.2.14"
     }
 }
