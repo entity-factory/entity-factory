@@ -1,9 +1,7 @@
-import { TypeormBlueprint } from '@entity-factory/typeorm';
-import { Comment } from '../00-entities/Comment.entity';
-import { Post } from '../00-entities/Post.entity';
-import { User } from '../00-entities/User.entity';
+import { ObjectBlueprint } from '@entity-factory/core';
+import { Post } from './Post';
 
-export class PostFixture extends TypeormBlueprint<Post> {
+export class PostFixture extends ObjectBlueprint<Post> {
     constructor() {
         super();
 
@@ -15,13 +13,13 @@ export class PostFixture extends TypeormBlueprint<Post> {
         }));
 
         this.state('with-author', async (faker) => ({
-            author: async (factory) => factory.for(User).create(),
+            author: async (factory) => await factory.for('user').create(),
         }));
 
         this.state('with-comments', async (faker) => ({
             comments: async (factory) =>
-                factory
-                    .for(Comment)
+                await factory
+                    .for('comment')
                     .state('with-user')
                     .create(3),
         }));

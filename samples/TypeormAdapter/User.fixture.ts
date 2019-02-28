@@ -1,4 +1,4 @@
-import { TypeormBlueprint } from '../../src';
+import { TypeormBlueprint } from '@entity-factory/typeorm';
 import { Post } from '../00-entities/Post.entity';
 import { User } from '../00-entities/User.entity';
 

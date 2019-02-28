@@ -1,4 +1,4 @@
-import { ObjectBlueprint } from '../../src';
+import { ObjectBlueprint } from '../../packages/src';
 import { IUser } from '../00-entities/interfaces';
 
 class UserProfile extends ObjectBlueprint<IUser> {

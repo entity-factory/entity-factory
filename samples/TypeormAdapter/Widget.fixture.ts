@@ -1,4 +1,4 @@
-import { TypeormBlueprint } from '../../src';
+import { TypeormBlueprint } from '@entity-factory/typeorm';
 import { Widget } from '../00-entities/Widget.entity';
 
 export class WidgetFixture extends TypeormBlueprint<Widget> {

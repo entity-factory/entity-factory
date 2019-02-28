@@ -12,9 +12,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "sourceMap": true,
-        "strictPropertyInitialization": false,
-        "baseUrl": ".",
-        "outDir": "dist"
+        "strictPropertyInitialization": false
     },
     "exclude": ["node_modules"]
 }

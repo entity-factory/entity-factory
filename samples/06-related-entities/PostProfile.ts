@@ -1,4 +1,4 @@
-import { ObjectBlueprint } from '../../src';
+import { ObjectBlueprint } from '../../packages/src';
 import { IPost } from '../00-entities/interfaces';
 
 export class PostProfile extends ObjectBlueprint<IPost> {

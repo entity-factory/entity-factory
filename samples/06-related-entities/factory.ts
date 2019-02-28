@@ -1,3 +1,3 @@
-import { EntityFactory } from '../../src';
+import { EntityFactory } from '../../packages/src';
 
 const entityFactory = new EntityFactory();

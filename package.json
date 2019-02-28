@@ -7,11 +7,10 @@
     "scripts": {
         "build": "rm -rf dist/ && tsc -p tsconfig.build.json",
         "test": "jest",
+        "lint": "tslint -p \"tsconfig.json\" -c \"tslint.json\" -e \"**/node_modules/**\" \"packages/**/*.ts\"",
         "doc:gen": "typedoc",
         "test:watch": "jest --watch",
-        "test:cov": "jest --coverage",
-        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "start": "ts-node src/index.ts"
+        "test:cov": "jest --coverage"
     },
     "author": "jcloutz",
     "license": "MIT",
@@ -42,18 +41,12 @@
         }
     },
     "lint-staged": {
-        "src/**/*.ts": [
-            "tslint src/**/*.ts",
-            "prettier --write --print-width 120 --trailing-comma all --single-quote --parser typescript --arrow-parens always",
-            "git add"
-        ],
-        "test/**/*.ts": [
-            "tslint samples/**/*.ts",
+        "packages/**/*.ts": [
+            "npm run lint",
             "prettier --write --print-width 120 --trailing-comma all --single-quote --parser typescript --arrow-parens always",
             "git add"
         ],
         "samples/**/*.ts": [
-            "tslint samples/**/*.ts",
             "prettier --write --print-width 120 --trailing-comma all --single-quote --parser typescript --arrow-parens always",
             "git add"
         ],
@@ -69,9 +62,7 @@
             "ts"
         ],
         "roots": [
-            "samples",
-            "src",
-            "test"
+            "packages/core"
         ],
         "coveragePathIgnorePatterns": [
             "/node_modules/",
