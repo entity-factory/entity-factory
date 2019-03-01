@@ -2,10 +2,11 @@
     "name": "entity-factory",
     "version": "0.1.1",
     "description": "Create entities on the fly for mocking and testing",
-    "main": "dist/index.js",
-    "typings": "dist/index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/entity-factory/entity-factory"
+    },
     "scripts": {
-        "build": "rm -rf dist/ && tsc -p tsconfig.build.json",
         "test": "jest",
         "lint": "tslint -p \"tsconfig.json\" -c \"tslint.json\" -e \"**/node_modules/**\" \"packages/**/*.ts\"",
         "clean:packages": "rimraf \"packages/**/*.js\" && rimraf \"packages/**/*.js.map\" && rimraf \"packages/**/*.d.ts\" ",

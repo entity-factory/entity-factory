@@ -7,7 +7,7 @@
     "typings": "index",
     "repository": {
         "type": "git",
-        "url": "https://github.com/jcloutz/entity-factory"
+        "url": "https://github.com/entity-factory/entity-factory"
     },
     "license": "MIT",
     "peerDependencies": {
