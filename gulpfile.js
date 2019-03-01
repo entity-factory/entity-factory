@@ -17,3 +17,9 @@ Object.keys(projects).forEach(project => {
 });
 
 gulp.task('build', gulp.series(Object.keys(projects)));
+
+gulp.task('copy', () => {
+    gulp.src(['README.md', '.npmignore', 'LICENSE'])
+        .pipe(gulp.dest(`packages/core`))
+        .pipe(gulp.dest(`packages/typeorm`));
+});

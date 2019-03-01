@@ -1,4 +1,4 @@
-import { BlueprintOptions } from '../../blueprint/BlueprintTypeOption';
+import { BlueprintOptions } from '../../blueprint/BlueprintOptions';
 import { EntityObjectType } from '../../common/EntityObjectType';
 import { isFunction } from '../../utils';
 import { Adapter } from '../Adapter';

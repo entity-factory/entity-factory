@@ -1,7 +1,5 @@
+import { Adapter, BlueprintOptions, DeepEntityPartial } from '@entity-factory/core';
 import { Connection, createConnection, DeepPartial, getConnection } from 'typeorm';
-import { Adapter } from '../core/adapters/Adapter';
-import { BlueprintOptions } from '../core/blueprint/BlueprintTypeOption';
-import { DeepEntityPartial } from '../core/common/DeepEntityPartial';
 import { TypeormAdapterOptions } from './TypeormAdapterOptions';
 import { TypeormBlueprintOptions } from './TypeormBlueprintOptions';
 

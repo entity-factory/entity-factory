@@ -1,6 +1,6 @@
 import { ObjectAdapter } from '../../adapters/object/ObjectAdapter';
 import { ObjectBlueprintOptions } from '../../adapters/object/ObjectBlueprintOptions';
-import { BlueprintOptions } from '../../blueprint/BlueprintTypeOption';
+import { BlueprintOptions } from '../../blueprint/BlueprintOptions';
 import { DeepEntityPartial } from '../../common/DeepEntityPartial';
 import { EntityFactory } from '../../EntityFactory';
 import { CommentBlueprint } from '../test-fixtures/Comment.blueprint';

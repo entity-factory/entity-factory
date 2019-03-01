@@ -1,4 +1,4 @@
-import { BlueprintOptions } from '../blueprint/BlueprintTypeOption';
+import { BlueprintOptions } from '../blueprint/BlueprintOptions';
 import { DeepEntityPartial } from '../common/DeepEntityPartial';
 import { AdapterBlueprintOptions } from './AdapterBlueprintOptions';
 

@@ -14,6 +14,7 @@ export * from './blueprint/BlueprintDefinitionAfterMethod';
 export * from './blueprint/BlueprintDefinitionAfterMethodContext';
 export * from './blueprint/BlueprintDefinitionMethod';
 export * from './blueprint/BlueprintLoader';
+export * from './blueprint/BlueprintOptions';
 
 export * from './common/DeepEntityPartial';
 export * from './common/EntityObjectType';

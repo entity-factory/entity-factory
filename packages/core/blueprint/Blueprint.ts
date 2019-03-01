@@ -5,7 +5,7 @@ import { getName, isFunction } from '../utils';
 import { BlueprintDeepPartial } from './BlueprintDeepPartial';
 import { BlueprintDefinitionAfterMethod } from './BlueprintDefinitionAfterMethod';
 import { BlueprintDefinitionMethod } from './BlueprintDefinitionMethod';
-import { BlueprintOptions } from './BlueprintTypeOption';
+import { BlueprintOptions } from './BlueprintOptions';
 
 export class Blueprint<
     Entity = any,
