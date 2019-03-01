@@ -1,4 +1,4 @@
-import { EntityFactory, ObjectAdapter, ObjectBlueprint } from '../../src';
+import { EntityFactory, ObjectAdapter, ObjectBlueprint } from '@entity-factory/core';
 
 export interface ICustomObject {
     _id: number;

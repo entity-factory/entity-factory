@@ -1,0 +1,31 @@
+import { Adapter } from '../adapters/Adapter';
+import { AdapterBlueprintOptions } from '../adapters/AdapterBlueprintOptions';
+import { EntityObjectType } from '../common/EntityObjectType';
+import { BlueprintDeepPartial } from './BlueprintDeepPartial';
+import { BlueprintDefinitionAfterMethod } from './BlueprintDefinitionAfterMethod';
+import { BlueprintDefinitionMethod } from './BlueprintDefinitionMethod';
+import { BlueprintOptions } from './BlueprintTypeOption';
+export declare class Blueprint<Entity = any, AdapterType extends Adapter = Adapter, Options extends AdapterBlueprintOptions = {}> {
+    private DEFAULT_KEY;
+    private entityType;
+    private blueprintOptions;
+    private readonly factoryMethods;
+    private readonly callbackMethods;
+    type(type: string | EntityObjectType<Entity>): void;
+    getType(): string | EntityObjectType<Entity>;
+    options(context: Options): void;
+    getOptions(): BlueprintOptions<Options>;
+    define(factory: BlueprintDefinitionMethod<Entity>): void;
+    state(state: string, factory: BlueprintDefinitionMethod<Entity> | BlueprintDeepPartial<Entity>): void;
+    afterMaking(callback: BlueprintDefinitionAfterMethod<Entity, AdapterType>): void;
+    afterMakingState(state: string, callback: BlueprintDefinitionAfterMethod<Entity, AdapterType>): void;
+    afterCreating(callback: BlueprintDefinitionAfterMethod<Entity, AdapterType>): void;
+    afterCreatingState(state: string, callback: BlueprintDefinitionAfterMethod<Entity, AdapterType>): void;
+    hasFactoryMethod(state?: string): boolean;
+    getFactoryMethod(state?: string): BlueprintDefinitionMethod<Entity>;
+    hasMakingCallbackMethod(state?: string): boolean;
+    getMakingCallbackMethod(state?: string): BlueprintDefinitionAfterMethod<Entity, AdapterType> | undefined;
+    hasCreatingCallbackMethod(state?: string): boolean;
+    getCreatingCallbackMethod(state?: string): BlueprintDefinitionAfterMethod<Entity, AdapterType> | undefined;
+    private getKey;
+}

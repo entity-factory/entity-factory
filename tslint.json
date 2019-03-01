@@ -4,6 +4,9 @@
     "jsRules": {
         "no-unused-expression": true
     },
+    "linterOptions": {
+        "exclude": ["node_modules/**", "packages/node_modules/**"]
+    },
     "rules": {
         "ban-types": [false],
         "interface-name": [false],

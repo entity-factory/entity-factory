@@ -1,4 +1,4 @@
-import { EntityFactory, ObjectBlueprint } from '../../src';
+import { EntityFactory, ObjectBlueprint } from '@entity-factory/core';
 import { IUser } from '../00-entities/interfaces';
 
 export const entityFactory = new EntityFactory();

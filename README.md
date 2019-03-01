@@ -4,11 +4,29 @@ Entity Factory is a library used for quickly creating fixture data from plain
 objects or classes using faker. Inspired by laravel's factories for generating
 test data. Currently the library supports plain JS objects and Typeorm entities.
 
+<<<<<<< HEAD
 [Additional Samples](https://github.com/jcloutz/entity-factory/tree/master/samples)
+=======
+
+## Table of Contents
+
+-   [Features](#features)
+-   [Installation](#installation)
+-   [Example](#example)
+    -   [Inline Declaration](#inline-declaration)
+    -   [Profile Declaration](#profile-declaration)
+
+## Features
+
+-   Generate plain javascript objects on demand
+-   Generate objects with nested relations
+-   Typeorm Support - Generate Entities - Persist Entities and nested relations
+    > > > > > > > feature/lerna
 
 ## Installation
 
 ```
+<<<<<<< HEAD
 npm install --save entity-factory
 ```
 
@@ -18,15 +36,24 @@ Entity blueprints can also be defined within classes to enable better code separ
 
 ```typescript
 import { EntityFactory, ObjectBlueprint } from 'entity-factory';
+=======
+npm install --save @entity-factory/core
+```
 
-interface User {
-    user_id: number;
-    username: string;
-    email: string;
-    active: boolean;
-}
+## Example
 
+Entity Profiles can also be defined within classes to enable better code separation.
+
+> > > > > > > feature/lerna
+
+```javascript
+import { EntityFactory, ObjectBlueprint } from '@entity-factory/core';
+
+<<<<<<< HEAD
 class UserBlueprint extends ObjectBlueprint<User> {
+=======
+class UserBlueprint extends ObjectBlueprint {
+>>>>>>> feature/lerna
     constructor() {
         super();
 
@@ -77,15 +104,18 @@ class UserBlueprint extends ObjectBlueprint<User> {
 }
 
 export const entityFactory = new EntityFactory({
+<<<<<<< HEAD
     // blueprints can be an array of glob patterns, blueprint classes and/or blueprint instances
     profiles: [UserBlueprint],
+=======
+    blueprints: [UserBlueprint],
+>>>>>>> feature/lerna
 });
 
 // Generate entities
 entityFactory
-    .for<User>('user') // get builder instance for 'user'
+    .for('user') // get builder instance for 'user'
     .state('active')
-    .with({ username: 'john' }) // override property with fixed value
     .create(3) // generate 3 users with incrementing id's
     .then(users => console.log(users));
 
@@ -100,7 +130,11 @@ entityFactory
 ### Alternate Inline Blueprint Declaration
 
 ```typescript
+<<<<<<< HEAD
 import { EntityFactory, ObjectBlueprint } from 'entity-factory';
+=======
+import { EntityFactory, ObjectProfile } from 'entity-factory';
+>>>>>>> feature/lerna
 
 interface User {
     id: number;
@@ -139,9 +173,22 @@ entityFactory
 // ]
 ```
 
+<<<<<<< HEAD
+
 ## TODO
 
 [ ] imporove docs
 [ ] resolve nested objects
 [ ] resolve nested array
 [ ] add method to generate random objects on the fly
+=======
+
+## Entity Profile
+
+_TODO_
+
+## Profile Builder
+
+_TODO_
+
+> > > > > > > feature/lerna
