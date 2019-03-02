@@ -17,8 +17,8 @@
     "author": "jcloutz",
     "license": "MIT",
     "dependencies": {
-        "faker": "^4.1.0",
-        "glob": "^7.1.3"
+        "@entity-factory/core": "^0.1.1-alpha.0",
+        "@entity-factory/typeorm": "^0.1.1-alpha.0"
     },
     "devDependencies": {
         "@types/faker": "^4.1.5",
