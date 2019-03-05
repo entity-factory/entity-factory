@@ -1,3 +1,7 @@
+/**
+ * @module Blueprint
+ */
+
 import { Adapter } from '../adapters/Adapter';
 import { AdapterBlueprintOptions } from '../adapters/AdapterBlueprintOptions';
 import { EntityObjectType } from '../common/EntityObjectType';

@@ -1,10 +1,10 @@
-import { IUser } from '../00-entities/interfaces';
+import { IUser } from '../entities/interfaces';
 import { factory } from './factory';
 
 factory
     .for<IUser>('user')
     .state('active')
     .create(3)
-    .then(users => {
+    .then((users) => {
         console.log('Active users have been created: ', users);
     });

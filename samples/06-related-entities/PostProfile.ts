@@ -1,5 +1,5 @@
 import { ObjectBlueprint } from '@entity-factory/core';
-import { IPost } from '../00-entities/interfaces';
+import { IPost } from '../entities/interfaces';
 
 export class PostProfile extends ObjectBlueprint<IPost> {
     constructor() {

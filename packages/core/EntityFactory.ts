@@ -1,3 +1,7 @@
+/**
+ * @module EntityFactory
+ */
+
 import { Adapter } from './adapters/Adapter';
 import { ObjectAdapter } from './adapters/object/ObjectAdapter';
 import { Blueprint } from './blueprint/Blueprint';

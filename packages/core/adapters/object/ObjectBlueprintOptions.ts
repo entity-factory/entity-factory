@@ -1,3 +1,7 @@
+/**
+ * @module Adapters/object
+ */
+
 import { AdapterBlueprintOptions } from '../AdapterBlueprintOptions';
 
 export interface ObjectBlueprintOptions extends AdapterBlueprintOptions {

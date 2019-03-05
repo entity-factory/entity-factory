@@ -1,5 +1,5 @@
 import { EntityFactory, ObjectBlueprint } from '@entity-factory/core';
-import { IUser } from '../00-entities/interfaces';
+import { IUser } from '../entities/interfaces';
 
 export const entityFactory = new EntityFactory();
 

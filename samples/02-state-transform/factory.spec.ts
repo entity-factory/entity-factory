@@ -1,4 +1,4 @@
-import { IUser } from '../00-entities/interfaces';
+import { IUser } from '../entities/interfaces';
 import { factory } from './factory';
 
 describe('02-state-transform', async () => {

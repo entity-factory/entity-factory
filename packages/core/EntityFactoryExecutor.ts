@@ -1,3 +1,7 @@
+/**
+ * @module EntityFactory
+ */
+
 import { BlueprintBuilder } from './blueprint/BlueprintBuilder';
 import { EntityObjectType } from './common/EntityObjectType';
 

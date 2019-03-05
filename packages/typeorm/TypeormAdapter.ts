@@ -1,3 +1,7 @@
+/**
+ * @module Adapters/Typeorm
+ */
+
 import { Adapter, BlueprintOptions, DeepEntityPartial } from '@entity-factory/core';
 import { Connection, createConnection, DeepPartial, getConnection } from 'typeorm';
 import { TypeormAdapterOptions } from './TypeormAdapterOptions';

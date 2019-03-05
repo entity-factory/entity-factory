@@ -1,4 +1,8 @@
 /**
+ * @module Common
+ */
+
+/**
  * Defines a partial object
  *
  * Taken from Typeorm's DeepPartial __type

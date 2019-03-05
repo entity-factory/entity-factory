@@ -1,3 +1,7 @@
+/**
+ * @module Blueprint
+ */
+
 import { BlueprintDefinitionAfterMethodContext } from './BlueprintDefinitionAfterMethodContext';
 
 /**

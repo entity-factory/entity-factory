@@ -1,8 +1,8 @@
 import { EntityFactory } from '@entity-factory/core';
 
-import { Post } from '../../../samples/00-entities/Post.entity';
-import { User } from '../../../samples/00-entities/User.entity';
 import { TypeormBlueprint } from '../TypeormBlueprint';
+import { Post } from './entities/Post.entity';
+import { User } from './entities/User.entity';
 
 export const getDefaultFactory = () => {
     return new EntityFactory();

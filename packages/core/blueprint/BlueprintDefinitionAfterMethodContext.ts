@@ -1,3 +1,7 @@
+/**
+ * @module Blueprint
+ */
+
 import { EntityFactory } from '../EntityFactory';
 import FakerStatic = Faker.FakerStatic;
 

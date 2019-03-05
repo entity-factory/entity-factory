@@ -1,3 +1,7 @@
+/**
+ * @module Blueprint
+ */
+
 import { isFunction, loadDep } from '../utils';
 import { Blueprint } from './Blueprint';
 

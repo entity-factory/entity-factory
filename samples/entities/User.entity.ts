@@ -16,9 +16,9 @@ export class User {
     @Column()
     public active: boolean;
 
-    @OneToMany(type => Post, post => post.author)
+    @OneToMany((type) => Post, (post) => post.author)
     public posts: Post[];
 
-    @OneToMany(type => Comment, comment => comment.user)
+    @OneToMany((type) => Comment, (comment) => comment.user)
     public comments: Comment[];
 }

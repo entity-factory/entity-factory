@@ -1,4 +1,4 @@
-import { IUser } from '../00-entities/interfaces';
+import { IUser } from '../entities/interfaces';
 import { entityFactory } from './factory';
 
 describe('03-after-making-callback', async () => {

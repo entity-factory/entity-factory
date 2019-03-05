@@ -1,5 +1,5 @@
 import { ObjectBlueprint } from '@entity-factory/core';
-import { IUser } from '../00-entities/interfaces';
+import { IUser } from '../entities/interfaces';
 
 class UserProfile extends ObjectBlueprint<IUser> {
     constructor() {

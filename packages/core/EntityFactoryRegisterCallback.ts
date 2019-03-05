@@ -1,3 +1,7 @@
+/**
+ * @module EntityFactory
+ */
+
 import { Blueprint } from './blueprint/Blueprint';
 
 /**

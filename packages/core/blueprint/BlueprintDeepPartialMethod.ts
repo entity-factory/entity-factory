@@ -1,3 +1,7 @@
+/**
+ * @module Blueprint
+ */
+
 import { EntityFactoryExecutor } from '../EntityFactoryExecutor';
 
 /**

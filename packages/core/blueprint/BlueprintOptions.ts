@@ -1,3 +1,7 @@
+/**
+ * @module Blueprint
+ */
+
 import { EntityObjectType } from '../common/EntityObjectType';
 
 export type BlueprintOptions<Options> = Options & {
