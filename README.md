@@ -9,7 +9,7 @@ test data. Currently the library supports plain JS objects and Typeorm entities.
 -   [Features](#features)
 -   [Installation](#installation)
 -   [Quick Guide](#quick-guide)
--   [Creating an Entity Factory](creating-an-entity-factory)
+-   [Creating an Entity Factory](#creating-an-entity-factory)
 -   [Defining a Blueprint](#defining-a-blueprint)
 -   [Using the Builder](#using-the-builder)
 -   [Using Adapters](#using-adapters)
