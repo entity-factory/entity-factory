@@ -9,12 +9,10 @@ test data. Currently the library supports plain JS objects and Typeorm entities.
 -   [Features](#features)
 -   [Installation](#installation)
 -   [Quick Guide](#quick-guide)
--   [API](#api)
-    -   [Entity Factory](#entity-factory)
-    -   [Adapters](#adapters)
-    -   [Blueprint](#blueprint)
-    -   [Blueprint Builder](#blueprint-builder)
-    -   [Blueprint Loader](#blueprint-loader)
+-   [Creating an Entity Factory](creating-an-entity-factory)
+-   [Defining a Blueprint](#defining-a-blueprint)
+-   [Using the Builder](#using-the-builder)
+-   [Using Adapters](#using-adapters)
 
 ## Features
 
@@ -293,6 +291,7 @@ blueprint.state('with-posts', faker => {
 Fired after a call to `make()` on the builder instance. The entity received will
 have been resolved to it's base type but not persisted. The callback will
 receive the current entity as well as a context object.
+
 **callback**
 
 -   **currentEntity**: resolved entity, plain object or class
@@ -324,6 +323,7 @@ blueprint.afterMakingState(
 Fired after a call to `create()` on the builder instance. The entity received
 will have been resolved and persisted. The callback will receive the current
 entity as well as a context object.
+
 **callback**
 
 -   **currentEntity**: resolved entity, plain object or class
