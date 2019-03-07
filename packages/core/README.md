@@ -93,13 +93,15 @@ following attributes.
 
 -   **opts.adapter (optional)**: default `new ObjectAdapter()`. The adapter is
     used when making and creating objects. Available adapters
-    _ **ObjectAdapter**: Creates standard javascript objects with incrementing
-    id values.
-    _ **TypeormAdapter**: Makes and persists TyprORM entities.
+    -   **ObjectAdapter**: Creates standard javascript objects with incrementing
+        id values.
+    -   **TypeormAdapter**: Makes and persists TyprORM entities.
 -   **opts.profiles (optional)**: default `[]`. The profiles array accepts an
     array of glob patterns, Profile instances or Profile classes.
-    _ **glob patterns**: ex: `’src/\*\*/_.profile.js'`. If a glob pattern is passed EntityFactory will attempt to load all profiles found in the path and register them. * **Class Reference**: ex`UserProfile`. If a class reference is passed Entity factory will create a new instance and register it. * **Profile Instance**: Ex`new UserProfile()`. If a profile instance is
-    provided EntityFactory will register it.
+    -   **glob patterns**: ex: `’src/\*\*/_.profile.js'`. If a glob pattern is passed EntityFactory will attempt to load all profiles found in the path and register them.
+    -   **Class Reference**: ex`UserProfile`. If a class reference is passed Entity factory will create a new instance and register it.
+    -   **Profile Instance**: Ex`new UserProfile()`. If a profile instance is
+        provided EntityFactory will register it.
 
 ### factory.register(profile | callback(profile))
 
@@ -390,11 +392,11 @@ plain objects or class instances. Unlike `create()` the entity will not be
 persisted
 
 ```javascript
-factory.for(User).make();
+factory.for(User).make(); // return a single User
 
-factory.for(User).make(1);
+factory.for(User).make(1); // return a single User
 
-factory.for(User).make(2);
+factory.for(User).make(2); // return an array of User
 ```
 
 ### create([int, [partial]])
@@ -405,11 +407,11 @@ mean that they simple have an id generated for them or they are saved to teh
 database.
 
 ```javascript
-factory.for(User).create();
+factory.for(User).create(); // return a single User
 
-factory.for(User).create(1);
+factory.for(User).create(1); // return a single user
 
-factory.for(User).create(2);
+factory.for(User).create(2); // return an array of User
 ```
 
 ## Using Adapters

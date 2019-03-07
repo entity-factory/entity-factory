@@ -18,27 +18,33 @@ npm install --save @entity-factory/core
 
 ## Example
 
-{% codetabs name="index.js", type="js" -%}
+See it run on [repl.it](https://repl.it/@jcloutz/entity-factory-js-example)
+
+```javascript
+// index.js
 const { EntityFactory } = require('@entity-factory/core');
-const { UserBlueprint } = require('./UserBlueprint')
-const { PostBlueprint } = require('./PostBlueprint')
+const { UserBlueprint } = require('./UserBlueprint');
+const { PostBlueprint } = require('./PostBlueprint');
 
 const entityFactory = new EntityFactory({
-// blueprints can be an array of glob patterns, blueprint classes and/or blueprint instances
-blueprints: [UserBlueprint, PostBlueprint],
+    // blueprints can be an array of glob patterns, blueprint classes and/or blueprint instances
+    blueprints: [UserBlueprint, PostBlueprint],
 });
 
 // Generate entities
 entityFactory
-.for('user') // get builder instance for 'user'
-.state('with-posts') // generate users with posts
-.create(3) // generate 3 users with incrementing id's
-{%- language name="UserBlueprint.js", type="js" -%}
+    .for('user') // get builder instance for 'user'
+    .state('with-posts') // generate users with posts
+    .create(3); // generate 3 users with incrementing id's
+```
+
+```javascript
+// UserBlueprint.js
 const { ObjectBlueprint } = require('@entity-factory/core');
 
 export class UserBlueprint extends ObjectBlueprint {
-constructor() {
-super();
+    constructor() {
+        super();
 
         this.type('user');
 
@@ -49,18 +55,19 @@ super();
         }));
 
         this.state('with-posts', async faker => ({
-            posts: async factory => factory.for('post').create(2)
+            posts: async factory => factory.for('post').create(2),
         }));
     }
-
 }
+```
 
-{%- language name="PostBlueprint.js", type="js" -%}
+```javascript
+// PostBlueprint.js
 const { ObjectBlueprint } = require('@entity-factory/core');
 
 class PostBlueprint extends ObjectBlueprint {
-constructor() {
-super();
+    constructor() {
+        super();
 
         this.type('post');
 
@@ -69,10 +76,5 @@ super();
             body: faker.lorem.sentences(2),
         }));
     }
-
 }
-{%- endcodetabs %}
-
-See it run:
-
-<iframe height="800px" width="100%" src="https://repl.it/@jcloutz/entity-factory-js-example?lite=true" scrolling="no" frameborder="no" allowtransparency="true" allowfullscreen="true" sandbox="allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-modals"></iframe>
+```
