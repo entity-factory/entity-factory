@@ -1,3 +1,4 @@
+-   [What is Entity Factory](readme.md)
 -   [Creating a Factory](factory.md)
 -   [Defining a Blueprint](blueprint.md)
 -   [Using the Builder](builder.md)
