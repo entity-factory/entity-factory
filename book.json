@@ -1,0 +1,8 @@
+{
+    "root": "docs",
+    "title": "Entity Factory",
+    "description": "Entity Factory documentation",
+    "author": "Jeremy Cloutier",
+    "gitbook": ">=3.2.3",
+    "plugins": ["codetabs", "runkit"]
+}
