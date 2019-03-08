@@ -7,18 +7,18 @@ database.
 ### ObjectAdapter([opts])
 
 ```javascript
-const objectAdapter = new ObjectAdapter()
+const objectAdapter = new ObjectAdapter();
 
 // or
 
 const objectAdapter = new ObjectAdaper({
-    generateId: true;
-    defaultIdAttribute: 'id';
+    generateId: true,
+    defaultIdAttribute: 'id',
 });
 
 const factory = new EntityFactory({
     adapter: objectAdapter,
-})
+});
 ```
 
 -   **opts**: optional
@@ -43,9 +43,9 @@ export class WidgetBlueprint extends ObjectBlueprint {
         this.type(Widget);
 
         this.options({
-            generateId: true
-            idAttribute: '_id';
-        })
+            generateId: true,
+            idAttribute: '_id',
+        });
     }
 }
 ```

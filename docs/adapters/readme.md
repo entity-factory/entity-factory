@@ -5,5 +5,5 @@ formats. The ObjectAdapter is included in Entity Factory by default.
 
 **Available Adapters**
 
--   [ObjectAdapter](/adapters/object-adapter.md)
--   [TypeormAdapter](/adapters/typeorm-adapter.md)
+-   [ObjectAdapter](../adapters/object-adapter.md)
+-   [TypeormAdapter](../adapters/typeorm-adapter.md)

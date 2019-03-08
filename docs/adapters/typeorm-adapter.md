@@ -13,19 +13,19 @@ npm install --save @entity-factory/core @entity-factory/typeorm
 
 ```javascript
 // use default connection from ormconfig.json
-const typeormAdapter = new TypeormAdapter()
+const typeormAdapter = new TypeormAdapter();
 
 // or use any valid typeorm connection options
 const objectAdapter = new ObjectAdaper({
     type: 'sqlite',
     database: ':memory:',
     synchronize: true,
-    entities: [Widget],;
+    entities: [Widget],
 });
 
 const factory = new EntityFactory({
     adapter: typeormAdapter,
-})
+});
 ```
 
 -   **opts**: optional, any valid

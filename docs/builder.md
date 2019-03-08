@@ -17,7 +17,8 @@ factory
 
 ### state(...string)
 
-Used to apply defined state transforms to a factory. The states are applied the order they are provided to the function.
+Used to apply defined state transforms to a factory. The states are applied the
+order they are provided to the function.
 
 ```javascript
 factory.for(User).state('active', 'with-posts');

@@ -2,13 +2,13 @@
 
 ```javascript
 const entityFactory = new EntityFactory({
-    adapter: new OjectAdapter()
+    adapter: new OjectAdapter(),
     blueprints: [
         '**/*.blueprint.js', // glob pattern
         new UserBlueprint(), // blueprint instance
         PostBlueprint, // blueprint reference
     ],
-})
+});
 ```
 
 Create a new entity factory instance. Opts is optional and can contain the
@@ -29,7 +29,7 @@ following attributes.
 ## factory.register(profile | callback(profile))
 
 ```javascript
-class UserProfile extends ObjectBlueprint {}
+class UserBlueprint extends ObjectBlueprint {}
 
 // Accepts a reference or an instance to a blueprint
 factory.register(UserBlueprint);
@@ -62,4 +62,4 @@ const users = await factory.for(User).create(3);
     -   **key (string|object reference)**: The is defined in the profile calling
         `type(key)` in a blueprint and used to retrieve the profile from the factory
         and supply it to the `ProfileBuilder`.
--   **Returns**: [BlueprintBuilder](/builder.md)
+-   **Returns**: [BlueprintBuilder](builder.md)

@@ -1,6 +1,6 @@
 # Defining a Blueprint
 
-Defining blueprint can be done either via callback to [EntityFactory.register()](/factory.md#factoryregisterprofile--callbackprofile)
+Defining blueprint can be done either via callback to [EntityFactory.register()](factory.md#factoryregisterprofile--callbackprofile)
 or as a separate Blueprint class.
 
 ```javascript
