@@ -75,3 +75,7 @@ gulp.task('copy', () => {
         .pipe(gulp.dest(`packages/core`))
         .pipe(gulp.dest(`packages/typeorm`));
 });
+
+gulp.task('copy:readme', () => {
+    gulp.src(['README.md']).pipe(gulp.dest(`packages/core`));
+});
