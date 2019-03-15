@@ -9,21 +9,20 @@ export class PostBlueprint extends TypeormBlueprint<Post> {
 
         this.type(Post);
 
-        this.define(async (faker) => ({
+        this.define(async ({ faker, factory }) => ({
             title: faker.company.catchPhrase(),
             body: faker.lorem.paragraphs(2, '\n\n'),
         }));
 
-        this.state('with-author', async (faker) => ({
-            author: async (factory) => factory.for(User).create(),
+        this.state('with-author', async ({ faker, factory }) => ({
+            author: await factory.for(User).create(),
         }));
 
-        this.state('with-comments', async (faker) => ({
-            comments: async (factory) =>
-                factory
-                    .for(Comment)
-                    .state('with-user')
-                    .create(3),
+        this.state('with-comments', async ({ faker, factory }) => ({
+            comments: await factory
+                .for(Comment)
+                .state('with-user')
+                .create(3),
         }));
     }
 }

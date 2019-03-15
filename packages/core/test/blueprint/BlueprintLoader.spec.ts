@@ -45,15 +45,15 @@ describe('BlueprintLoader', () => {
         }
     });
 
-    it('should only load blueprints', async () => {
-        const loader = new BlueprintLoader(['samples/TypeormAdapter/*.entity.ts', FooEntity, new FooBlueprint()]);
-
-        const profiles = loader.getProfiles();
-
-        expect(profiles.length).toEqual(1);
-
-        for (const profile of profiles) {
-            expect(profile).toBeInstanceOf(Blueprint);
-        }
-    });
+    // it('should only load blueprints', async () => {
+    //     const loader = new BlueprintLoader(['samples/TypeormAdapter/*.entity.ts', FooEntity, new FooBlueprint()]);
+    //
+    //     const profiles = loader.getProfiles();
+    //
+    //     expect(profiles.length).toEqual(1);
+    //
+    //     for (const profile of profiles) {
+    //         expect(profile).toBeInstanceOf(Blueprint);
+    //     }
+    // });
 });

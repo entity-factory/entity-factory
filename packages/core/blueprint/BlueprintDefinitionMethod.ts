@@ -2,7 +2,7 @@
  * @module Blueprint
  */
 
-import { BlueprintDeepPartial } from './BlueprintDeepPartial';
+import { DeepEntityPartial } from '..';
 import { BlueprintFactoryMethodContext } from './BlueprintFactoryMethodContext';
 
 /**
@@ -10,4 +10,4 @@ import { BlueprintFactoryMethodContext } from './BlueprintFactoryMethodContext';
  */
 export type BlueprintDefinitionMethod<EntityType> = (
     context: BlueprintFactoryMethodContext,
-) => Promise<BlueprintDeepPartial<EntityType>>;
+) => Promise<DeepEntityPartial<EntityType>>;

@@ -1,5 +1,4 @@
 import { ObjectBlueprint } from '..';
-import { TypeormAdapter, TypeormBlueprint } from '../../typeorm';
 import { Blueprint } from '../blueprint/Blueprint';
 import { BlueprintBuilder } from '../blueprint/BlueprintBuilder';
 import { EntityFactory } from '../EntityFactory';

@@ -7,7 +7,6 @@ import { Adapter } from './adapters/Adapter';
 import { ObjectAdapter } from './adapters/object/ObjectAdapter';
 import { Blueprint } from './blueprint/Blueprint';
 import { BlueprintBuilder } from './blueprint/BlueprintBuilder';
-import { BlueprintDefinitionMethod } from './blueprint/BlueprintDefinitionMethod';
 import { BlueprintLoader } from './blueprint/BlueprintLoader';
 import { EntityObjectType } from './common/EntityObjectType';
 import { EntityFactoryExecutor } from './EntityFactoryExecutor';

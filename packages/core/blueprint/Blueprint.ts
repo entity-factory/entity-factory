@@ -2,11 +2,11 @@
  * @module Blueprint
  */
 
+import { DeepEntityPartial } from '..';
 import { Adapter } from '../adapters/Adapter';
 import { AdapterBlueprintOptions } from '../adapters/AdapterBlueprintOptions';
 import { EntityObjectType } from '../common/EntityObjectType';
 import { getName, isFunction } from '../utils';
-import { BlueprintDeepPartial } from './BlueprintDeepPartial';
 import { BlueprintDefinitionAfterMethod } from './BlueprintDefinitionAfterMethod';
 import { BlueprintDefinitionMethod } from './BlueprintDefinitionMethod';
 import { BlueprintOptions } from './BlueprintOptions';
@@ -85,12 +85,12 @@ export class Blueprint<
      * @param state
      * @param factory
      */
-    public state(state: string, factory: BlueprintDefinitionMethod<Entity> | BlueprintDeepPartial<Entity>): void {
+    public state(state: string, factory: BlueprintDefinitionMethod<Entity> | DeepEntityPartial<Entity>): void {
         const key = this.getKey(state);
 
         let factoryMethod: BlueprintDefinitionMethod<Entity>;
         if (!isFunction(factory)) {
-            factoryMethod = async () => factory as BlueprintDeepPartial<Entity>;
+            factoryMethod = async () => factory as DeepEntityPartial<Entity>;
         } else {
             factoryMethod = factory as BlueprintDefinitionMethod<Entity>;
         }

@@ -8,8 +8,6 @@ export * from './adapters/object/ObjectBlueprintOptions';
 
 export * from './blueprint/Blueprint';
 export * from './blueprint/BlueprintBuilder';
-export * from './blueprint/BlueprintDeepPartial';
-export * from './blueprint/BlueprintDeepPartialMethod';
 export * from './blueprint/BlueprintDefinitionAfterMethod';
 export * from './blueprint/BlueprintDefinitionAfterMethodContext';
 export * from './blueprint/BlueprintDefinitionMethod';

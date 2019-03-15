@@ -72,8 +72,7 @@
             "json"
         ],
         "roots": [
-            "packages/",
-            "samples/"
+            "packages/"
         ],
         "coveragePathIgnorePatterns": [
             "/node_modules/",

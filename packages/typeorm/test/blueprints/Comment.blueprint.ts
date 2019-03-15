@@ -9,16 +9,16 @@ export class CommentBlueprint extends TypeormBlueprint<Comment> {
 
         this.type(Comment);
 
-        this.define(async (faker) => ({
+        this.define(async ({ faker, factory }) => ({
             body: faker.lorem.sentences(2),
         }));
 
-        this.state('with-user', async (faker) => ({
-            user: async (factory) => factory.for(User).create(),
+        this.state('with-user', async ({ faker, factory }) => ({
+            user: await factory.for(User).create(),
         }));
 
-        this.state('with-post', async (faker) => ({
-            user: async (factory) => factory.for(Post).create(),
+        this.state('with-post', async ({ faker, factory }) => ({
+            user: await factory.for(Post).create(),
         }));
     }
 }

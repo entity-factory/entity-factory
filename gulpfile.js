@@ -7,7 +7,9 @@ const projects = {
     typeorm: ts.createProject('./packages/typeorm/tsconfig.json'),
 };
 
-Object.keys(projects).forEach(project => {
+const projectKeys = Object.keys(projects);
+
+projectKeys.forEach(project => {
     gulp.task(project, () => {
         return projects[project]
             .src()
@@ -16,7 +18,36 @@ Object.keys(projects).forEach(project => {
     });
 });
 
-gulp.task('build', gulp.series(Object.keys(projects)));
+projectKeys.forEach(project => {
+    gulp.task(`${project}:dev`, () => {
+        return projects[project]
+            .src()
+            .pipe(projects[project]())
+            .pipe(gulp.dest(`node_modules/@entity-factory/${project}`));
+    });
+});
+
+projectKeys.forEach(project => {
+    gulp.task(`${project}-clean:dev`, done => {
+        gulp.src(
+            `node_modules/@entity-factory/${project}/**/*.{d.ts,js.map,js}`,
+        ).pipe(clean({ force: true }));
+        done();
+    });
+});
+
+gulp.task('build', gulp.series(projectKeys));
+
+gulp.task(
+    'build:dev',
+    gulp.series(projectKeys.map(project => `${project}:dev`)),
+);
+gulp.task(
+    'clean:dev',
+    gulp.series(projectKeys.map(project => `${project}-clean:dev`)),
+);
+
+gulp.task('dev', gulp.series(['clean:dev', 'build:dev']));
 
 gulp.task('copy', () => {
     gulp.src(['README.md', '.npmignore', 'LICENSE'])

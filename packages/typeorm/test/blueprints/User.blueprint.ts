@@ -8,18 +8,18 @@ export class UserBlueprint extends TypeormBlueprint<User> {
 
         this.type(User);
 
-        this.define(async (faker) => ({
+        this.define(async ({ faker, factory }) => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
             active: true,
         }));
 
-        this.state('inactive', async (faker) => ({
+        this.state('inactive', async ({ faker, factory }) => ({
             active: false,
         }));
 
-        this.state('with-posts', async (faker) => ({
-            posts: async (factory) => await factory.for(Post).make(3),
+        this.state('with-posts', async ({ faker, factory }) => ({
+            posts: await factory.for(Post).make(3),
         }));
     }
 }

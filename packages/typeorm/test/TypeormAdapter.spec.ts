@@ -120,7 +120,9 @@ describe('TypeORM Adapter', async () => {
                 active: true,
             };
 
-            const result = await adapter.make([partial], { __type: Widget });
+            const result = await adapter.make<Widget>([partial], {
+                __type: Widget,
+            });
 
             expect(result[0]).toBeInstanceOf(Widget);
             expect(result[0].name).toEqual(partial.name);

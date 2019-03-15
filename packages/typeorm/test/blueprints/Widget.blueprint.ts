@@ -7,7 +7,7 @@ export class WidgetBlueprint extends TypeormBlueprint<Widget> {
 
         this.type(Widget);
 
-        this.define(async (faker) => {
+        this.define(async ({ faker, factory }) => {
             return {
                 name: faker.fake('{{name.firstName}} {{name.lastName}}'),
                 active: true,
