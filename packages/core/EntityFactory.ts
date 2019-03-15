@@ -53,6 +53,10 @@ export class EntityFactory implements EntityFactoryExecutor {
         return new BlueprintBuilder<EntityType>(blueprint, this, this.adapter);
     }
 
+    /**
+     * Generate an arbitrary object
+     * @param count
+     */
     public async gen<Entity = any>(count: EntityFactoryGeneratorMethod<Entity>): Promise<Entity>;
     public async gen<Entity = any>(count: 1, factoryMethod: EntityFactoryGeneratorMethod<Entity>): Promise<Entity>;
     public async gen<Entity = any>(
@@ -70,14 +74,14 @@ export class EntityFactory implements EntityFactoryExecutor {
         }
 
         if (factoryMethod) {
-            const objects: Entity[] = [];
+            const generatedObjects: Entity[] = [];
 
             for (let i = 0; i < count; i++) {
                 const result = await factoryMethod({ faker, factory: this });
-                objects.push(result);
+                generatedObjects.push(result);
             }
 
-            return count === 1 ? objects[0] : objects;
+            return count === 1 ? generatedObjects[0] : generatedObjects;
         }
     }
     /**
