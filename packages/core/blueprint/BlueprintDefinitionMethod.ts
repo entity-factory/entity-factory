@@ -2,12 +2,12 @@
  * @module Blueprint
  */
 
-import FakerStatic = Faker.FakerStatic;
 import { BlueprintDeepPartial } from './BlueprintDeepPartial';
+import { BlueprintFactoryMethodContext } from './BlueprintFactoryMethodContext';
 
 /**
  * Method used when defining a base factory and state factory
  */
 export type BlueprintDefinitionMethod<EntityType> = (
-    fakerInstance: FakerStatic,
+    context: BlueprintFactoryMethodContext,
 ) => Promise<BlueprintDeepPartial<EntityType>>;

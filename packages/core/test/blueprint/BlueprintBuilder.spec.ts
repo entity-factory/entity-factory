@@ -16,45 +16,45 @@ interface Post {
     body: string;
 }
 
-export const definePostProfile = (factory: EntityFactory): ObjectBlueprint<Post> => {
+export const definePostProfile = (entityFactory: EntityFactory): ObjectBlueprint<Post> => {
     const profile = new ObjectBlueprint<Post>();
     profile.type('post');
-    profile.define(async (faker) => ({
+    profile.define(async ({ faker, factory }) => ({
         title: faker.company.catchPhrase(),
         body: faker.lorem.paragraphs(2, '\n\n'),
     }));
 
-    factory.register(profile);
+    entityFactory.register(profile);
 
     return profile;
 };
 
-export const defineUserProfile = (factory: EntityFactory): ObjectBlueprint<User> => {
+export const defineUserProfile = (entityFactory: EntityFactory): ObjectBlueprint<User> => {
     const profile = new ObjectBlueprint<User>();
 
     profile.type(User);
-    profile.define(async (faker) => ({
+    profile.define(async ({ faker, factory }) => ({
         name: `${faker.name.firstName()} ${faker.name.lastName()}`,
         username: faker.internet.userName(),
         email: faker.internet.email(),
         active: true,
     }));
 
-    factory.register(profile);
+    entityFactory.register(profile);
 
     return profile;
 };
 
 describe('BlueprintBuilder', () => {
-    let factory: EntityFactory;
+    let factoryInstance: EntityFactory;
     beforeEach(() => {
-        factory = new EntityFactory();
+        factoryInstance = new EntityFactory();
     });
 
     describe('Make', async () => {
         it('should make a single entity', async () => {
-            defineUserProfile(factory);
-            const user = await factory.for(User).make();
+            defineUserProfile(factoryInstance);
+            const user = await factoryInstance.for(User).make();
 
             expect(user).toHaveProperty('username');
             expect(user).toHaveProperty('email');
@@ -65,9 +65,9 @@ describe('BlueprintBuilder', () => {
 
         it('should override an attribute when passing a partial', async () => {
             const expected = 'typeorm';
-            defineUserProfile(factory);
+            defineUserProfile(factoryInstance);
 
-            const user = await factory
+            const user = await factoryInstance
                 .for(User)
                 .with({
                     username: expected,
@@ -78,18 +78,18 @@ describe('BlueprintBuilder', () => {
         });
 
         it('should create multiple entities', async () => {
-            defineUserProfile(factory);
+            defineUserProfile(factoryInstance);
 
-            const users = await factory.for(User).make(2);
+            const users = await factoryInstance.for(User).make(2);
 
             expect(users.length).toEqual(2);
         });
 
         it('should allow overriding attributes for multiple entities when passing a partial', async () => {
             const expected = 'typeorm';
-            defineUserProfile(factory);
+            defineUserProfile(factoryInstance);
 
-            const users = await factory
+            const users = await factoryInstance
                 .for(User)
                 .with({
                     username: expected,
@@ -106,10 +106,10 @@ describe('BlueprintBuilder', () => {
         it('should call after making callback', async () => {
             const callback = jest.fn();
 
-            const blueprint = defineUserProfile(factory);
+            const blueprint = defineUserProfile(factoryInstance);
             blueprint.afterMaking(callback);
 
-            await factory.for(User).make();
+            await factoryInstance.for(User).make();
 
             expect(callback).toHaveBeenCalledTimes(1);
         });
@@ -117,24 +117,24 @@ describe('BlueprintBuilder', () => {
         it('should call after making callback for each entity made', async () => {
             const callback = jest.fn();
 
-            const blueprint = defineUserProfile(factory);
+            const blueprint = defineUserProfile(factoryInstance);
 
             blueprint.afterMaking(callback);
 
-            await factory.for(User).make(4);
+            await factoryInstance.for(User).make(4);
 
             expect(callback).toHaveBeenCalledTimes(4);
         });
 
         it('should resolve state factory calls', async () => {
-            const blueprint = defineUserProfile(factory);
-            definePostProfile(factory);
+            const blueprint = defineUserProfile(factoryInstance);
+            definePostProfile(factoryInstance);
 
-            blueprint.state('with-posts', async (faker) => ({
-                posts: async (fac) => await fac.for<Post>('post').make(2),
+            blueprint.state('with-posts', async ({ faker, factory }) => ({
+                posts: await factory.for<Post>('post').make(2),
             }));
 
-            const user = await factory
+            const user = await factoryInstance
                 .for(User)
                 .state('with-posts')
                 .make();
@@ -145,7 +145,7 @@ describe('BlueprintBuilder', () => {
         it('should call afterMakingState callbacks', async () => {
             const callback = jest.fn();
 
-            const blueprint = defineUserProfile(factory);
+            const blueprint = defineUserProfile(factoryInstance);
 
             blueprint.state('inactive', async (faker) => ({
                 active: false,
@@ -153,7 +153,7 @@ describe('BlueprintBuilder', () => {
 
             blueprint.afterMakingState('inactive', callback);
 
-            await factory
+            await factoryInstance
                 .for(User)
                 .state('inactive')
                 .make();
@@ -164,8 +164,8 @@ describe('BlueprintBuilder', () => {
 
     describe('Create', async () => {
         it('should create a single entity', async () => {
-            defineUserProfile(factory);
-            const createdUser = await factory.for(User).create();
+            defineUserProfile(factoryInstance);
+            const createdUser = await factoryInstance.for(User).create();
 
             expect(Array.isArray(createdUser)).toEqual(false);
             expect(createdUser).toHaveProperty('username');
@@ -175,32 +175,32 @@ describe('BlueprintBuilder', () => {
         });
 
         it('should call afterCreate', async () => {
-            const blueprint = defineUserProfile(factory);
+            const blueprint = defineUserProfile(factoryInstance);
 
             const callback = jest.fn();
             blueprint.afterCreating(callback);
 
-            await factory.for(User).create();
+            await factoryInstance.for(User).create();
 
             expect(callback).toHaveBeenCalledTimes(1);
         });
 
         it('should call afterMake and afterCreate', async () => {
-            const blueprint = defineUserProfile(factory);
+            const blueprint = defineUserProfile(factoryInstance);
 
             const afterMake = jest.fn();
             const afterCreate = jest.fn();
             blueprint.afterMaking(afterMake);
             blueprint.afterCreating(afterCreate);
 
-            await factory.for(User).create();
+            await factoryInstance.for(User).create();
 
             expect(afterMake).toHaveBeenCalledTimes(1);
             expect(afterCreate).toHaveBeenCalledTimes(1);
         });
 
         it('should call afterMake and afterCreate with states', async () => {
-            const blueprint = defineUserProfile(factory);
+            const blueprint = defineUserProfile(factoryInstance);
 
             const factoryActive = jest.fn();
             const afterMake = jest.fn();
@@ -214,7 +214,7 @@ describe('BlueprintBuilder', () => {
             blueprint.afterCreating(afterCreate);
             blueprint.afterCreatingState('active', afterCreateActive);
 
-            await factory
+            await factoryInstance
                 .for(User)
                 .state('active')
                 .create();
@@ -227,9 +227,9 @@ describe('BlueprintBuilder', () => {
         });
 
         it('should allow overriding of properties during create', async () => {
-            defineUserProfile(factory);
+            defineUserProfile(factoryInstance);
 
-            const users = await factory
+            const users = await factoryInstance
                 .for(User)
                 .with({
                     username: 'Chuck',
@@ -250,9 +250,9 @@ describe('BlueprintBuilder', () => {
 
     describe('Common', async () => {
         it('should allow overriding properties by passing object to "with"', async () => {
-            defineUserProfile(factory);
+            defineUserProfile(factoryInstance);
 
-            const user = await factory
+            const user = await factoryInstance
                 .for(User)
                 .with({
                     email: 'email@example.com',
@@ -265,8 +265,8 @@ describe('BlueprintBuilder', () => {
         });
 
         it('should resolve factory calls in callbacks', async () => {
-            const blueprint = defineUserProfile(factory);
-            definePostProfile(factory);
+            const blueprint = defineUserProfile(factoryInstance);
+            definePostProfile(factoryInstance);
 
             blueprint.afterCreating(async (usr, context) => {
                 usr.posts = await context.factory.for<Post>('post').create(3, {
@@ -274,7 +274,7 @@ describe('BlueprintBuilder', () => {
                 });
             });
 
-            const user = await factory.for(User).create();
+            const user = await factoryInstance.for(User).create();
 
             expect(user.posts).toHaveLength(3);
 

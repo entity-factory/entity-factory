@@ -3,6 +3,9 @@
  *
  * @param entity
  */
+import * as faker from 'faker';
+import { BlueprintDefinitionMethod, EntityFactoryExecutor } from '..';
+
 export const getName = (entity: any): string => {
     return typeof entity === 'string' ? entity : entity.name;
 };

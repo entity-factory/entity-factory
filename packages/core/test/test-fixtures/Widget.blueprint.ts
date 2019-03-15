@@ -11,7 +11,7 @@ export class WidgetBlueprint extends ObjectBlueprint<IWidget> {
             idAttribute: 'widgetId',
         });
 
-        this.define(async (faker) => {
+        this.define(async ({ faker, factory }) => {
             return {
                 name: faker.fake('{{name.firstName}} {{name.lastName}}'),
                 active: true,

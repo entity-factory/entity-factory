@@ -7,16 +7,16 @@ export class CommentBlueprint extends ObjectBlueprint<IComment> {
 
         this.type('comment');
 
-        this.define(async (faker) => ({
+        this.define(async ({ faker, factory }) => ({
             body: faker.lorem.sentences(2),
         }));
 
-        this.state('with-user', async (faker) => ({
-            user: async (factory) => factory.for('user').create(),
+        this.state('with-user', async ({ faker, factory }) => ({
+            user: await factory.for('user').create(),
         }));
 
-        this.state('with-post', async (faker) => ({
-            user: async (factory) => factory.for('post').create(),
+        this.state('with-post', async ({ faker, factory }) => ({
+            user: await factory.for('post').create(),
         }));
     }
 }

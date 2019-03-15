@@ -7,18 +7,18 @@ export class UserBlueprint extends ObjectBlueprint<IUser> {
 
         this.type('user');
 
-        this.define(async (faker) => ({
+        this.define(async ({ faker, factory }) => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
             active: true,
         }));
 
-        this.state('inactive', async (faker) => ({
+        this.state('inactive', async ({ faker, factory }) => ({
             active: false,
         }));
 
-        this.state('with-posts', async (faker) => ({
-            posts: async (factory) => await factory.for('post').make(3),
+        this.state('with-posts', async ({ faker, factory }) => ({
+            posts: await factory.for('post').make(3),
         }));
 
         // this.afterMaking(async (user, { factory, faker }) => {

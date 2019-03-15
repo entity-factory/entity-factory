@@ -2,14 +2,14 @@
  * @module Blueprint
  */
 
-import { EntityFactory } from '../EntityFactory';
+import { EntityFactoryExecutor } from '../EntityFactoryExecutor';
 import FakerStatic = Faker.FakerStatic;
 
 /**
  * Options passed to BlueprintDefinitionAfterMethod
  */
 export interface BlueprintDefinitionAfterMethodContext<Adapter> {
-    factory: EntityFactory;
+    factory: EntityFactoryExecutor;
     faker: FakerStatic;
     adapter: Adapter;
 }

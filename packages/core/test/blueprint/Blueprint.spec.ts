@@ -1,7 +1,8 @@
 import * as faker from 'faker';
-import FakerStatic = Faker.FakerStatic;
 
 import { Blueprint } from '../../blueprint/Blueprint';
+import { BlueprintFactoryMethodContext } from '../../blueprint/BlueprintFactoryMethodContext';
+import { EntityFactory } from '../../EntityFactory';
 
 interface IWidget {
     id: string;
@@ -15,11 +16,20 @@ class Widget {
     public active: boolean;
 }
 
+const mockContext = (): BlueprintFactoryMethodContext => {
+    return {
+        faker,
+        factory: new EntityFactory(),
+    };
+};
+
 describe('Blueprint', async () => {
     it('should allow factories to be defined with string keys', async () => {
         const blueprint = new Blueprint<IWidget>();
 
-        const callback = async (fake: FakerStatic) => ({
+        const ctx = mockContext();
+
+        const callback = async (context) => ({
             name: 'widgetizer',
         });
 
@@ -28,15 +38,17 @@ describe('Blueprint', async () => {
 
         expect(blueprint.hasFactoryMethod()).toBe(true);
 
-        const callbackResult = await callback(faker);
+        const callbackResult = await callback(ctx);
 
-        expect(await blueprint.getFactoryMethod()(faker)).toEqual(callbackResult);
+        expect(await blueprint.getFactoryMethod()(ctx)).toEqual(callbackResult);
     });
 
     it('should allow factories to be defined with function keys', async () => {
         const blueprint = new Blueprint<Widget>();
 
-        const callback = async (fake: FakerStatic) => ({
+        const ctx = mockContext();
+
+        const callback = async (context) => ({
             name: 'widgetizer',
         });
 
@@ -45,8 +57,8 @@ describe('Blueprint', async () => {
 
         expect(blueprint.hasFactoryMethod()).toBe(true);
 
-        const callbackResult = await callback(faker);
-        expect(await blueprint.getFactoryMethod()(faker)).toEqual(callbackResult);
+        const callbackResult = await callback(ctx);
+        expect(await blueprint.getFactoryMethod()(ctx)).toEqual(callbackResult);
     });
 
     it('should allow factory states to be defined with string keys', async () => {
@@ -55,7 +67,9 @@ describe('Blueprint', async () => {
 
         const state = 'active';
 
-        const callback = async (fake: FakerStatic) => ({
+        const ctx = mockContext();
+
+        const callback = async (context) => ({
             active: true,
         });
 
@@ -63,8 +77,8 @@ describe('Blueprint', async () => {
 
         expect(blueprint.hasFactoryMethod(state)).toBe(true);
 
-        const callbackResult = await callback(faker);
-        expect(await blueprint.getFactoryMethod(state)(faker)).toEqual(callbackResult);
+        const callbackResult = await callback(ctx);
+        expect(await blueprint.getFactoryMethod(state)(ctx)).toEqual(callbackResult);
     });
 
     it('should allow factory states to be defined with function keys', async () => {
@@ -73,7 +87,9 @@ describe('Blueprint', async () => {
 
         const state = 'active';
 
-        const callback = async (fake: FakerStatic) => ({
+        const ctx = mockContext();
+
+        const callback = async (context) => ({
             active: true,
         });
 
@@ -81,8 +97,8 @@ describe('Blueprint', async () => {
 
         expect(blueprint.hasFactoryMethod(state)).toBe(true);
 
-        const callbackResult = await callback(faker);
-        expect(await blueprint.getFactoryMethod(state)(faker)).toEqual(callbackResult);
+        const callbackResult = await callback(ctx);
+        expect(await blueprint.getFactoryMethod(state)(ctx)).toEqual(callbackResult);
     });
 
     it('should allow factory states to be defined as deep partials', async () => {
@@ -99,7 +115,7 @@ describe('Blueprint', async () => {
 
         expect(blueprint.hasFactoryMethod(state)).toBe(true);
 
-        expect(await blueprint.getFactoryMethod(state)(faker)).toEqual(partial);
+        expect(await blueprint.getFactoryMethod(state)(mockContext())).toEqual(partial);
     });
 
     it('should allow factory afterMaking callbacks to be defined with string keys', async () => {

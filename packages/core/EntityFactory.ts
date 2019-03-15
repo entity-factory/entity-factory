@@ -2,13 +2,16 @@
  * @module EntityFactory
  */
 
+import * as faker from 'faker';
 import { Adapter } from './adapters/Adapter';
 import { ObjectAdapter } from './adapters/object/ObjectAdapter';
 import { Blueprint } from './blueprint/Blueprint';
 import { BlueprintBuilder } from './blueprint/BlueprintBuilder';
+import { BlueprintDefinitionMethod } from './blueprint/BlueprintDefinitionMethod';
 import { BlueprintLoader } from './blueprint/BlueprintLoader';
 import { EntityObjectType } from './common/EntityObjectType';
 import { EntityFactoryExecutor } from './EntityFactoryExecutor';
+import { EntityFactoryGeneratorMethod } from './EntityFactoryGeneratorMethod';
 import { EntityFactoryOptions } from './EntityFactoryOptions';
 import { EntityFactoryRegisterCallback } from './EntityFactoryRegisterCallback';
 import { getName, isFunction } from './utils';
@@ -51,6 +54,35 @@ export class EntityFactory implements EntityFactoryExecutor {
         return new BlueprintBuilder<EntityType>(blueprint, this, this.adapter);
     }
 
+    public async gen<Entity = any>(count: EntityFactoryGeneratorMethod<Entity>): Promise<Entity>;
+
+    public async gen<Entity = any>(count: 1, factoryMethod: EntityFactoryGeneratorMethod<Entity>): Promise<Entity>;
+
+    public async gen<Entity = any>(
+        count: number,
+        factoryMethod: EntityFactoryGeneratorMethod<Entity>,
+    ): Promise<Entity[]>;
+
+    public async gen<Entity = any>(
+        count: number | EntityFactoryGeneratorMethod<Entity>,
+        factoryMethod?: EntityFactoryGeneratorMethod<Entity>,
+    ): Promise<any> {
+        if (isFunction(count)) {
+            factoryMethod = count as EntityFactoryGeneratorMethod<Entity>;
+            count = 1;
+        }
+
+        if (factoryMethod) {
+            const objects: Entity[] = [];
+
+            for (let i = 0; i < count; i++) {
+                const result = await factoryMethod({ faker, factory: this });
+                objects.push(result);
+            }
+
+            return count === 1 ? objects[0] : objects;
+        }
+    }
     /**
      * Check if a blueprint has been registered
      *

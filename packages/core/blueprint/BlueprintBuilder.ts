@@ -190,16 +190,7 @@ export class BlueprintBuilder<Entity = Record<string, any>> {
      * @param stateFactory
      */
     private async resolveStateFactory(stateFactory: BlueprintDefinitionMethod<Entity>) {
-        const derived = await stateFactory(faker);
-        for (const key in derived) {
-            const value = derived[key];
-
-            if (isFunction(value)) {
-                const callback = derived[key] as BlueprintDeepPartialMethod<Entity>;
-
-                derived[key] = await callback(this.factory);
-            }
-        }
+        const derived = await stateFactory({ faker, factory: this.factory });
 
         return {
             ...(derived as any),

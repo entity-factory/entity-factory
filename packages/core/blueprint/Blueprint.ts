@@ -20,7 +20,7 @@ export class Blueprint<
      * key used as default state when saving to defining
      * factories and states
      */
-    private DEFAULT_KEY = '__default';
+    public DEFAULT_KEY = '__default';
 
     private entityType: EntityObjectType<any> | string = '';
 
