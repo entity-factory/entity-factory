@@ -12,7 +12,7 @@ import { BlueprintDefinitionMethod } from './BlueprintDefinitionMethod';
 import { BlueprintOptions } from './BlueprintOptions';
 
 export class Blueprint<
-    Entity = any,
+    Entity = Record<string, any>,
     AdapterType extends Adapter = Adapter,
     Options extends AdapterBlueprintOptions = {}
 > {
@@ -20,7 +20,7 @@ export class Blueprint<
      * key used as default state when saving to defining
      * factories and states
      */
-    public DEFAULT_KEY = '__default';
+    private DEFAULT_KEY = '__default';
 
     private entityType: EntityObjectType<any> | string = '';
 

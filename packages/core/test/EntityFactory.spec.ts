@@ -135,26 +135,23 @@ describe('EntityFactory', () => {
             }
         });
 
-        // it('should resolve factory calls when generating arbitrary objects', async () => {
-        //     const entityFactory = new EntityFactory();
-        //     entityFactory.register(bp => {
-        //         bp.type('post');
-        //
-        //         bp.define(async ({ faker }) => ({
-        //             title: faker.company.bsBuzz(),
-        //         }));
-        //     });
-        //
-        //     const result = await entityFactory.gen(
-        //         1,
-        //         async ({ faker, factory }) => {
-        //             return {
-        //                 username: faker.internet.userName(),
-        //             };
-        //         },
-        //     );
-        //
-        //     expect(result.username).toBeDefined();
-        // });
+        it('should resolve factory calls when generating arbitrary objects', async () => {
+            const entityFactory = new EntityFactory();
+            entityFactory.register((bp) => {
+                bp.type('post');
+
+                bp.define(async ({ faker }) => ({
+                    title: faker.company.bsBuzz(),
+                }));
+            });
+
+            const result = await entityFactory.gen(1, async ({ faker, factory }) => {
+                return {
+                    username: faker.internet.userName(),
+                };
+            });
+
+            expect(result.username).toBeDefined();
+        });
     });
 });

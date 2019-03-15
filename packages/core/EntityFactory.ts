@@ -54,9 +54,7 @@ export class EntityFactory implements EntityFactoryExecutor {
     }
 
     public async gen<Entity = any>(count: EntityFactoryGeneratorMethod<Entity>): Promise<Entity>;
-
     public async gen<Entity = any>(count: 1, factoryMethod: EntityFactoryGeneratorMethod<Entity>): Promise<Entity>;
-
     public async gen<Entity = any>(
         count: number,
         factoryMethod: EntityFactoryGeneratorMethod<Entity>,
@@ -102,15 +100,17 @@ export class EntityFactory implements EntityFactoryExecutor {
         return this.profiles.get(entity);
     }
 
-    public register(fixture: Blueprint<any, any, any> | EntityFactoryRegisterCallback): EntityFactory {
-        let profile: Blueprint<any, any, any>; // = new FixtureBlueprint();
+    public register<Entity>(
+        fixture: Blueprint<Entity, any, any> | EntityFactoryRegisterCallback<Entity>,
+    ): EntityFactory {
+        let profile: Blueprint<Entity, any, any>; // = new FixtureBlueprint();
 
         if (fixture instanceof Blueprint) {
             profile = fixture;
 
             this.profiles.set(profile.getType(), profile);
         } else if (isFunction(fixture)) {
-            profile = new Blueprint<any, any, any>();
+            profile = new Blueprint<Entity, any, any>();
 
             fixture(profile);
 

@@ -17,7 +17,7 @@ class UserBlueprint extends ObjectBlueprint {
         });
 
         // define the default factory method for this blueprint
-        this.define(async faker => {
+        this.define(async ({ faker, factory }) => {
             return {
                 /* user properties */
             };
@@ -25,7 +25,7 @@ class UserBlueprint extends ObjectBlueprint {
 
         // create a state transform for this blueprint to override or supplement
         // properties created in define()
-        this.state('active', async faker => {
+        this.state('active', async ({ faker, factory }) => {
             return {
                 /* user properties */
             };
@@ -79,7 +79,7 @@ export class UserBlueprint extends ObjectBlueprint {
 
         this.type('user');
 
-        this.define(async faker => {
+        this.define(async ({ faker, factory }) => {
             return {
                 // user attributes
             };
@@ -107,7 +107,7 @@ const factory = new EntityFactory();
 factory.register(bp => {
     bp.type('user');
 
-    bp.define(async faker => {
+    bp.define(async ({ faker, factory }) => {
         return {
             // user attributes
         };
@@ -159,9 +159,14 @@ Property values can also an async callback to the factory which will allow data
 to be resolved from related factories.
 
 **This method must be called**
+**callback**
+
+-   **context**:
+    -   **faker**: faker instance
+    -   **factory**: factory instance
 
 ```javascript
-blueprint.define(faker => {
+blueprint.define(async ({ faker, factory }) => {
     return {
         // faker usage
         username: faker.internet.userName(),
@@ -183,18 +188,24 @@ properties.
 Property values can also an async callback to the factory which will allow data
 to be resolved from related factories.
 
+**callback**
+
+-   **context**:
+    -   **faker**: faker instance
+    -   **factory**: factory instance
+
 ```javascript
-blueprint.state('inactive', faker => {
+blueprint.state('inactive', async ({ faker, factory }) => {
     return {
         active: false,
     };
 });
 
-blueprint.state('with-posts', faker => {
+blueprint.state('with-posts', async ({ faker, factory }) => {
     return {
         // factory callbacks can contain nested factory calls to resolve other
         // blueprint instances  from the factory.
-        posts: async factory => factory.for('posts').make(2),
+        posts: await factory.for('posts').make(2),
     };
 });
 ```

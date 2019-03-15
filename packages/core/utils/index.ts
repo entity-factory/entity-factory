@@ -21,13 +21,13 @@ export const isFunction = (functionToCheck: any): boolean => {
     );
 };
 
-export const loadDep = (type: string): any => {
-    switch (type) {
-        case 'glob':
-            return require('glob');
-        case 'path':
-            return require('path');
-        default:
-            return;
-    }
-};
+// export const loadDep = (type: string): any => {
+//     switch (type) {
+//         case 'glob':
+//             return require('glob');
+//         case 'path':
+//             return require('path');
+//         default:
+//             return;
+//     }
+// };

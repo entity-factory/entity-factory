@@ -9,17 +9,39 @@ const projects = {
 
 const projectKeys = Object.keys(projects);
 
+// production clean
 projectKeys.forEach(project => {
-    gulp.task(project, () => {
-        return projects[project]
-            .src()
-            .pipe(projects[project]())
-            .pipe(gulp.dest(`dist/${project}`));
+    gulp.task(`${project}-clean:prod`, done => {
+        return gulp
+            .src([`packages/${project}/**/*.{d.ts,js.map,js}`])
+            .pipe(clean({ read: false }));
     });
 });
 
+// production build
 projectKeys.forEach(project => {
-    gulp.task(`${project}:dev`, () => {
+    gulp.task(`${project}-build:prod`, () => {
+        return projects[project]
+            .src()
+            .pipe(projects[project]())
+            .pipe(gulp.dest(`packages/${project}`));
+    });
+});
+
+// dev clean
+projectKeys.forEach(project => {
+    gulp.task(`${project}-clean:dev`, done => {
+        return gulp
+            .src(
+                `node_modules/@entity-factory/${project}/**/**/*.{d.ts,js.map,js}`,
+            )
+            .pipe(clean({ force: true }));
+    });
+});
+
+// dev build
+projectKeys.forEach(project => {
+    gulp.task(`${project}-build:dev`, () => {
         return projects[project]
             .src()
             .pipe(projects[project]())
@@ -27,30 +49,29 @@ projectKeys.forEach(project => {
     });
 });
 
-projectKeys.forEach(project => {
-    gulp.task(`${project}-clean:dev`, done => {
-        gulp.src(
-            `node_modules/@entity-factory/${project}/**/*.{d.ts,js.map,js}`,
-        ).pipe(clean({ force: true }));
-        done();
-    });
-});
-
-gulp.task('build', gulp.series(projectKeys));
+gulp.task(
+    'build:prod',
+    gulp.series(projectKeys.map(project => `${project}-build:prod`)),
+);
+gulp.task(
+    'clean:prod',
+    gulp.series(projectKeys.map(project => `${project}-clean:prod`)),
+);
 
 gulp.task(
     'build:dev',
-    gulp.series(projectKeys.map(project => `${project}:dev`)),
+    gulp.series(projectKeys.map(project => `${project}-build:dev`)),
 );
 gulp.task(
     'clean:dev',
     gulp.series(projectKeys.map(project => `${project}-clean:dev`)),
 );
 
+gulp.task('prod', gulp.series(['clean:prod', 'build:prod']));
 gulp.task('dev', gulp.series(['clean:dev', 'build:dev']));
 
 gulp.task('copy', () => {
-    gulp.src(['README.md', '.npmignore', 'LICENSE'])
+    gulp.src(['.npmignore', 'LICENSE'])
         .pipe(gulp.dest(`packages/core`))
         .pipe(gulp.dest(`packages/typeorm`));
 });

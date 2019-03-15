@@ -1,39 +1,18 @@
 /**
  * @module Blueprint
  */
-
-import { isFunction, loadDep } from '../utils';
 import { Blueprint } from './Blueprint';
 
 export class BlueprintLoader {
     constructor(private readonly fixtureProfiles: Array<Function | string | Blueprint<any, any, any>>) {}
 
     public getProfiles(): Array<Blueprint<any, any, any>> {
-        const files = this.getImportsFromPath(this.fixtureProfiles);
+        // const files = this.getImportsFromPath(this.fixtureProfiles);
 
-        return [...this.resolveFilePaths(files, []), ...this.resolveClasses(this.fixtureProfiles)];
-    }
-
-    /**
-     * Resolve file paths into FactoryProfile instances
-     *
-     * @param value
-     * @param profiles
-     */
-    private resolveFilePaths(value: any, profiles: Array<Blueprint<any, any, any>>) {
-        if (isFunction(value) || value instanceof Blueprint) {
-            const instance = this.createFactoryProfileInstance(value);
-
-            if (instance) {
-                profiles.push(instance);
-            }
-        } else if (Array.isArray(value)) {
-            value.forEach((v) => this.resolveFilePaths(v, profiles));
-        } else if (typeof value === 'object' && value !== null) {
-            Object.keys(value).forEach((key) => this.resolveFilePaths(value[key], profiles));
-        }
-
-        return profiles;
+        return [
+            // ...this.resolveFilePaths(files, []),
+            ...this.resolveClasses(this.fixtureProfiles),
+        ];
     }
 
     /**
@@ -51,28 +30,6 @@ export class BlueprintLoader {
         });
 
         return profiles;
-    }
-
-    /**
-     * Import files from provided glob patterns
-     *
-     * @param values
-     */
-    private getImportsFromPath<T>(values: Array<string | T>): string[] {
-        const patterns = values.filter((v): v is string => typeof v === 'string');
-
-        // prevent call to glob
-        if (patterns.length === 0) {
-            return [];
-        }
-
-        return patterns
-            .reduce((paths: string[], pattern) => {
-                return [...paths, ...loadDep('glob').sync(pattern)];
-            }, [])
-            .map((filePath) => {
-                return require(loadDep('path').resolve(process.cwd(), filePath));
-            });
     }
 
     /**

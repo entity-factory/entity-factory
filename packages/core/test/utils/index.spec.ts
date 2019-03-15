@@ -1,4 +1,4 @@
-import { getName, isFunction, loadDep } from '../../utils';
+import { getName, isFunction } from '../../utils';
 
 class TestClass {}
 
@@ -25,20 +25,6 @@ describe('utils', async () => {
 
         it('should return false if an object is passed', () => {
             expect(isFunction({})).toEqual(false);
-        });
-    });
-
-    describe('loadDep', () => {
-        it('should return an instance of glob', () => {
-            expect(loadDep('glob')).toBeDefined();
-        });
-
-        it('should return an instance of path', () => {
-            expect(loadDep('path')).toBeDefined();
-        });
-
-        it('should return undefined for unknown deps', () => {
-            expect(loadDep('typeorm')).toBeUndefined();
         });
     });
 });

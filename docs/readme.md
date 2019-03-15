@@ -48,14 +48,14 @@ export class UserBlueprint extends ObjectBlueprint {
 
         this.type('user');
 
-        this.define(async faker => ({
+        this.define(async ({ faker, factory }) => ({
             username: faker.internet.userName(),
             email: faker.internet.email(),
             active: false,
         }));
 
-        this.state('with-posts', async faker => ({
-            posts: async factory => factory.for('post').create(2),
+        this.state('with-posts', async ({ faker, factory }) => ({
+            posts: await factory.for('post').create(2),
         }));
     }
 }
@@ -71,7 +71,7 @@ class PostBlueprint extends ObjectBlueprint {
 
         this.type('post');
 
-        this.define(async faker => ({
+        this.define(async ({ faker, factory }) => ({
             title: faker.company.bsBuzz(),
             body: faker.lorem.sentences(2),
         }));

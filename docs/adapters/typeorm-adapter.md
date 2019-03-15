@@ -11,12 +11,12 @@ npm install --save @entity-factory/core @entity-factory/typeorm
 
 ### TypeormAdapter([opts])
 
-```javascript
+```typescript
 // use default connection from ormconfig.json
 const typeormAdapter = new TypeormAdapter();
 
 // or use any valid typeorm connection options
-const objectAdapter = new ObjectAdaper({
+const typeormAdapter = new TypeormAdapter({
     type: 'sqlite',
     database: ':memory:',
     synchronize: true,
@@ -36,19 +36,16 @@ const factory = new EntityFactory({
 ### Typeorm Blueprint
 
 **Available Options**
+None
 
--   **generateId**: overrides the default adapter setting for a particular entity.
--   **idAttribute**: overrides the adapter setting to change the genrated id
-    attribute name.
-
-```javascript
+```typescript
 export class WidgetBlueprint extends TypeormBlueprint<Widget> {
     constructor() {
         super();
 
         this.type(Widget);
 
-        this.define(async faker => {
+        this.define(async ({ faker, factory }) => {
             /* ... */
         });
     }

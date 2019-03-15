@@ -4,7 +4,6 @@
 const entityFactory = new EntityFactory({
     adapter: new OjectAdapter(),
     blueprints: [
-        '**/*.blueprint.js', // glob pattern
         new UserBlueprint(), // blueprint instance
         PostBlueprint, // blueprint reference
     ],
@@ -20,10 +19,9 @@ following attributes.
         id values.
     -   **[TypeormAdapter](adapters/typeorm-adapter.md)**: Makes and persists TypeORM entities.
 -   **opts.profiles (optional)**: default `[]`. The profiles array accepts an
-    array of glob patterns, Profile instances or Profile classes.
-    -   **glob patterns**: ex: `’src/\*\*/_.profile.js'`. If a glob pattern is passed EntityFactory will attempt to load all profiles found in the path and register them.
-    -   **Class Reference**: ex`UserProfile`. If a class reference is passed Entity factory will create a new instance and register it.
-    -   **Profile Instance**: Ex`new UserProfile()`. If a profile instance is
+    array of Profile instances or Profile classes.
+    -   **Class Reference**: Ex `UserProfile`. If a class reference is passed Entity factory will create a new instance and register it.
+    -   **Profile Instance**: Ex `new UserProfile()`. If a profile instance is
         provided EntityFactory will register it.
 
 ## factory.register(profile | callback(profile))
