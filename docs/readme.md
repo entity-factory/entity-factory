@@ -18,7 +18,7 @@ npm install --save @entity-factory/core
 
 ## Example
 
-See it run on [repl.it](https://repl.it/@jcloutz/entity-factory-js-example)
+Try it on [Runkit](https://runkit.com/jcloutz/entity-factory-quick-example)
 
 ```javascript
 // index.js

@@ -75,8 +75,17 @@ entityFactory
     .then(users => console.log(users));
 ```
 
-If you wish to retain more control over the structure of your code blueprints
-can be defined in classes.
+It is also possible to generate random data using the `gen` method available on
+EntityFactory
+
+```javascript
+await entityFactory.gen(3, async ({ faker, factory }) => {
+    return {
+        name: faker.company.bsBuzz(),
+        active: faker.random.boolean(),
+    };
+});
+```
 
 [Additional Samples](https://github.com/jcloutz/entity-factory/tree/master/samples)
 

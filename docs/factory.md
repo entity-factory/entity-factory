@@ -61,3 +61,39 @@ const users = await factory.for(User).create(3);
         `type(key)` in a blueprint and used to retrieve the profile from the factory
         and supply it to the `ProfileBuilder`.
 -   **Returns**: [BlueprintBuilder](builder.md)
+
+## factory.gen(count, callback)
+
+Generates arbitrary objects on an as needed basis.
+
+```javascript
+// create a single object
+const user = await factory.gen(async ({ faker, factory }) => {
+    return {
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+    };
+});
+
+const user = await factory.gen(async ({ faker, factory }) => {
+    return {
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        posts: await factory.gen(2, async ({ faker, factory }) => {
+            return {
+                title: faker.company.bsBuzz(),
+                body: faker.lorem.paragraphs(2),
+            };
+        }),
+    };
+});
+
+// create 3 users with nested posts from the factory
+const users = await factory.gen(3, async ({ faker, factory }) => {
+    return {
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        posts: await factory.for('post').create(2),
+    };
+});
+```

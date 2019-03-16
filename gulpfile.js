@@ -71,11 +71,12 @@ gulp.task('prod', gulp.series(['clean:prod', 'build:prod']));
 gulp.task('dev', gulp.series(['clean:dev', 'build:dev']));
 
 gulp.task('copy', () => {
-    gulp.src(['.npmignore', 'LICENSE'])
+    return gulp
+        .src(['.npmignore', 'LICENSE'])
         .pipe(gulp.dest(`packages/core`))
         .pipe(gulp.dest(`packages/typeorm`));
 });
 
 gulp.task('copy:readme', () => {
-    gulp.src(['README.md']).pipe(gulp.dest(`packages/core`));
+    return gulp.src(['README.md']).pipe(gulp.dest(`packages/core/`));
 });
