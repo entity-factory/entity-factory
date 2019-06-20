@@ -1,4 +1,5 @@
 import { ObjectBlueprint } from '../../adapters/object/ObjectBlueprint';
+import { Post } from './Post';
 import { IUser } from './User';
 
 export class UserBlueprint extends ObjectBlueprint<IUser> {
@@ -18,7 +19,7 @@ export class UserBlueprint extends ObjectBlueprint<IUser> {
         }));
 
         this.state('with-posts', async ({ faker, factory }) => ({
-            posts: await factory.for('post').make(3),
+            posts: await factory.for<Post>('post').make(3),
         }));
 
         // this.afterMaking(async (user, { factory, faker }) => {

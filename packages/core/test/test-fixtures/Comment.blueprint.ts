@@ -1,5 +1,7 @@
 import { ObjectBlueprint } from '../../adapters/object/ObjectBlueprint';
 import { IComment } from './Comment';
+import { Post } from './Post';
+import { IUser } from './User';
 
 export class CommentBlueprint extends ObjectBlueprint<IComment> {
     constructor() {
@@ -12,11 +14,11 @@ export class CommentBlueprint extends ObjectBlueprint<IComment> {
         }));
 
         this.state('with-user', async ({ faker, factory }) => ({
-            user: await factory.for('user').create(),
+            user: await factory.for<IUser>('user').create(),
         }));
 
         this.state('with-post', async ({ faker, factory }) => ({
-            user: await factory.for('post').create(),
+            user: await factory.for<Post>('post').create(),
         }));
     }
 }

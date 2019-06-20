@@ -3,7 +3,7 @@
  */
 
 import { Adapter, BlueprintOptions, DeepEntityPartial } from '@entity-factory/core';
-import { Connection, createConnection, DeepPartial, getConnection } from 'typeorm';
+import { Connection, createConnection, DeepPartial, getConnection, ObjectType } from 'typeorm';
 import { TypeormAdapterOptions } from './TypeormAdapterOptions';
 import { TypeormBlueprintOptions } from './TypeormBlueprintOptions';
 
@@ -23,10 +23,10 @@ export class TypeormAdapter implements Adapter<TypeormBlueprintOptions> {
         objects: Array<DeepEntityPartial<Entity>>,
         context: BlueprintOptions<TypeormBlueprintOptions>,
     ): Promise<Entity[]> {
-        const type = context.__type;
+        const type = context.__type as ObjectType<Entity>;
         const conn = await this.getConnection();
 
-        return await conn.manager.create(type, (objects as any) as DeepPartial<Entity>);
+        return await conn.manager.create(type, (objects as any) as Array<DeepPartial<Entity>>);
     }
 
     /**
