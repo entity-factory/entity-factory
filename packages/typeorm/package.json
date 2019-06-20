@@ -17,5 +17,13 @@
     "dependencies": {
         "typeorm": "^0.2.18"
     },
-    "gitHead": "2633609ee5b4a6a5333ddb4fd29cc94216a54120"
+    "gitHead": "2633609ee5b4a6a5333ddb4fd29cc94216a54120",
+    "keywords": [
+        "typeorm",
+        "fixtures",
+        "orm",
+        "typescript",
+        "faker",
+        "typeorm-fixtures"
+    ]
 }

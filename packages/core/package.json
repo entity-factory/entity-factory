@@ -16,5 +16,15 @@
         "faker": "^4.1.0",
         "uuid": "^3.3.2"
     },
-    "gitHead": "2633609ee5b4a6a5333ddb4fd29cc94216a54120"
+    "gitHead": "2633609ee5b4a6a5333ddb4fd29cc94216a54120",
+    "keywords": [
+        "test",
+        "testing",
+        "typeorm",
+        "fixtures",
+        "orm",
+        "typescript",
+        "faker",
+        "typeorm-fixtures"
+    ]
 }
