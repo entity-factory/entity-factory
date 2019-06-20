@@ -91,9 +91,11 @@ await entityFactory.gen(3, async ({ faker, factory }) => {
 
 ## TODO
 
--   [ ] imporove docs
--   [ ] resolve nested objects
--   [ ] resolve nested array
--   [ ] allow guid id's for object adapter
--   [ ] add method to generate random objects on the fly without a blueprint
+-   [ ] Add Mongoose adapter
+-   [ ] Add Sequelize adapter
+-   [x] improve docs
+-   [x] resolve nested objects
+-   [x] resolve nested array
+-   [x] allow guid id's for object adapter
+-   [x] add method to generate random objects on the fly without a blueprint
         definition
