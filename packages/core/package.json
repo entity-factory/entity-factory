@@ -1,6 +1,6 @@
 {
     "name": "@entity-factory/core",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Create entities on the fly for mocking and testing",
     "author": "Jeremy Cloutier",
     "main": "index.js",
