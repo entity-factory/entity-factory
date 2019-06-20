@@ -7,6 +7,8 @@ import { CommentBlueprint } from '../test-fixtures/Comment.blueprint';
 import { Post } from '../test-fixtures/Post';
 import { PostBlueprint } from '../test-fixtures/Post.blueprint';
 import { UserBlueprint } from '../test-fixtures/User.blueprint';
+import { Uuid } from '../test-fixtures/Uuid';
+import { UuidBlueprint } from '../test-fixtures/Uuid.blueprint';
 
 interface IWidget {
     id: string;
@@ -61,6 +63,60 @@ describe('ObjectAdapter', async () => {
 
         expect(result[0].id).toEqual(1);
         expect(result[1].id).toEqual(2);
+    });
+
+    it('should generate an entity with a uuid primary key', async () => {
+        const adapter = new ObjectAdapter({
+            uuidPrimary: true,
+        });
+
+        const context: BlueprintOptions<ObjectBlueprintOptions> = {
+            __type: Uuid,
+        };
+
+        const uuidEntity = new Uuid();
+        uuidEntity.name = 'bob';
+
+        const result = await adapter.create([uuidEntity], context);
+
+        expect(typeof result[0].id).toEqual('string');
+    });
+
+    it('should generate an entity with a uuid primary key when the blueprint overrides the adapter', async () => {
+        const adapter = new ObjectAdapter({
+            uuidPrimary: false,
+        });
+
+        const context: BlueprintOptions<ObjectBlueprintOptions> = {
+            __type: Uuid,
+            uuidPrimary: true,
+        };
+
+        const uuidEntity = new Uuid();
+        uuidEntity.name = 'bob';
+
+        const result = await adapter.create([uuidEntity], context);
+
+        expect(typeof result[0].id).toEqual('string');
+    });
+
+    it('should not generate an entity with a uuid primary key when the blueprint overrides the adapter', async () => {
+        const adapter = new ObjectAdapter({
+            uuidPrimary: true,
+        });
+
+        const context: BlueprintOptions<ObjectBlueprintOptions> = {
+            __type: Uuid,
+            uuidPrimary: false,
+        };
+
+        const uuidEntity = new Uuid();
+        uuidEntity.name = 'bob';
+
+        const result = await adapter.create([uuidEntity], context);
+
+        expect(typeof result[0].id).toEqual('number');
+        expect(result[0].id).toBe(1);
     });
 
     it('should allow custom mappings for id attributes in options', async () => {
@@ -179,8 +235,21 @@ describe('ObjectAdapter', async () => {
             const adapter = new ObjectAdapter();
             factory = new EntityFactory({
                 adapter,
-                blueprints: [CommentBlueprint, PostBlueprint, UserBlueprint],
+                blueprints: [CommentBlueprint, PostBlueprint, UserBlueprint, UuidBlueprint],
             });
+        });
+
+        it('should make entities with uuid primary keys', async () => {
+            const uuidEntities = await factory
+                .for(Uuid)
+                .state()
+                .create(3);
+
+            expect(uuidEntities.length).toBe(3);
+            for (const entity of uuidEntities) {
+                expect(entity.id).toBeDefined();
+                expect(typeof entity.id).toBe('string');
+            }
         });
 
         it('should make an entity and its nested relations', async () => {

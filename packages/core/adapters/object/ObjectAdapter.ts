@@ -2,6 +2,7 @@
  * @module Adapters/object
  */
 
+import * as uuid from 'uuid/v4';
 import { BlueprintOptions } from '../../blueprint/BlueprintOptions';
 import { EntityObjectType } from '../../common/EntityObjectType';
 import { isFunction } from '../../utils';
@@ -10,9 +11,10 @@ import { ObjectAdapterOptions } from './ObjectAdapterOptions';
 import { ObjectBlueprintOptions } from './ObjectBlueprintOptions';
 
 export class ObjectAdapter implements Adapter<ObjectBlueprintOptions> {
-    private readonly options = {
+    private readonly options: ObjectAdapterOptions = {
         generateId: true,
         defaultIdAttribute: 'id',
+        uuidPrimary: false,
     };
 
     /**
@@ -32,6 +34,10 @@ export class ObjectAdapter implements Adapter<ObjectBlueprintOptions> {
 
         if (options.defaultIdAttribute !== undefined) {
             this.options.defaultIdAttribute = options.defaultIdAttribute;
+        }
+
+        if (options.uuidPrimary !== undefined) {
+            this.options.uuidPrimary = options.uuidPrimary;
         }
     }
 
@@ -72,15 +78,17 @@ export class ObjectAdapter implements Adapter<ObjectBlueprintOptions> {
         objects: Entity[],
         context: BlueprintOptions<ObjectBlueprintOptions>,
     ): Promise<Entity[]> {
-        const { __type, idAttribute } = context;
+        const { __type, idAttribute, uuidPrimary } = context;
 
         const generateId = context.generateId !== undefined ? context.generateId : this.options.generateId;
 
         if (generateId) {
-            const idKey = idAttribute || this.options.defaultIdAttribute;
+            const useUuid = context.uuidPrimary !== undefined ? context.uuidPrimary : this.options.uuidPrimary;
+
+            const idKey = (idAttribute || this.options.defaultIdAttribute) as string;
             objects = objects.map((entity: any) => {
                 return {
-                    [idKey]: this.getNextId(__type),
+                    [idKey]: useUuid ? uuid() : this.getNextId(__type),
                     ...entity,
                 };
             });

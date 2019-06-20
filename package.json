@@ -17,11 +17,11 @@
     "author": "jcloutz",
     "license": "MIT",
     "dependencies": {
-        "@entity-factory/core": "0.1.2",
-        "@entity-factory/typeorm": "0.1.1"
+        "@entity-factory/core": "^0.1.2",
+        "@entity-factory/typeorm": "^0.1.1"
     },
     "devDependencies": {
-        "@types/faker": "4.1.5",
+        "@types/faker": "^4.1.5",
         "@types/jest": "23.3.14",
         "@types/node": "11.13.14",
         "gulp": "4.0.2",
