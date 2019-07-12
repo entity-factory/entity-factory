@@ -3,9 +3,13 @@ import { createConnection } from 'typeorm';
 import { TypeormAdapter } from '../TypeormAdapter';
 import { CommentBlueprint } from './blueprints/Comment.blueprint';
 import { PostBlueprint } from './blueprints/Post.blueprint';
+import { ProductBlueprint } from './blueprints/Product.blueprint';
+import { StoreBlueprint } from './blueprints/Store.blueprint';
 import { UserBlueprint } from './blueprints/User.blueprint';
 import { Comment } from './entities/Comment.entity';
 import { Post } from './entities/Post.entity';
+import { Product } from './entities/Product.entity';
+import { Store } from './entities/Store.entity';
 import { User } from './entities/User.entity';
 import { Widget } from './entities/Widget.entity';
 
@@ -182,11 +186,11 @@ describe('TypeORM Adapter', async () => {
                 type: 'sqlite',
                 database: ':memory:',
                 synchronize: true,
-                entities: [Post, Comment, User],
+                entities: [Post, Comment, User, Store, Product],
             });
             factory = new EntityFactory({
                 adapter,
-                blueprints: [CommentBlueprint, PostBlueprint, UserBlueprint],
+                blueprints: [CommentBlueprint, PostBlueprint, UserBlueprint, StoreBlueprint, ProductBlueprint],
             });
         });
 
@@ -236,6 +240,45 @@ describe('TypeORM Adapter', async () => {
                 }
             } else {
                 fail('post not defined');
+            }
+        });
+
+        it('with-products-make', async () => {
+            const store = await factory
+                .for(Store)
+                .state('with-products-make')
+                .create();
+
+            expect(store.id).toBeDefined();
+
+            for (const product of store.products) {
+                expect(product.id).toBeDefined();
+            }
+        });
+
+        it('with-products-create', async () => {
+            const store = await factory
+                .for(Store)
+                .state('with-products-create')
+                .create();
+
+            expect(store.id).toBeDefined();
+
+            for (const product of store.products) {
+                expect(product.id).toBeDefined();
+            }
+        });
+
+        it('with-products-workaround', async () => {
+            const store = await factory
+                .for(Store)
+                .state('with-products-workaround')
+                .create();
+
+            expect(store.id).toBeDefined();
+
+            for (const product of store.products) {
+                expect(product.id).toBeDefined();
             }
         });
     });
