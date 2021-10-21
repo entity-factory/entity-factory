@@ -42,7 +42,7 @@
         "typedoc": "0.14.2",
         "typedoc-plugin-external-module-name": "2.1.0",
         "typedoc-plugin-markdown": "2.0.5",
-        "typeorm": "0.2.18",
+        "typeorm": "0.2.25",
         "typescript": "^3.3.3333"
     },
     "husky": {
