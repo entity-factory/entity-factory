@@ -14,7 +14,7 @@ export class Comment {
     @Column()
     public body: string;
 
-    @ManyToOne((type) => Post, (post) => post.comments)
+    @ManyToOne((type) => Post, (post) => post.comments, { nullable: false })
     @JoinColumn()
     public post: Post;
 }

@@ -206,7 +206,7 @@ describe('TypeORM Adapter', async () => {
                 .state('with-author', 'with-comments')
                 .make();
 
-            expect(post.author.id).toBeDefined();
+            expect(post.author.id).toBeUndefined();
             expect(post.comments.length).toBeGreaterThan(1);
         });
 

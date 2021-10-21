@@ -7,7 +7,10 @@ export class Post {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToOne((type) => User, (user) => user.posts)
+    @ManyToOne((type) => User, (user) => user.posts, {
+        nullable: false,
+        cascade: true,
+    })
     @JoinColumn()
     public author: User;
 
@@ -17,6 +20,9 @@ export class Post {
     @Column()
     public body: string;
 
-    @OneToMany((type) => Comment, (comment) => comment.post)
+    @OneToMany((type) => Comment, (comment) => comment.post, {
+        nullable: false,
+        cascade: true,
+    })
     public comments: Comment[];
 }
