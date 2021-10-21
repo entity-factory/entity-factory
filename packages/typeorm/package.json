@@ -11,12 +11,14 @@
     },
     "license": "MIT",
     "peerDependencies": {
-        "@entity-factory/core": "^0.1.0",
-        "typeorm": "^0.2.18"
+        "@entity-factory/core": "^0.2.1",
+        "typeorm": "^0.2.38"
     },
     "dependencies": {
-        "sqlite3": "4.0.9",
         "typeorm": "^0.2.18"
+    },
+    "devDependencies": {
+        "sqlite3": "4.0.9"
     },
     "gitHead": "2633609ee5b4a6a5333ddb4fd29cc94216a54120",
     "keywords": [
