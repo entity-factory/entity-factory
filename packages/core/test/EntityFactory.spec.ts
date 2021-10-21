@@ -28,7 +28,7 @@ class BarBlueprint extends ObjectBlueprint<BarEntity> {
 }
 
 describe('EntityFactory', () => {
-    describe('Basic Functions', async () => {
+    describe('Basic Functions', () => {
         it('should load blueprints', () => {
             const factory = new EntityFactory({
                 blueprints: [BarBlueprint],

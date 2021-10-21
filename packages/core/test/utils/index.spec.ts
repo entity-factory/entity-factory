@@ -2,8 +2,8 @@ import { getName, isFunction } from '../../utils';
 
 class TestClass {}
 
-describe('utils', async () => {
-    describe('getName', async () => {
+describe('utils', () => {
+    describe('getName', () => {
         it('should return a the string provided', async () => {
             expect(getName('user')).toEqual('user');
         });
@@ -13,7 +13,7 @@ describe('utils', async () => {
         });
     });
 
-    describe('isFunction', async () => {
+    describe('isFunction', () => {
         it('should return true if a function is passed', () => {
             expect(isFunction(() => false)).toEqual(true);
         });

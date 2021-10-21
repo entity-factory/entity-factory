@@ -16,7 +16,9 @@ interface Post {
     body: string;
 }
 
-export const definePostProfile = (entityFactory: EntityFactory): ObjectBlueprint<Post> => {
+export const definePostProfile = (
+    entityFactory: EntityFactory,
+): ObjectBlueprint<Post> => {
     const profile = new ObjectBlueprint<Post>();
     profile.type('post');
     profile.define(async ({ faker, factory }) => ({
@@ -29,7 +31,9 @@ export const definePostProfile = (entityFactory: EntityFactory): ObjectBlueprint
     return profile;
 };
 
-export const defineUserProfile = (entityFactory: EntityFactory): ObjectBlueprint<User> => {
+export const defineUserProfile = (
+    entityFactory: EntityFactory,
+): ObjectBlueprint<User> => {
     const profile = new ObjectBlueprint<User>();
 
     profile.type(User);
@@ -51,7 +55,7 @@ describe('BlueprintBuilder', () => {
         factoryInstance = new EntityFactory();
     });
 
-    describe('Make', async () => {
+    describe('Make', () => {
         it('should make a single entity', async () => {
             defineUserProfile(factoryInstance);
             const user = await factoryInstance.for(User).make();
@@ -153,16 +157,13 @@ describe('BlueprintBuilder', () => {
 
             blueprint.afterMakingState('inactive', callback);
 
-            await factoryInstance
-                .for(User)
-                .state('inactive')
-                .make();
+            await factoryInstance.for(User).state('inactive').make();
 
             expect(callback).toHaveBeenCalledTimes(1);
         });
     });
 
-    describe('Create', async () => {
+    describe('Create', () => {
         it('should create a single entity', async () => {
             defineUserProfile(factoryInstance);
             const createdUser = await factoryInstance.for(User).create();
@@ -214,10 +215,7 @@ describe('BlueprintBuilder', () => {
             blueprint.afterCreating(afterCreate);
             blueprint.afterCreatingState('active', afterCreateActive);
 
-            await factoryInstance
-                .for(User)
-                .state('active')
-                .create();
+            await factoryInstance.for(User).state('active').create();
 
             expect(factoryActive).toHaveBeenCalledTimes(1);
             expect(afterMake).toHaveBeenCalledTimes(1);
@@ -248,7 +246,7 @@ describe('BlueprintBuilder', () => {
         });
     });
 
-    describe('Common', async () => {
+    describe('Common', () => {
         it('should allow overriding properties by passing object to "with"', async () => {
             defineUserProfile(factoryInstance);
 

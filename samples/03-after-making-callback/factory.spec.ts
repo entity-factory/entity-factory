@@ -1,7 +1,7 @@
 import { IUser } from '../entities/interfaces';
 import { entityFactory } from './factory';
 
-describe('03-after-making-callback', async () => {
+describe('03-after-making-callback', () => {
     it('it should make 3 active users', async () => {
         const users = await entityFactory.for<IUser>('user').make(3);
 

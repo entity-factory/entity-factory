@@ -23,7 +23,7 @@ const mockContext = (): BlueprintFactoryMethodContext => {
     };
 };
 
-describe('Blueprint', async () => {
+describe('Blueprint', () => {
     it('should allow factories to be defined with string keys', async () => {
         const blueprint = new Blueprint<IWidget>();
 

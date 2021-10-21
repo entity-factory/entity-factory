@@ -9,8 +9,8 @@ import { Post } from './entities/Post.entity';
 import { User } from './entities/User.entity';
 import { Widget } from './entities/Widget.entity';
 
-describe('TypeORM Adapter', async () => {
-    describe('Connection Management', async () => {
+describe('TypeORM Adapter', () => {
+    describe('Connection Management', () => {
         it('should use existing connection', async () => {
             const connection = await createConnection({
                 type: 'sqlite',
@@ -49,7 +49,9 @@ describe('TypeORM Adapter', async () => {
 
             expect(widget.widgetId).toEqual(1);
 
-            const result = await connection.manager.query(`select * from widget where widgetId = 1`);
+            const result = await connection.manager.query(
+                `select * from widget where widgetId = 1`,
+            );
 
             expect(result[0].widgetId).toEqual(1);
 
@@ -106,7 +108,7 @@ describe('TypeORM Adapter', async () => {
         });
     });
 
-    describe('Make', async () => {
+    describe('Make', () => {
         it('should convert a partial to an entity instance', async () => {
             const adapter = new TypeormAdapter({
                 type: 'sqlite',
@@ -132,7 +134,7 @@ describe('TypeORM Adapter', async () => {
         });
     });
 
-    describe('Create', async () => {
+    describe('Create', () => {
         it('should persist data to the database with prepared entities', async () => {
             const adapter = new TypeormAdapter({
                 type: 'sqlite',
@@ -172,7 +174,7 @@ describe('TypeORM Adapter', async () => {
         });
     });
 
-    describe('E2E', async () => {
+    describe('E2E', () => {
         let factory: EntityFactory;
         let adapter: TypeormAdapter;
 

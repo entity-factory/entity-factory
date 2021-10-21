@@ -1,6 +1,6 @@
 import { factory, ICustomObject, Widget } from './factory';
 
-describe('07-default-adapter', async () => {
+describe('07-default-adapter', () => {
     it('it should make 3 inactive users', async () => {
         const customObject = await factory
             .for<ICustomObject>('customObject')

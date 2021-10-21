@@ -43,7 +43,7 @@ const widgetPartial2: DeepEntityPartial<IWidget> = {
     active: true,
 };
 
-describe('ObjectAdapter', async () => {
+describe('ObjectAdapter', () => {
     it('should return and entity based on a partial', async () => {
         const adapter = new ObjectAdapter();
         const result = await adapter.make([widgetPartial, widgetPartial2], {
@@ -58,7 +58,10 @@ describe('ObjectAdapter', async () => {
         const adapter = new ObjectAdapter();
         const context = { __type: 'widget' };
 
-        let result = await adapter.make([widgetPartial, widgetPartial2], context);
+        let result = await adapter.make(
+            [widgetPartial, widgetPartial2],
+            context,
+        );
         result = await adapter.create(result, context);
 
         expect(result[0].id).toEqual(1);
@@ -228,22 +231,24 @@ describe('ObjectAdapter', async () => {
         expect(results[0].active).toEqual(false);
     });
 
-    describe('E2E', async () => {
+    describe('E2E', () => {
         let factory: EntityFactory;
 
         beforeEach(async () => {
             const adapter = new ObjectAdapter();
             factory = new EntityFactory({
                 adapter,
-                blueprints: [CommentBlueprint, PostBlueprint, UserBlueprint, UuidBlueprint],
+                blueprints: [
+                    CommentBlueprint,
+                    PostBlueprint,
+                    UserBlueprint,
+                    UuidBlueprint,
+                ],
             });
         });
 
         it('should make entities with uuid primary keys', async () => {
-            const uuidEntities = await factory
-                .for(Uuid)
-                .state()
-                .create(3);
+            const uuidEntities = await factory.for(Uuid).state().create(3);
 
             expect(uuidEntities.length).toBe(3);
             for (const entity of uuidEntities) {
