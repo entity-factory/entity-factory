@@ -2,7 +2,7 @@
  * @module Adapters/object
  */
 
-import * as uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import { BlueprintOptions } from '../../blueprint/BlueprintOptions';
 import { EntityObjectType } from '../../common/EntityObjectType';
 import { isFunction } from '../../utils';
